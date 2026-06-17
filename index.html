@@ -1,0 +1,847 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Presupuesto PRO - CCTV</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Arial, sans-serif;
+            background: #f0f2f5;
+            padding: 20px;
+        }
+
+        .container {
+            max-width: 1100px;
+            margin: 0 auto;
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.1);
+        }
+
+        h1 {
+            color: #1a237e;
+            font-size: 28px;
+            text-align: center;
+            margin-bottom: 30px;
+            border-bottom: 3px solid #1a237e;
+            padding-bottom: 15px;
+        }
+
+        .section {
+            background: #f8f9fa;
+            padding: 20px;
+            border-radius: 8px;
+            margin-bottom: 25px;
+            border-left: 4px solid #1a237e;
+        }
+
+        .section-title {
+            font-size: 18px;
+            font-weight: bold;
+            color: #1a237e;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title span {
+            background: #1a237e;
+            color: white;
+            border-radius: 50%;
+            width: 28px;
+            height: 28px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 14px;
+        }
+
+        .row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 15px;
+            margin-bottom: 12px;
+        }
+
+        .row-3 {
+            grid-template-columns: 1fr 1fr 1fr;
+        }
+
+        .field {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .field label {
+            font-size: 13px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 4px;
+        }
+
+        .field input, .field select, .field textarea {
+            padding: 8px 12px;
+            border: 1.5px solid #d0d0d0;
+            border-radius: 6px;
+            font-size: 14px;
+            transition: border 0.3s;
+            background: white;
+        }
+
+        .field input:focus, .field select:focus {
+            border-color: #1a237e;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(26,35,126,0.1);
+        }
+
+        .field input[readonly] {
+            background: #e9ecef;
+            cursor: not-allowed;
+        }
+
+        .full-width {
+            grid-column: 1 / -1;
+        }
+
+        .btn {
+            padding: 10px 24px;
+            border: none;
+            border-radius: 6px;
+            font-weight: 600;
+            cursor: pointer;
+            font-size: 14px;
+            transition: all 0.3s;
+        }
+
+        .btn-primary {
+            background: #1a237e;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #0d1555;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(26,35,126,0.3);
+        }
+
+        .btn-success {
+            background: #2e7d32;
+            color: white;
+        }
+
+        .btn-success:hover {
+            background: #1b5e20;
+        }
+
+        .btn-danger {
+            background: #c62828;
+            color: white;
+        }
+
+        .btn-danger:hover {
+            background: #b71c1c;
+        }
+
+        .btn-warning {
+            background: #f57f17;
+            color: white;
+        }
+
+        .btn-warning:hover {
+            background: #e65100;
+        }
+
+        .btn-group {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+            margin: 20px 0;
+        }
+
+        .table-wrap {
+            overflow-x: auto;
+            margin: 15px 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+        }
+
+        table th {
+            background: #1a237e;
+            color: white;
+            padding: 10px 12px;
+            text-align: left;
+        }
+
+        table td {
+            padding: 8px 12px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        table tr:hover {
+            background: #f5f5f5;
+        }
+
+        table input, table select {
+            width: 100%;
+            padding: 6px 8px;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            font-size: 13px;
+        }
+
+        table input[type="number"] {
+            width: 90px;
+        }
+
+        .total-row {
+            font-weight: bold;
+            background: #e3f2fd !important;
+        }
+
+        .total-row td {
+            border-top: 2px solid #1a237e;
+        }
+
+        .summary-box {
+            background: #1a237e;
+            color: white;
+            padding: 20px;
+            border-radius: 8px;
+            margin: 20px 0;
+            display: grid;
+            grid-template-columns: 1fr 1fr 1fr;
+            gap: 15px;
+        }
+
+        .summary-box .item {
+            text-align: center;
+        }
+
+        .summary-box .item .label {
+            font-size: 13px;
+            opacity: 0.8;
+        }
+
+        .summary-box .item .value {
+            font-size: 24px;
+            font-weight: bold;
+        }
+
+        .summary-box .item input {
+            background: transparent;
+            border: 1px solid rgba(255,255,255,0.3);
+            color: white;
+            padding: 6px 10px;
+            border-radius: 4px;
+            width: 100%;
+            text-align: center;
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        .summary-box .item input:focus {
+            border-color: white;
+            outline: none;
+        }
+
+        .checkbox-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            padding: 8px 0;
+        }
+
+        .checkbox-group label {
+            display: flex;
+            align-items: center;
+            gap: 6px;
+            font-weight: normal;
+            font-size: 13px;
+        }
+
+        .checkbox-group input[type="checkbox"] {
+            width: 16px;
+            height: 16px;
+        }
+
+        .btn-generate {
+            background: #ff6f00;
+            color: white;
+            padding: 14px 40px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+            margin: 20px 0;
+        }
+
+        .btn-generate:hover {
+            background: #e65100;
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(255,111,0,0.4);
+        }
+
+        @media (max-width: 768px) {
+            .row {
+                grid-template-columns: 1fr;
+            }
+            .row-3 {
+                grid-template-columns: 1fr;
+            }
+            .summary-box {
+                grid-template-columns: 1fr;
+            }
+            .container {
+                padding: 15px;
+            }
+        }
+
+        /* Estilo para el PDF */
+        @media print {
+            body { background: white; padding: 0; }
+            .container { box-shadow: none; padding: 20px; }
+            .btn, .btn-group, .btn-generate { display: none; }
+            .section { break-inside: avoid; }
+        }
+
+        .hidden {
+            display: none;
+        }
+
+        .tab-btn {
+            padding: 8px 20px;
+            border: 2px solid #1a237e;
+            background: transparent;
+            color: #1a237e;
+            border-radius: 20px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s;
+        }
+
+        .tab-btn.active {
+            background: #1a237e;
+            color: white;
+        }
+
+        .tab-btn:hover {
+            background: #1a237e;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container" id="app">
+    <h1>📹 PRESUPUESTO PRO - CCTV</h1>
+
+    <!-- ====== DATOS PROFESIONALES ====== -->
+    <div class="section">
+        <div class="section-title"><span>1</span> DATOS PROFESIONALES</div>
+        <div class="row">
+            <div class="field">
+                <label>NOMBRE DE LA EMPRESA</label>
+                <input type="text" id="empresa" value="SEGURIDAD ELECTRÓNICA" placeholder="Nombre de tu empresa">
+            </div>
+            <div class="field">
+                <label>TÉCNICO EN SERVICIO</label>
+                <input type="text" id="tecnico" value="Ing. Carlos Ramírez" placeholder="Nombre del técnico">
+            </div>
+        </div>
+        <div class="row">
+            <div class="field">
+                <label>TELÉFONO (WhatsApp)</label>
+                <input type="text" id="telefono" value="55 1234 5678" placeholder="Teléfono">
+            </div>
+            <div class="field">
+                <label>CORREO ELECTRÓNICO</label>
+                <input type="email" id="correo" value="contacto@seguridadelectronica.com" placeholder="correo@empresa.com">
+            </div>
+        </div>
+        <div class="field full-width">
+            <label>DOMICILIO - UBICACIÓN</label>
+            <input type="text" id="domicilio" value="Calle Independencia #45, Col. Centro, CDMX" placeholder="Dirección del taller u oficina">
+        </div>
+    </div>
+
+    <!-- ====== DATOS DEL CLIENTE ====== -->
+    <div class="section">
+        <div class="section-title"><span>2</span> DATOS DEL CLIENTE</div>
+        <div class="row">
+            <div class="field">
+                <label>NOMBRE DEL CLIENTE</label>
+                <input type="text" id="cliente_nombre" value="Bruno Calderón Vega" placeholder="Nombre completo">
+            </div>
+            <div class="field">
+                <label>NOMBRE DE LA EMPRESA</label>
+                <input type="text" id="cliente_empresa" value="Oficina Particular" placeholder="Empresa (Opcional)">
+            </div>
+        </div>
+        <div class="row">
+            <div class="field">
+                <label>TELÉFONO (WHATSAPP)</label>
+                <input type="text" id="cliente_telefono" value="6647795280" placeholder="Teléfono del cliente">
+            </div>
+            <div class="field">
+                <label>CORREO ELECTRÓNICO</label>
+                <input type="email" id="cliente_correo" value="brunocald123@gmail.com" placeholder="cliente@mail.com">
+            </div>
+        </div>
+        <div class="field full-width">
+            <label>DIRECCIÓN DEL SITIO</label>
+            <input type="text" id="cliente_direccion" value="Av. Américas 1250" placeholder="Ubicación de la instalación">
+        </div>
+    </div>
+
+    <!-- ====== CONFIGURACIÓN DEL SISTEMA ====== -->
+    <div class="section">
+        <div class="section-title"><span>3</span> CONFIGURACIÓN DEL SISTEMA CCTV</div>
+        <div class="row row-3">
+            <div class="field">
+                <label>TIPO DE SISTEMA</label>
+                <select id="tipo_sistema">
+                    <option value="Sistema IP (Digital)" selected>Sistema IP (Digital)</option>
+                    <option value="Sistema HD (Analógico)">Sistema HD (Analógico)</option>
+                    <option value="Sistema Híbrido">Sistema Híbrido</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>UBICACIÓN / ÁREA</label>
+                <select id="ubicacion">
+                    <option value="Oficinas">Oficinas</option>
+                    <option value="Exterior" selected>Exterior</option>
+                    <option value="Nave Industrial">Nave Industrial</option>
+                    <option value="Almacén">Almacén</option>
+                    <option value="Residencial">Residencial</option>
+                    <option value="Comercial">Comercial</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>RESOLUCIÓN</label>
+                <select id="resolucion">
+                    <option value="2MP (1080p)">2MP (1080p)</option>
+                    <option value="4MP (1440p)" selected>4MP (1440p)</option>
+                    <option value="5MP (1944p)">5MP (1944p)</option>
+                    <option value="8MP (4K)">8MP (4K)</option>
+                    <option value="12MP">12MP</option>
+                </select>
+            </div>
+        </div>
+        <div class="row row-3">
+            <div class="field">
+                <label>DVR / CANALES</label>
+                <select id="canales">
+                    <option value="4 Canales">4 Canales</option>
+                    <option value="8 Canales" selected>8 Canales</option>
+                    <option value="16 Canales">16 Canales</option>
+                    <option value="32 Canales">32 Canales</option>
+                    <option value="64 Canales">64 Canales</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>ALMACENAMIENTO (HDD)</label>
+                <select id="almacenamiento">
+                    <option value="1 TB">1 TB</option>
+                    <option value="2 TB" selected>2 TB</option>
+                    <option value="4 TB">4 TB</option>
+                    <option value="6 TB">6 TB</option>
+                    <option value="8 TB">8 TB</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>CABLEADO</label>
+                <select id="cableado">
+                    <option value="UTP Cat5e" selected>UTP Cat5e</option>
+                    <option value="UTP Cat6">UTP Cat6</option>
+                    <option value="UTP Cat6A">UTP Cat6A</option>
+                    <option value="Fibra Óptica">Fibra Óptica</option>
+                </select>
+            </div>
+        </div>
+        <div class="row row-3">
+            <div class="field">
+                <label>TUBERÍA / CANALIZACIÓN</label>
+                <select id="tuberia">
+                    <option value="Tubería Conduit PVC">Tubería Conduit PVC</option>
+                    <option value="Tubería Metálica EMT">Tubería Metálica EMT</option>
+                    <option value="Canaleta Plástica" selected>Canaleta Plástica</option>
+                    <option value="Tubería Flexible">Tubería Flexible</option>
+                    <option value="Sin tubería (visible)">Sin tubería (visible)</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>FUENTE / ENERGÍA</label>
+                <select id="fuente">
+                    <option value="PoE (Switch)">PoE (Switch)</option>
+                    <option value="Fuente 12V DC" selected>Fuente 12V DC</option>
+                    <option value="Fuente 24V AC">Fuente 24V AC</option>
+                    <option value="Híbrido">Híbrido</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>FOLIO</label>
+                <input type="text" id="folio" value="1001" placeholder="Número de folio">
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== DESGLOSE DE EQUIPOS ====== -->
+    <div class="section">
+        <div class="section-title"><span>4</span> DESGLOSE DE EQUIPOS (HARDWARE)</div>
+        <div class="table-wrap">
+            <table id="tablaEquipos">
+                <thead>
+                    <tr>
+                        <th style="width:40%">DESCRIPCIÓN</th>
+                        <th style="width:15%">UNIDAD</th>
+                        <th style="width:10%">CANT</th>
+                        <th style="width:17%">P. UNIT ($)</th>
+                        <th style="width:18%">TOTAL ($)</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyEquipos">
+                    <tr>
+                        <td><input type="text" class="desc-equipo" value="Cámara Bala 4MP IP" placeholder="Descripción del equipo"></td>
+                        <td><select class="unidad-equipo"><option value="Pieza" selected>Pieza</option><option value="Metro">Metro</option><option value="Kit">Kit</option><option value="Juego">Juego</option></select></td>
+                        <td><input type="number" class="cant-equipo" value="4" min="1"></td>
+                        <td><input type="number" class="punit-equipo" value="1800" step="0.01"></td>
+                        <td><input type="text" class="total-equipo" value="7200.00" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="desc-equipo" value="Grabador NVR 8 Canales" placeholder="Descripción del equipo"></td>
+                        <td><select class="unidad-equipo"><option value="Pieza" selected>Pieza</option><option value="Metro">Metro</option><option value="Kit">Kit</option><option value="Juego">Juego</option></select></td>
+                        <td><input type="number" class="cant-equipo" value="1" min="1"></td>
+                        <td><input type="number" class="punit-equipo" value="4500" step="0.01"></td>
+                        <td><input type="text" class="total-equipo" value="4500.00" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="desc-equipo" value="Disco Duro 2TB" placeholder="Descripción del equipo"></td>
+                        <td><select class="unidad-equipo"><option value="Pieza" selected>Pieza</option><option value="Metro">Metro</option><option value="Kit">Kit</option><option value="Juego">Juego</option></select></td>
+                        <td><input type="number" class="cant-equipo" value="1" min="1"></td>
+                        <td><input type="number" class="punit-equipo" value="2200" step="0.01"></td>
+                        <td><input type="text" class="total-equipo" value="2200.00" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="desc-equipo" value="Switch PoE 8 Puertos" placeholder="Descripción del equipo"></td>
+                        <td><select class="unidad-equipo"><option value="Pieza" selected>Pieza</option><option value="Metro">Metro</option><option value="Kit">Kit</option><option value="Juego">Juego</option></select></td>
+                        <td><input type="number" class="cant-equipo" value="1" min="1"></td>
+                        <td><input type="number" class="punit-equipo" value="2600" step="0.01"></td>
+                        <td><input type="text" class="total-equipo" value="2600.00" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="desc-equipo" value="Cable UTP Cat5e 305m" placeholder="Descripción del equipo"></td>
+                        <td><select class="unidad-equipo"><option value="Pieza">Pieza</option><option value="Metro" selected>Metro</option><option value="Kit">Kit</option><option value="Juego">Juego</option></select></td>
+                        <td><input type="number" class="cant-equipo" value="30" min="1"></td>
+                        <td><input type="number" class="punit-equipo" value="8.50" step="0.01"></td>
+                        <td><input type="text" class="total-equipo" value="255.00" readonly></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="4" style="text-align:right; font-weight:bold;">SUBTOTAL EQUIPOS</td>
+                        <td style="font-weight:bold;"><input type="text" id="subtotalEquipos" value="16755.00" readonly style="border:none; background:transparent; font-weight:bold; font-size:16px;"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <button class="btn btn-success" onclick="agregarFilaEquipo()">+ AGREGAR EQUIPO / ACCESORIO</button>
+    </div>
+
+    <!-- ====== MANO DE OBRA ====== -->
+    <div class="section">
+        <div class="section-title"><span>5</span> MANO DE OBRA Y SERVICIOS</div>
+        <div class="table-wrap">
+            <table id="tablaServicios">
+                <thead>
+                    <tr>
+                        <th style="width:45%">DESCRIPCIÓN DEL SERVICIO</th>
+                        <th style="width:15%">CANT</th>
+                        <th style="width:20%">P. UNIT ($)</th>
+                        <th style="width:20%">TOTAL ($)</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyServicios">
+                    <tr>
+                        <td><input type="text" class="desc-servicio" value="Instalación de cámaras IP y configuación" placeholder="Descripción del servicio"></td>
+                        <td><input type="number" class="cant-servicio" value="1" min="1"></td>
+                        <td><input type="number" class="punit-servicio" value="1800" step="0.01"></td>
+                        <td><input type="text" class="total-servicio" value="1800.00" readonly></td>
+                    </tr>
+                    <tr>
+                        <td><input type="text" class="desc-servicio" value="Configuración de 3 celulares para visualización remota" placeholder="Descripción del servicio"></td>
+                        <td><input type="number" class="cant-servicio" value="1" min="1"></td>
+                        <td><input type="number" class="punit-servicio" value="600" step="0.01"></td>
+                        <td><input type="text" class="total-servicio" value="600.00" readonly></td>
+                    </tr>
+                </tbody>
+                <tfoot>
+                    <tr>
+                        <td colspan="3" style="text-align:right; font-weight:bold;">SUBTOTAL SERVICIOS</td>
+                        <td style="font-weight:bold;"><input type="text" id="subtotalServicios" value="2400.00" readonly style="border:none; background:transparent; font-weight:bold; font-size:16px;"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <button class="btn btn-success" onclick="agregarFilaServicio()">+ AGREGAR SERVICIO / MANO DE OBRA</button>
+    </div>
+
+    <!-- ====== CONDICIONES Y GASTOS ====== -->
+    <div class="section">
+        <div class="section-title"><span>6</span> TIEMPOS, REQUISITOS Y GASTOS</div>
+        <div class="row">
+            <div class="field">
+                <label>TIEMPO DE EJECUCIÓN</label>
+                <input type="text" id="tiempo_ejecucion" value="2 días hábiles" placeholder="Ej. 2 días hábiles">
+            </div>
+            <div class="field">
+                <label>VIGENCIA DE COTIZACIÓN</label>
+                <input type="text" id="vigencia" value="5 Días (Por tipo de cambio)" placeholder="Ej. 5 Días">
+            </div>
+        </div>
+        <div class="field full-width">
+            <label>CONDICIONES DEL SERVICIO</label>
+            <div class="checkbox-group" id="condiciones">
+                <label><input type="checkbox" checked> Requiere Internet (App)</label>
+                <label><input type="checkbox" checked> No incluye obra civil</label>
+                <label><input type="checkbox" checked> Punto 110V (Cliente)</label>
+                <label><input type="checkbox" checked> Config. 3 Celulares</label>
+                <label><input type="checkbox" checked> Horario Diurno (L-V)</label>
+                <label><input type="checkbox" checked> Sin Albañilería/Pintura</label>
+                <label><input type="checkbox" checked> Acceso a Wi-Fi Cliente</label>
+                <label><input type="checkbox" checked> Garantía Fabricante</label>
+            </div>
+        </div>
+        <div class="field full-width">
+            <label>OTRA CONDICIÓN ESPECÍFICA</label>
+            <input type="text" id="otra_condicion" value="" placeholder="Especifique otro requisito si es necesario...">
+        </div>
+        <div class="row row-3">
+            <div class="field">
+                <label>VIÁTICOS / TRANSPORTE ($)</label>
+                <input type="number" id="viaticos" value="350" step="0.01">
+            </div>
+            <div class="field">
+                <label>RENTA DE ESCALERAS/ANDAMIO ($)</label>
+                <input type="number" id="renta" value="0" step="0.01">
+            </div>
+            <div class="field">
+                <label>INSUMOS MENORES / VARIOS ($)</label>
+                <input type="number" id="insumos" value="0" step="0.01">
+            </div>
+        </div>
+        <div class="field full-width">
+            <label>NOTAS TÉCNICAS</label>
+            <input type="text" id="notas_tecnicas" value="Altura máxima de instalación 3mts, tubería visible" placeholder="Ej. Altura máxima de instalación 3mts, tubería visible...">
+        </div>
+    </div>
+
+    <!-- ====== RESUMEN ====== -->
+    <div class="section">
+        <div class="section-title"><span>7</span> RESUMEN DE INVERSIÓN</div>
+        <div class="summary-box">
+            <div class="item">
+                <div class="label">SUBTOTAL NETO</div>
+                <div class="value"><input type="text" id="subtotalNeto" value="19155.00" readonly></div>
+            </div>
+            <div class="item">
+                <div class="label">IVA (16%)</div>
+                <div class="value"><input type="text" id="iva" value="3064.80" readonly></div>
+            </div>
+            <div class="item">
+                <div class="label">RETENER ISR (RESICO 1.25%)</div>
+                <div class="value"><input type="text" id="isr" value="-239.44" readonly></div>
+            </div>
+        </div>
+        <div style="background:#e8f5e9; padding:20px; border-radius:8px; text-align:center; margin:15px 0;">
+            <div style="font-size:14px; color:#2e7d32;">INVERSIÓN TOTAL ESTIMADA</div>
+            <div style="font-size:36px; font-weight:bold; color:#1a237e;" id="totalFinal">$21,980.36</div>
+        </div>
+        <div class="row">
+            <div class="field">
+                <label>ANTICIPACIÓN (50-70%)</label>
+                <input type="number" id="anticipacion" value="0" step="0.01" placeholder="$0.00">
+            </div>
+            <div class="field">
+                <label>CONTRA ENTREGA</label>
+                <input type="text" id="contra_entrega" value="21,980.36" readonly>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== BOTONES ====== -->
+    <div class="btn-group">
+        <button class="btn btn-generate" onclick="generarPDF()">📄 GENERAR COTIZACIÓN PRO</button>
+        <button class="btn btn-warning" onclick="limpiarTodo()">🧹 LIMPIAR</button>
+        <button class="btn btn-danger" onclick="borrarEmpresa()">🗑️ BORRAR DATOS EMPRESA</button>
+    </div>
+
+    <div style="text-align:center; color:#999; font-size:12px; margin-top:20px;">
+        PRESUPUESTO PRO - CCTV v3.6
+    </div>
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+<script>
+    // ====== FUNCIONES DE CÁLCULO ======
+    function calcularTotales() {
+        let subtotalEquipos = 0;
+        const filasEquipos = document.querySelectorAll('#tbodyEquipos tr');
+        filasEquipos.forEach(row => {
+            const cant = parseFloat(row.querySelector('.cant-equipo')?.value) || 0;
+            const punit = parseFloat(row.querySelector('.punit-equipo')?.value) || 0;
+            const total = cant * punit;
+            const totalInput = row.querySelector('.total-equipo');
+            if (totalInput) {
+                totalInput.value = total.toFixed(2);
+            }
+            subtotalEquipos += total;
+        });
+        document.getElementById('subtotalEquipos').value = subtotalEquipos.toFixed(2);
+
+        let subtotalServicios = 0;
+        const filasServicios = document.querySelectorAll('#tbodyServicios tr');
+        filasServicios.forEach(row => {
+            const cant = parseFloat(row.querySelector('.cant-servicio')?.value) || 0;
+            const punit = parseFloat(row.querySelector('.punit-servicio')?.value) || 0;
+            const total = cant * punit;
+            const totalInput = row.querySelector('.total-servicio');
+            if (totalInput) {
+                totalInput.value = total.toFixed(2);
+            }
+            subtotalServicios += total;
+        });
+        document.getElementById('subtotalServicios').value = subtotalServicios.toFixed(2);
+
+        const viaticos = parseFloat(document.getElementById('viaticos').value) || 0;
+        const renta = parseFloat(document.getElementById('renta').value) || 0;
+        const insumos = parseFloat(document.getElementById('insumos').value) || 0;
+        const extras = viaticos + renta + insumos;
+
+        const subtotalNeto = subtotalEquipos + subtotalServicios + extras;
+        document.getElementById('subtotalNeto').value = subtotalNeto.toFixed(2);
+
+        const iva = subtotalNeto * 0.16;
+        document.getElementById('iva').value = iva.toFixed(2);
+
+        const isr = subtotalNeto * 0.0125;
+        document.getElementById('isr').value = '-' + isr.toFixed(2);
+
+        const totalFinal = subtotalNeto + iva - isr;
+        document.getElementById('totalFinal').innerText = '$' + totalFinal.toFixed(2);
+        document.getElementById('contra_entrega').value = totalFinal.toFixed(2);
+    }
+
+    // Event listeners para cálculos automáticos
+    document.addEventListener('input', function(e) {
+        if (e.target.classList.contains('cant-equipo') || e.target.classList.contains('punit-equipo') ||
+            e.target.classList.contains('cant-servicio') || e.target.classList.contains('punit-servicio') ||
+            e.target.id === 'viaticos' || e.target.id === 'renta' || e.target.id === 'insumos') {
+            calcularTotales();
+        }
+    });
+
+    // ====== AGREGAR FILAS ======
+    function agregarFilaEquipo() {
+        const tbody = document.getElementById('tbodyEquipos');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="text" class="desc-equipo" placeholder="Descripción del equipo"></td>
+            <td><select class="unidad-equipo"><option value="Pieza" selected>Pieza</option><option value="Metro">Metro</option><option value="Kit">Kit</option><option value="Juego">Juego</option></select></td>
+            <td><input type="number" class="cant-equipo" value="1" min="1"></td>
+            <td><input type="number" class="punit-equipo" value="0" step="0.01"></td>
+            <td><input type="text" class="total-equipo" value="0.00" readonly></td>
+        `;
+        tbody.appendChild(tr);
+        calcularTotales();
+    }
+
+    function agregarFilaServicio() {
+        const tbody = document.getElementById('tbodyServicios');
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td><input type="text" class="desc-servicio" placeholder="Descripción del servicio"></td>
+            <td><input type="number" class="cant-servicio" value="1" min="1"></td>
+            <td><input type="number" class="punit-servicio" value="0" step="0.01"></td>
+            <td><input type="text" class="total-servicio" value="0.00" readonly></td>
+        `;
+        tbody.appendChild(tr);
+        calcularTotales();
+    }
+
+    // ====== LIMPIAR TODO ======
+    function limpiarTodo() {
+        if (!confirm('¿Estás seguro de limpiar todos los campos?')) return;
+        document.querySelectorAll('input:not([readonly])').forEach(inp => {
+            if (inp.type === 'number' || inp.type === 'text' || inp.type === 'email') {
+                inp.value = '';
+            }
+        });
+        document.querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
+        document.querySelectorAll('.total-equipo, .total-servicio').forEach(inp => inp.value = '0.00');
+        document.getElementById('subtotalEquipos').value = '0.00';
+        document.getElementById('subtotalServicios').value = '0.00';
+        document.getElementById('subtotalNeto').value = '0.00';
+        document.getElementById('iva').value = '0.00';
+        document.getElementById('isr').value = '-0.00';
+        document.getElementById('totalFinal').innerText = '$0.00';
+        document.getElementById('contra_entrega').value = '0.00';
+        document.querySelectorAll('#condiciones input[type="checkbox"]').forEach(cb => cb.checked = false);
+    }
+
+    function borrarEmpresa() {
+        if (!confirm('¿Borrar datos de la empresa?')) return;
+        document.getElementById('empresa').value = '';
+        document.getElementById('tecnico').value = '';
+        document.getElementById('telefono').value = '';
+        document.getElementById('correo').value = '';
+        document.getElementById('domicilio').value = '';
+    }
+
+    // ====== GENERAR PDF ======
+    function generarPDF() {
+        const element = document.getElementById('app');
+        const btn = document.querySelector('.btn-generate');
+        btn.innerText = '⏳ GENERANDO PDF...';
+        btn.disabled = true;
+
+        const opt = {
+            margin:        [0.5, 0.5, 0.5, 0.5],
+            filename:     'Presupuesto_CCTV_' + document.getElementById('folio').value + '.pdf',
+            image:        { type: 'jpeg', quality: 0.98 },
+            html2canvas:  { scale: 2, letterRendering: true, useCORS: true, logging: false },
+            jsPDF:        { unit: 'in', format: 'a4', orientation: 'portrait' }
+        };
+
+        html2pdf().set(opt).from(element).save().then(function() {
+            btn.innerText = '📄 GENERAR COTIZACIÓN PRO';
+            btn.disabled = false;
+        }).catch(function(err) {
+            alert('Error al generar PDF: ' + err);
+            btn.innerText = '📄 GENERAR COTIZACIÓN PRO';
+            btn.disabled = false;
+        });
+    }
+
+    // Calcular al cargar
+    window.onload = function() {
+        calcularTotales();
+    };
+</script>
+</body>
+</html>
