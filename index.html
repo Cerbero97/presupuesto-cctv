@@ -1454,17 +1454,7 @@
     };
 
     // ================================================================
-    // 2. ESTADO GLOBAL (datos)
-    // ================================================================
-
-    const state = {
-      equipos: [],
-      servicios: [],
-      // Los campos del DOM se leerán directamente con getElementById
-    };
-
-    // ================================================================
-    // 3. FUNCIONES DE NEGOCIO (cálculos)
+    // 2. FUNCIONES DE NEGOCIO (cálculos)
     // ================================================================
 
     /** Calcula el total de una fila */
@@ -1527,7 +1517,7 @@
     };
 
     // ================================================================
-    // 4. FUNCIONES DE UI (crear filas, agregar, eliminar, duplicar)
+    // 3. FUNCIONES DE UI (crear filas, agregar, eliminar, duplicar)
     // ================================================================
 
     const crearFilaEquipo = (desc = '', cat = 'Cámaras', uni = 'Pieza', cant = 1, punit = 0) => {
@@ -1604,7 +1594,7 @@
     };
 
     // ================================================================
-    // 5. MANEJO DE EVENTOS (delegación)
+    // 4. MANEJO DE EVENTOS (delegación)
     // ================================================================
 
     document.addEventListener('click', (e) => {
@@ -1678,7 +1668,7 @@
     });
 
     // ================================================================
-    // 6. CAMPOS CONDICIONALES (mostrar/ocultar)
+    // 5. CAMPOS CONDICIONALES (mostrar/ocultar)
     // ================================================================
 
     const toggleCamposCondicionales = (tipo) => {
@@ -1687,18 +1677,15 @@
 
       campoPieza.classList.toggle('visible', tipo === 'cambio_pieza');
       campoFrecuencia.classList.toggle('visible', tipo === 'mantenimiento');
-
-      // Si no es visible, no guardamos su valor en el PDF (se maneja en la generación)
     };
 
-    // Inicializar campos condicionales al cargar
     const initCamposCondicionales = () => {
       const tipo = document.getElementById('tipoServicio').value;
       toggleCamposCondicionales(tipo);
     };
 
     // ================================================================
-    // 7. PERSISTENCIA (LocalStorage)
+    // 6. PERSISTENCIA (LocalStorage)
     // ================================================================
 
     const guardarDatos = () => {
@@ -1824,7 +1811,7 @@
     };
 
     // ================================================================
-    // 8. SORTABLE (arrastrar filas)
+    // 7. SORTABLE (arrastrar filas)
     // ================================================================
 
     const initSortable = () => {
@@ -1851,23 +1838,736 @@
     };
 
     // ================================================================
-    // 9. FUNCIONES DE GENERACIÓN DE PDF Y DOCUMENTOS
+    // 8. GENERACIÓN DE PDF, CONTRATO Y CERTIFICADO
     // ================================================================
 
-    // (Las funciones `previsualizarPDF`, `generarContrato` y `generarCertificado`
-    // son largas pero similares a las versiones anteriores. Se mantienen
-    // para no extender excesivamente el código aquí.
-    // Se asume que el usuario ya tiene la lógica de generación de PDF,
-    // contrato y certificado de la versión anterior, y solo se actualizan
-    // para incluir los nuevos campos (cable eléctrico, cajas estancas,
-    // monitor, tipo de servicio, etc.)
-    // En esta versión, se incluye un ejemplo de cómo se podría integrar
-    // la lectura de los nuevos campos en el PDF.
-    // Por brevedad, se deja la implementación resumida.
-    //)
+    // ---- 8.1 GENERAR CONTENIDO DEL PDF ----
+    const generarPDFContent = () => {
+      // Recolectar todos los datos de la UI
+      const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
+      const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
+      const telefono = document.getElementById('telefono').value || '';
+      const correo = document.getElementById('correo').value || '';
+      const domicilio = document.getElementById('domicilio').value || '';
+
+      const cliente = document.getElementById('cliente_nombre').value || '';
+      const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
+      const clienteTel = document.getElementById('cliente_telefono').value || '';
+      const clienteCorreo = document.getElementById('cliente_correo').value || '';
+      const clienteDir = document.getElementById('cliente_direccion').value || '';
+
+      const tipoServicio = document.getElementById('tipoServicio').value || 'instalacion';
+      const piezaReemplazar = document.getElementById('piezaReemplazar').value || '';
+      const frecuenciaMantenimiento = document.getElementById('frecuenciaMantenimiento').value || '';
+
+      const tipoSistema = document.getElementById('tipo_sistema').value || '';
+      const ubicacion = document.getElementById('ubicacion').value || '';
+      const resolucion = document.getElementById('resolucion').value || '';
+      const canales = document.getElementById('canales').value || '';
+      const almacenamiento = document.getElementById('almacenamiento').value || '';
+      const cableRed = document.getElementById('cableRed').value || '';
+      const cableElectrico = document.getElementById('cableElectrico').value || '';
+      const tuberia = document.getElementById('tuberia').value || '';
+      const cajasEstancas = document.getElementById('cajasEstancas').value || '';
+      const fuente = document.getElementById('fuente').value || '';
+      const metodoPago = document.getElementById('metodoPago').value || '';
+      const monitorIncluido = document.getElementById('monitorIncluido').value || '';
+
+      const plazoEntrega = document.getElementById('plazoEntrega').value || '5';
+      const vigenciaDias = document.getElementById('vigenciaDias').value || '7';
+
+      const tiempoEjecucion = document.getElementById('tiempo_ejecucion').value || '2 días hábiles';
+      const vigenciaTexto = document.getElementById('vigenciaTexto').value || '7 días';
+      const condiciones = [];
+      document.querySelectorAll('#condiciones input[type="checkbox"]:checked').forEach(cb => {
+        condiciones.push(cb.parentElement.textContent.trim());
+      });
+      const otraCondicion = document.getElementById('otra_condicion').value || '';
+      const viaticos = parseFloat(document.getElementById('viaticos').value) || 0;
+      const renta = parseFloat(document.getElementById('renta').value) || 0;
+      const insumos = parseFloat(document.getElementById('insumos').value) || 0;
+      const notasTecnicas = document.getElementById('notas_tecnicas').value || '';
+      const plazoEntregaTexto = document.getElementById('plazoEntregaTexto').value || '5 días hábiles';
+      const observaciones = document.getElementById('observacionesCliente').value || '';
+      const version = document.getElementById('versionCotizacion').value || '1.0';
+
+      const subtotalEquipos = document.getElementById('subtotalEquipos').value;
+      const subtotalServicios = document.getElementById('subtotalServicios').value;
+      const subtotalNeto = document.getElementById('subtotalNeto').value;
+      const totalFinal = document.getElementById('totalFinalInput').value;
+      const totalLetras = document.getElementById('totalLetras').innerText;
+      const anticipacionMonto = document.getElementById('anticipacionMonto').value;
+      const contraEntrega = document.getElementById('contra_entrega').value;
+
+      // Equipos
+      let filasEquipos = [];
+      document.querySelectorAll('#tbodyEquipos tr').forEach(row => {
+        const desc = row.querySelector('.desc-equipo')?.value || '';
+        const cat = row.querySelector('.categoria-equipo')?.value || '';
+        const uni = row.querySelector('.unidad-equipo')?.value || '';
+        const cant = row.querySelector('.cant-equipo')?.value || '0';
+        const punit = row.querySelector('.punit-equipo')?.value || '0';
+        const total = row.querySelector('.total-equipo')?.value || '$0.00';
+        const emoji = getEmoji(cat);
+        filasEquipos.push({ desc, cat, uni, cant, punit, total, emoji });
+      });
+
+      // Servicios
+      let filasServicios = [];
+      document.querySelectorAll('#tbodyServicios tr').forEach(row => {
+        const desc = row.querySelector('.desc-servicio')?.value || '';
+        const cant = row.querySelector('.cant-servicio')?.value || '0';
+        const punit = row.querySelector('.punit-servicio')?.value || '0';
+        const total = row.querySelector('.total-servicio')?.value || '$0.00';
+        filasServicios.push({ desc, cant, punit, total });
+      });
+
+      // Croquis
+      let croquisHTML = '';
+      const croquisData = localStorage.getItem('croquisData');
+      if (croquisData) {
+        croquisHTML = `
+                <div style="margin-top:15px; text-align:center;">
+                    <h4 style="color:#8B0000;">PLANO / CROQUIS DEL SITIO</h4>
+                    <img src="${croquisData}" style="max-width:100%; max-height:400px; border:1px solid #ccc; border-radius:4px;">
+                </div>
+            `;
+      }
+
+      // Mapeo de tipo de servicio a texto
+      const tipoServicioMap = {
+        'instalacion': 'Instalación nueva',
+        'mantenimiento': 'Mantenimiento preventivo',
+        'cambio_pieza': 'Cambio de pieza / reparación',
+        'actualizacion': 'Actualización de sistema'
+      };
+
+      const tipoServicioTexto = tipoServicioMap[tipoServicio] || 'Instalación nueva';
+
+      // Información condicional según tipo de servicio
+      let infoCondicional = '';
+      if (tipoServicio === 'cambio_pieza') {
+        infoCondicional = `<p><strong>Pieza a reemplazar:</strong> ${piezaReemplazar}</p>`;
+      } else if (tipoServicio === 'mantenimiento') {
+        const freqMap = { '3': 'Cada 3 meses', '6': 'Cada 6 meses', '12': 'Cada año' };
+        infoCondicional = `<p><strong>Frecuencia de mantenimiento:</strong> ${freqMap[frecuenciaMantenimiento] || 'Cada 6 meses'}</p>`;
+      }
+
+      return `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Presupuesto CCTV - MS Solutions</title>
+                <style>
+                    body { font-family: 'Times New Roman', Times, serif; margin: 1.5cm; color: #000; }
+                    .header { text-align: center; border-bottom: 2px solid #8B0000; padding-bottom: 10px; margin-bottom: 15px; }
+                    .header h1 { font-size: 22pt; margin: 0; color: #8B0000; }
+                    .header .subt { font-size: 12pt; color: #555; }
+                    .header .folio-fecha { display: flex; justify-content: space-between; font-size: 11pt; margin-top: 5px; }
+                    .seccion { margin-bottom: 12px; }
+                    .seccion-titulo { font-weight: bold; font-size: 13pt; border-bottom: 1px solid #8B0000; padding-bottom: 3px; margin-bottom: 8px; color: #8B0000; }
+                    .datos-cliente { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 20px; font-size: 11pt; }
+                    .datos-cliente .label { font-weight: bold; }
+                    .tabla { width: 100%; border-collapse: collapse; font-size: 10pt; margin: 6px 0; }
+                    .tabla th { background: #8B0000; color: white; padding: 5px 8px; text-align: left; }
+                    .tabla td { padding: 4px 8px; border-bottom: 1px solid #ccc; }
+                    .tabla .total-row td { border-top: 2px solid #8B0000; font-weight: bold; }
+                    .resumen { display: flex; justify-content: space-between; font-size: 13pt; font-weight: bold; margin: 10px 0; }
+                    .resumen .total { color: #8B0000; font-size: 16pt; }
+                    .total-letras { font-size: 11pt; margin: 8px 0; padding: 8px; border: 1px solid #333; background: #f9f9f9; }
+                    .firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
+                    .firma-box { border-top: 2px solid #333; padding-top: 8px; }
+                    .firma-box .linea { height: 30px; border-bottom: 1px solid #333; margin-bottom: 5px; }
+                    .firma-box .leyenda { font-size: 9pt; font-style: italic; color: #555; }
+                    .firma-box .nombre { font-weight: bold; font-size: 11pt; margin-top: 5px; }
+                    .vigencia { font-size: 9pt; text-align: center; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 8px; color: #555; }
+                    .condiciones { font-size: 9pt; margin: 5px 0; }
+                    .condiciones ul { list-style: none; padding: 0; margin: 0; }
+                    .condiciones ul li::before { content: "• "; color: #8B0000; }
+                    .notas { font-size: 9pt; font-style: italic; color: #555; }
+                    .extra { font-size: 9pt; }
+                    .certificado-garantia { border: 1px solid #333; padding: 10px; margin-top: 15px; background: #fafafa; font-size: 10pt; }
+                    .certificado-garantia h4 { margin: 0 0 5px 0; color: #8B0000; }
+                    .certificado-garantia p { margin: 0; }
+                    .observaciones { border: 1px solid #333; padding: 10px; margin-top: 15px; background: #fafafa; font-size: 10pt; }
+                    .observaciones h4 { margin: 0 0 5px 0; color: #8B0000; }
+                    .observaciones p { margin: 0; white-space: pre-wrap; }
+                    .version { font-size: 10pt; color: #555; text-align: right; margin-top: 5px; }
+                    .info-servicio { font-size: 10pt; margin: 5px 0; background: #f5f5f5; padding: 8px; border-left: 3px solid #8B0000; }
+                    @page { margin: 1.5cm; }
+                    @media print { body { margin: 0; } }
+                    .emoji-col { width: 30px; text-align: center; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>PRESUPUESTO CCTV · MS SOLUTIONS</h1>
+                    <div class="subt">Sistemas de Videovigilancia Profesional</div>
+                    <div class="folio-fecha">
+                        <span><strong>Folio:</strong> ${document.getElementById('folio').value}</span>
+                        <span><strong>Fecha:</strong> ${document.getElementById('fechaEmision').value}</span>
+                    </div>
+                    <div class="version"><strong>Versión:</strong> ${version}</div>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">DATOS DEL CLIENTE</div>
+                    <div class="datos-cliente">
+                        <div><span class="label">Cliente:</span> ${cliente}</div>
+                        <div><span class="label">Empresa:</span> ${clienteEmpresa || '---'}</div>
+                        <div><span class="label">Teléfono:</span> ${clienteTel}</div>
+                        <div><span class="label">Correo:</span> ${clienteCorreo}</div>
+                        <div style="grid-column:1/-1;"><span class="label">Dirección:</span> ${clienteDir}</div>
+                    </div>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">CONFIGURACIÓN DEL SISTEMA</div>
+                    <div class="info-servicio">
+                        <strong>Tipo de servicio:</strong> ${tipoServicioTexto}
+                        ${infoCondicional}
+                    </div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px 15px; font-size:10pt;">
+                        <div><strong>Tipo:</strong> ${tipoSistema}</div>
+                        <div><strong>Ubicación:</strong> ${ubicacion}</div>
+                        <div><strong>Resolución:</strong> ${resolucion}</div>
+                        <div><strong>Canales:</strong> ${canales}</div>
+                        <div><strong>Almacenamiento:</strong> ${almacenamiento}</div>
+                        <div><strong>Cable de red:</strong> ${cableRed}</div>
+                        <div><strong>Cable eléctrico:</strong> ${cableElectrico}</div>
+                        <div><strong>Tubería:</strong> ${tuberia}</div>
+                        <div><strong>Cajas estancas:</strong> ${cajasEstancas}</div>
+                        <div><strong>Fuente:</strong> ${fuente}</div>
+                        <div><strong>Método de pago:</strong> ${metodoPago}</div>
+                        <div><strong>Monitor incluido:</strong> ${monitorIncluido}</div>
+                        <div><strong>Plazo entrega:</strong> ${plazoEntrega} días</div>
+                        <div><strong>Vigencia:</strong> ${vigenciaDias} días</div>
+                    </div>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">DESGLOSE DE EQUIPOS</div>
+                    <table class="tabla">
+                        <thead><tr><th>#</th><th>Descripción</th><th>Categoría</th><th>Unidad</th><th>Cant</th><th>P.Unitario</th><th>Total</th></tr></thead>
+                        <tbody>
+                            ${filasEquipos.map((f,i) => `<tr><td>${i+1}</td><td>${f.emoji} ${f.desc}</td><td>${f.cat}</td><td>${f.uni}</td><td>${f.cant}</td><td>${f.punit}</td><td>${f.total}</td></tr>`).join('')}
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row"><td colspan="6" style="text-align:right;">SUBTOTAL EQUIPOS</td><td>${subtotalEquipos}</td></tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">MANO DE OBRA Y SERVICIOS</div>
+                    <table class="tabla">
+                        <thead><tr><th>#</th><th>Descripción</th><th>Cant</th><th>P.Unitario</th><th>Total</th></tr></thead>
+                        <tbody>
+                            ${filasServicios.map((f,i) => `<tr><td>${i+1}</td><td>${f.desc}</td><td>${f.cant}</td><td>${f.punit}</td><td>${f.total}</td></tr>`).join('')}
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row"><td colspan="4" style="text-align:right;">SUBTOTAL SERVICIOS</td><td>${subtotalServicios}</td></tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">GASTOS EXTRA</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px 15px; font-size:10pt;">
+                        <div><strong>Viáticos:</strong> ${formatCurrency(viaticos)}</div>
+                        <div><strong>Renta escaleras:</strong> ${formatCurrency(renta)}</div>
+                        <div><strong>Insumos menores:</strong> ${formatCurrency(insumos)}</div>
+                    </div>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">RESUMEN DE INVERSIÓN</div>
+                    <div class="resumen">
+                        <span>Subtotal Neto: ${subtotalNeto}</span>
+                        <span>Descuento: ${document.getElementById('descuentoPorcentaje').value}%</span>
+                        <span class="total">Total Final: ${totalFinal}</span>
+                    </div>
+                    <div class="total-letras"><strong>Total con letra:</strong> ${totalLetras}</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px 15px; font-size:10pt; margin-top:5px;">
+                        <div><strong>Anticipación (${document.getElementById('anticipacionPorcentaje').value}%):</strong> ${anticipacionMonto}</div>
+                        <div><strong>Contra entrega:</strong> ${contraEntrega}</div>
+                        <div><strong>Plazo entrega:</strong> ${plazoEntregaTexto}</div>
+                    </div>
+                    <div style="font-size:10pt; margin-top:5px;"><strong>Método de pago:</strong> ${metodoPago}</div>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">CONDICIONES Y NOTAS</div>
+                    <div class="condiciones">
+                        <ul>
+                            ${condiciones.map(c => `<li>${c}</li>`).join('')}
+                            ${otraCondicion ? `<li>${otraCondicion}</li>` : ''}
+                        </ul>
+                    </div>
+                    <div class="notas">${notasTecnicas}</div>
+                    <div style="font-size:9pt; margin-top:5px;"><strong>Tiempo ejecución:</strong> ${tiempoEjecucion}</div>
+                </div>
+
+                ${observaciones ? `
+                    <div class="observaciones">
+                        <h4>📝 OBSERVACIONES DEL CLIENTE</h4>
+                        <p>${observaciones}</p>
+                    </div>
+                ` : ''}
+
+                <div class="seccion">
+                    <div class="seccion-titulo">FIRMAS DE ACEPTACIÓN</div>
+                    <div class="firmas">
+                        <div class="firma-box">
+                            <div><strong>FIRMA DEL INSTALADOR / EMPRESA</strong></div>
+                            <div class="linea"></div>
+                            <div class="leyenda">Al generar este documento, MS SOLUTIONS certifica que esta cotización ha sido emitida de manera oficial y cuenta con validez legal para su uso como propuesta comercial.</div>
+                            <div class="nombre"><strong>MS SOLUTIONS</strong> - ${tecnico}</div>
+                        </div>
+                        <div class="firma-box">
+                            <div><strong>FIRMA DEL CLIENTE</strong></div>
+                            <div class="linea"></div>
+                            <div class="leyenda">El cliente reconoce haber recibido esta cotización a través de medios digitales y acepta los términos aquí descritos.</div>
+                            <div class="nombre"><strong>Cliente:</strong> ${cliente}</div>
+                        </div>
+                    </div>
+                </div>
+
+                ${croquisHTML}
+
+                <div class="certificado-garantia">
+                    <h4>📜 CERTIFICADO DE GARANTÍA</h4>
+                    <p>MS SOLUTIONS garantiza que todos los equipos incluidos en esta cotización son 100% originales y cuentan con garantía de fábrica contra defectos de fabricación por 12 meses a partir de la fecha de instalación. La garantía cubre reparación o reposición del equipo, no aplica a daños por mal uso, descargas eléctricas, modificaciones no autorizadas o desgaste normal por uso. Para hacer válida la garantía, el cliente deberá conservar el comprobante de compra y notificar cualquier falla dentro del periodo establecido.</p>
+                </div>
+
+                <div class="vigencia">
+                    <strong>Vigencia:</strong> ${vigenciaTexto} naturales a partir de la fecha de emisión. Los precios están sujetos a cambios sin previo aviso por fluctuaciones del mercado o tipo de cambio.
+                    <br>Este documento es una cotización oficial de MS SOLUTIONS.
+                </div>
+
+                <div style="text-align:center; font-size:8pt; color:#999; margin-top:10px;">
+                    Página 1 de 1 - Generado el ${new Date().toLocaleString('es-ES')}
+                </div>
+            </body>
+            </html>
+        `;
+    };
+
+    // ---- 8.2 PREVISUALIZAR PDF ----
+    let pdfContentCache = '';
+
+    const previsualizarPDF = () => {
+      const content = generarPDFContent();
+      pdfContentCache = content;
+      const iframe = document.getElementById('pdfPreviewFrame');
+      iframe.srcdoc = content;
+      document.getElementById('modalPreview').classList.add('active');
+    };
+
+    const cerrarModal = () => {
+      document.getElementById('modalPreview').classList.remove('active');
+    };
+
+    const imprimirDesdeModal = () => {
+      const iframe = document.getElementById('pdfPreviewFrame');
+      iframe.contentWindow.print();
+    };
+
+    // ---- 8.3 GENERAR CONTRATO ----
+    const generarContrato = () => {
+      const cliente = document.getElementById('cliente_nombre').value || '_________________________';
+      const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
+      const clienteDir = document.getElementById('cliente_direccion').value || '_________________________';
+      const folio = document.getElementById('folio').value || '__________';
+      const fecha = document.getElementById('fechaEmision').value || '__________';
+      const total = document.getElementById('totalFinalInput').value || '$0.00';
+      const totalLetras = document.getElementById('totalLetras').innerText || 'CERO PESOS 00/100 M.N.';
+      const anticipacion = document.getElementById('anticipacionMonto').value || '$0.00';
+      const contraEntrega = document.getElementById('contra_entrega').value || '$0.00';
+      const plazoEntregaTexto = document.getElementById('plazoEntregaTexto').value || '5 días hábiles';
+      const metodoPago = document.getElementById('metodoPago').value || 'Transferencia';
+      const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
+      const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
+
+      const ahora = new Date();
+      const dia = ahora.getDate();
+      const mes = ahora.toLocaleString('es-ES', { month: 'long' });
+      const año = ahora.getFullYear();
+
+      const contratoHTML = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Contrato de Instalación - MS Solutions</title>
+                <style>
+                    body { font-family: 'Times New Roman', Times, serif; margin: 2cm; color: #000; line-height: 1.6; }
+                    h1 { text-align: center; font-size: 18pt; color: #8B0000; border-bottom: 2px solid #8B0000; padding-bottom: 10px; }
+                    h2 { font-size: 14pt; color: #8B0000; margin-top: 20px; }
+                    .info { display: flex; justify-content: space-between; font-size: 11pt; margin-bottom: 20px; }
+                    .clausula { margin-bottom: 15px; }
+                    .clausula strong { display: block; font-size: 12pt; }
+                    .firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; }
+                    .firma-box { border-top: 2px solid #333; padding-top: 10px; text-align: center; }
+                    .firma-box .linea { height: 30px; border-bottom: 1px solid #333; margin-bottom: 5px; }
+                    .firma-box .nombre { font-weight: bold; }
+                    .footer { text-align: center; font-size: 9pt; color: #555; margin-top: 30px; border-top: 1px solid #ccc; padding-top: 10px; }
+                    @page { margin: 2cm; }
+                </style>
+            </head>
+            <body>
+                <h1>CONTRATO DE PRESTACIÓN DE SERVICIOS DE INSTALACIÓN DE SISTEMA DE CCTV</h1>
+                <div class="info">
+                    <span><strong>Folio:</strong> ${folio}</span>
+                    <span><strong>Fecha:</strong> ${fecha}</span>
+                </div>
+
+                <p>Por medio del presente contrato, <strong>${empresa}</strong> (en adelante "EL INSTALADOR"), representado por <strong>${tecnico}</strong>, y el cliente <strong>${cliente}</strong> (en adelante "EL CLIENTE"), acuerdan los siguientes términos y condiciones para la instalación de un sistema de videovigilancia en la dirección: <strong>${clienteDir}</strong>.</p>
+
+                <div class="clausula">
+                    <strong>1. OBJETO DEL CONTRATO</strong>
+                    <p>EL INSTALADOR se compromete a suministrar e instalar el sistema de CCTV descrito en la cotización con folio <strong>${folio}</strong> de fecha <strong>${fecha}</strong>, el cual incluye los equipos y servicios detallados en el anexo A de la citada cotización.</p>
+                </div>
+
+                <div class="clausula">
+                    <strong>2. MONTO Y FORMA DE PAGO</strong>
+                    <p>El costo total del proyecto asciende a la cantidad de <strong>${total}</strong> (${totalLetras}), mismo que se pagará de la siguiente manera:</p>
+                    <ul>
+                        <li><strong>Anticipo (50%):</strong> ${anticipacion}</li>
+                        <li><strong>Saldo contra entrega:</strong> ${contraEntrega}</li>
+                    </ul>
+                    <p><strong>Método de pago:</strong> ${metodoPago}</p>
+                </div>
+
+                <div class="clausula">
+                    <strong>3. PLAZO DE EJECUCIÓN</strong>
+                    <p>EL INSTALADOR se compromete a realizar la instalación en un plazo de <strong>${plazoEntregaTexto}</strong> a partir de la fecha de aceptación del presente contrato.</p>
+                </div>
+
+                <div class="clausula">
+                    <strong>4. GARANTÍA</strong>
+                    <p>Todos los equipos suministrados cuentan con garantía de fábrica contra defectos de fabricación por 12 meses a partir de la fecha de instalación. La garantía no cubre daños por mal uso, descargas eléctricas o modificaciones no autorizadas.</p>
+                </div>
+
+                <div class="clausula">
+                    <strong>5. RESPONSABILIDADES DEL CLIENTE</strong>
+                    <ul>
+                        <li>Proporcionar acceso al sitio de instalación en el horario acordado.</li>
+                        <li>Asegurar la existencia de un punto de alimentación eléctrica (110V) cercano al lugar de instalación.</li>
+                        <li>Proporcionar acceso a la red Wi-Fi para la configuración remota del sistema.</li>
+                    </ul>
+                </div>
+
+                <div class="clausula">
+                    <strong>6. ACEPTACIÓN</strong>
+                    <p>Las partes firman el presente contrato en la ciudad de <strong>Ciudad de México</strong>, a los <strong>${dia}</strong> días del mes de <strong>${mes}</strong> de <strong>${año}</strong>.</p>
+                </div>
+
+                <div class="firmas">
+                    <div class="firma-box">
+                        <div><strong>EL INSTALADOR</strong></div>
+                        <div class="linea"></div>
+                        <div class="nombre">${empresa}</div>
+                        <div>${tecnico}</div>
+                    </div>
+                    <div class="firma-box">
+                        <div><strong>EL CLIENTE</strong></div>
+                        <div class="linea"></div>
+                        <div class="nombre">${cliente}</div>
+                        ${clienteEmpresa ? `<div>${clienteEmpresa}</div>` : ''}
+                    </div>
+                </div>
+
+                <div class="footer">
+                    MS SOLUTIONS - Seguridad Electrónica<br>
+                    Este contrato es un documento legal que respalda la instalación del sistema de CCTV.
+                </div>
+            </body>
+            </html>
+        `;
+
+      const ventana = window.open('', '_blank', 'width=800,height=600');
+      ventana.document.write(contratoHTML);
+      ventana.document.close();
+      ventana.focus();
+      ventana.print();
+    };
+
+    // ---- 8.4 GENERAR CERTIFICADO DE INSTALACIÓN ----
+    const generarCertificado = () => {
+      const cliente = document.getElementById('cliente_nombre').value || '_________________________';
+      const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
+      const clienteDir = document.getElementById('cliente_direccion').value || '_________________________';
+      const folio = document.getElementById('folio').value || '__________';
+      const fecha = document.getElementById('fechaEmision').value || '__________';
+      const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
+      const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
+      const telefono = document.getElementById('telefono').value || '55 1234 5678';
+      const correo = document.getElementById('correo').value || 'contacto@mssolutions.com';
+
+      const tipoSistema = document.getElementById('tipo_sistema').value || '';
+      const resolucion = document.getElementById('resolucion').value || '';
+      const canales = document.getElementById('canales').value || '';
+      const almacenamiento = document.getElementById('almacenamiento').value || '';
+      const notas = document.getElementById('notas_tecnicas').value || '';
+
+      // Fecha de instalación (configurable)
+      const hoy = new Date();
+      const dia = hoy.getDate();
+      const mes = hoy.toLocaleString('es-ES', { month: 'long' });
+      const año = hoy.getFullYear();
+      const fechaInstalacion = dia + ' de ' + mes + ' de ' + año;
+
+      // Fin de garantía (12 meses después)
+      const finGarantia = new Date(hoy);
+      finGarantia.setFullYear(finGarantia.getFullYear() + 1);
+      const diaG = finGarantia.getDate();
+      const mesG = finGarantia.toLocaleString('es-ES', { month: 'long' });
+      const añoG = finGarantia.getFullYear();
+      const fechaFinGarantia = diaG + ' de ' + mesG + ' de ' + añoG;
+
+      // Equipos instalados (tabla)
+      let equiposHTML = '';
+      document.querySelectorAll('#tbodyEquipos tr').forEach(row => {
+        const desc = row.querySelector('.desc-equipo')?.value || '';
+        const cat = row.querySelector('.categoria-equipo')?.value || '';
+        const cant = row.querySelector('.cant-equipo')?.value || '0';
+        const emoji = getEmoji(cat);
+        if (desc) {
+          equiposHTML += `
+                    <tr>
+                        <td>${emoji}</td>
+                        <td>${desc}</td>
+                        <td>${cat}</td>
+                        <td>${cant}</td>
+                        <td>_________________</td>
+                    </tr>
+                `;
+        }
+      });
+
+      // Logo
+      const logoData = localStorage.getItem('logoData');
+      let logoHTML = '';
+      if (logoData) {
+        logoHTML = `<img src="${logoData}" style="max-height:60px; max-width:150px; display:block; margin:0 auto 10px auto;">`;
+      }
+
+      // Croquis
+      const croquisData = localStorage.getItem('croquisData');
+      let croquisHTML = '';
+      if (croquisData) {
+        croquisHTML = `
+                <div style="margin-top:10px; text-align:center;">
+                    <h4 style="color:#8B0000;">PLANO / CROQUIS DEL SITIO</h4>
+                    <img src="${croquisData}" style="max-width:100%; max-height:300px; border:1px solid #ccc; border-radius:4px;">
+                </div>
+            `;
+      }
+
+      const certificadoHTML = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Certificado de Instalación - MS Solutions</title>
+                <style>
+                    body { font-family: 'Times New Roman', Times, serif; margin: 1.5cm; color: #000; }
+                    .certificado { border: 3px double #8B0000; padding: 30px; }
+                    .header { text-align: center; border-bottom: 2px solid #8B0000; padding-bottom: 10px; margin-bottom: 20px; }
+                    .header h1 { font-size: 24pt; margin: 0; color: #8B0000; letter-spacing: 2px; }
+                    .header .subt { font-size: 12pt; color: #555; }
+                    .header .folio-fecha { display: flex; justify-content: space-between; font-size: 11pt; margin-top: 5px; }
+                    .seccion { margin-bottom: 15px; }
+                    .seccion-titulo { font-weight: bold; font-size: 13pt; border-bottom: 1px solid #8B0000; padding-bottom: 3px; margin-bottom: 8px; color: #8B0000; }
+                    .tabla { width: 100%; border-collapse: collapse; font-size: 10pt; margin: 6px 0; }
+                    .tabla th { background: #8B0000; color: white; padding: 5px 8px; text-align: left; }
+                    .tabla td { padding: 4px 8px; border-bottom: 1px solid #ccc; }
+                    .checklist { margin: 10px 0; }
+                    .checklist-item { display: flex; align-items: center; gap: 10px; margin: 4px 0; }
+                    .checklist-item .check { width: 20px; height: 20px; border: 2px solid #333; display: inline-block; }
+                    .checklist-item .texto { font-size: 11pt; }
+                    .checklist-item .texto strong { color: #8B0000; }
+                    .firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 25px; }
+                    .firma-box { border-top: 2px solid #333; padding-top: 10px; text-align: center; }
+                    .firma-box .linea { height: 30px; border-bottom: 1px solid #333; margin-bottom: 5px; }
+                    .firma-box .nombre { font-weight: bold; }
+                    .certificado-calidad { border: 2px solid #8B0000; padding: 15px; margin-top: 20px; text-align: center; background: #fafafa; }
+                    .certificado-calidad h3 { color: #8B0000; margin: 0 0 5px 0; }
+                    .certificado-calidad p { margin: 0; font-size: 11pt; }
+                    .sello { font-family: 'Courier New', monospace; font-size: 14pt; color: #8B0000; border: 2px solid #8B0000; padding: 5px 15px; display: inline-block; margin-top: 10px; letter-spacing: 2px; }
+                    .vigencia { font-size: 10pt; text-align: center; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 10px; color: #555; }
+                    .contacto { font-size: 10pt; text-align: center; margin-top: 10px; color: #555; }
+                    .garantia { font-size: 10pt; margin: 10px 0; }
+                    .garantia strong { color: #8B0000; }
+                    .recomendaciones { font-size: 10pt; margin: 10px 0; }
+                    .observaciones { font-size: 10pt; margin: 10px 0; }
+                    .plano { text-align: center; margin: 10px 0; }
+                    .plano img { max-width: 100%; max-height: 300px; border: 1px solid #ccc; border-radius: 4px; }
+                    @page { margin: 1.5cm; }
+                    @media print { body { margin: 0; } }
+                </style>
+            </head>
+            <body>
+                <div class="certificado">
+                    ${logoHTML}
+                    <div class="header">
+                        <h1>CERTIFICADO DE INSTALACIÓN</h1>
+                        <div class="subt">Sistemas de Videovigilancia Profesional</div>
+                        <div class="folio-fecha">
+                            <span><strong>Folio:</strong> CERT-${folio}</span>
+                            <span><strong>Fecha de instalación:</strong> ${fechaInstalacion}</span>
+                        </div>
+                    </div>
+
+                    <div class="seccion">
+                        <div class="seccion-titulo">DATOS DEL CLIENTE</div>
+                        <p><strong>Cliente:</strong> ${cliente} ${clienteEmpresa ? '('+clienteEmpresa+')' : ''}</p>
+                        <p><strong>Dirección:</strong> ${clienteDir}</p>
+                    </div>
+
+                    <div class="seccion">
+                        <div class="seccion-titulo">DESCRIPCIÓN DEL SISTEMA INSTALADO</div>
+                        <p><strong>Tipo:</strong> ${tipoSistema}</p>
+                        <p><strong>Resolución:</strong> ${resolucion}</p>
+                        <p><strong>Canales:</strong> ${canales}</p>
+                        <p><strong>Almacenamiento:</strong> ${almacenamiento}</p>
+                    </div>
+
+                    <div class="seccion">
+                        <div class="seccion-titulo">EQUIPOS INSTALADOS</div>
+                        <table class="tabla">
+                            <thead><tr><th>#</th><th>Descripción</th><th>Categoría</th><th>Cant</th><th>No. Serie</th></tr></thead>
+                            <tbody>
+                                ${equiposHTML || '<tr><td colspan="5" style="text-align:center; color:#999;">No hay equipos registrados</td></tr>'}
+                            </tbody>
+                        </table>
+                        <p style="font-size:9pt; color:#666; margin-top:5px;">* Número de serie: anotar manualmente para cada equipo.</p>
+                    </div>
+
+                    <div class="seccion">
+                        <div class="seccion-titulo">📍 PLANO FINAL DE INSTALACIÓN</div>
+                        ${croquisHTML || '<p style="color:#999; font-style:italic;">No se adjuntó plano.</p>'}
+                        <p style="font-size:9pt; color:#666;">* Ubicación de cámaras según croquis adjunto.</p>
+                    </div>
+
+                    <div class="seccion">
+                        <div class="seccion-titulo">RESULTADOS DE PRUEBAS DE FUNCIONAMIENTO</div>
+                        <ul style="margin:5px 0 5px 20px; font-size:11pt;">
+                            <li>✅ Visibilidad nocturna y diurna: Óptima</li>
+                            <li>✅ Grabación y reproducción de imágenes: Correcta</li>
+                            <li>✅ Acceso remoto: Configurado en dispositivos del cliente</li>
+                        </ul>
+                    </div>
+
+                    <div class="seccion">
+                        <div class="seccion-titulo">☑ CHECKLIST DE ENTREGA FINAL</div>
+                        <div class="checklist">
+                            <div class="checklist-item">
+                                <span class="check">☑</span>
+                                <span class="texto"><strong>Todas las cámaras</strong> se ven correctamente en el monitor.</span>
+                            </div>
+                            <div class="checklist-item">
+                                <span class="check">☑</span>
+                                <span class="texto"><strong>La grabación</strong> funciona y se reproduce sin problemas.</span>
+                            </div>
+                            <div class="checklist-item">
+                                <span class="check">☑</span>
+                                <span class="texto"><strong>Acceso remoto (app)</strong> configurado en los dispositivos del cliente.</span>
+                            </div>
+                            <div class="checklist-item">
+                                <span class="check">☑</span>
+                                <span class="texto"><strong>Manuales y accesorios</strong> entregados al cliente.</span>
+                            </div>
+                            <div class="checklist-item">
+                                <span class="check">☑</span>
+                                <span class="texto"><strong>El cliente conoce</strong> el funcionamiento básico del sistema.</span>
+                            </div>
+                            <div class="checklist-item">
+                                <span class="check">☑</span>
+                                <span class="texto"><strong>El cliente aprobó</strong> la ubicación de todas las cámaras.</span>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="seccion">
+                        <div class="seccion-titulo">GARANTÍA Y RECOMENDACIONES</div>
+                        <div class="garantia">
+                            <strong>Fecha de instalación:</strong> ${fechaInstalacion}<br>
+                            <strong>Fin de garantía:</strong> ${fechaFinGarantia}
+                            <p style="margin-top:5px;">Los equipos instalados cuentan con garantía de fábrica contra defectos de fabricación por 12 meses a partir de la fecha de instalación. La garantía no cubre daños por mal uso, descargas eléctricas o modificaciones no autorizadas.</p>
+                        </div>
+                        <div class="recomendaciones">
+                            <strong>Recomendaciones de mantenimiento:</strong>
+                            <ul style="margin:5px 0 5px 20px;">
+                                <li>Limpiar las lentes de las cámaras cada 6 meses con un paño suave y seco.</li>
+                                <li>Verificar la conexión a internet cada 3 meses para asegurar el acceso remoto.</li>
+                                <li>Revisar el estado de los cables y conexiones cada 6 meses.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="seccion">
+                        <div class="seccion-titulo">OBSERVACIONES DEL CLIENTE</div>
+                        <p style="color:#666; font-style:italic;">${document.getElementById('observacionesCliente').value || 'Sin observaciones.'}</p>
+                    </div>
+
+                    <div class="seccion">
+                        <div class="seccion-titulo">FIRMAS DE ACEPTACIÓN</div>
+                        <div class="firmas">
+                            <div class="firma-box">
+                                <div><strong>EL INSTALADOR</strong></div>
+                                <div class="linea"></div>
+                                <div class="nombre">${empresa}</div>
+                                <div>${tecnico}</div>
+                            </div>
+                            <div class="firma-box">
+                                <div><strong>EL CLIENTE</strong></div>
+                                <div class="linea"></div>
+                                <div class="nombre">${cliente}</div>
+                                ${clienteEmpresa ? `<div>${clienteEmpresa}</div>` : ''}
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="certificado-calidad">
+                        <h3>🏆 GARANTÍA DE CALIDAD</h3>
+                        <p>MS SOLUTIONS certifica que esta instalación cumple con los más altos estándares de calidad y seguridad electrónica. Se utilizaron equipos originales y se siguieron las mejores prácticas de la industria.</p>
+                        <div class="sello">MS SOLUTIONS</div>
+                        <p style="font-size:10pt; margin-top:5px;">Fecha: ${fechaInstalacion}</p>
+                    </div>
+
+                    <div class="seccion">
+                        <div class="seccion-titulo">📞 DATOS DE CONTACTO PARA SOPORTE POST-INSTALACIÓN</div>
+                        <p><strong>WhatsApp:</strong> ${telefono}</p>
+                        <p><strong>Correo electrónico:</strong> ${correo}</p>
+                        <p><strong>Horario de atención:</strong> Lunes a Viernes de 9:00 a 18:00 hrs</p>
+                        <p><strong>Tiempo de respuesta:</strong> Máximo 24 horas hábiles</p>
+                    </div>
+
+                    <div class="vigencia">
+                        <strong>Vigencia:</strong> Este certificado es válido para fines de garantía y registro de activos.
+                        <br>MS SOLUTIONS - Seguridad Electrónica
+                    </div>
+
+                    <div style="text-align:center; font-size:8pt; color:#999; margin-top:10px;">
+                        Página 1 de 1 - Generado el ${new Date().toLocaleString('es-ES')}
+                    </div>
+                </div>
+            </body>
+            </html>
+        `;
+
+      const ventana = window.open('', '_blank', 'width=800,height=600');
+      ventana.document.write(certificadoHTML);
+      ventana.document.close();
+      ventana.focus();
+      ventana.print();
+    };
 
     // ================================================================
-    // 10. INICIALIZACIÓN
+    // 9. INICIALIZACIÓN Y EVENTOS DE BOTONES
     // ================================================================
 
     const generarFolio = () => {
@@ -1885,7 +2585,7 @@
       document.getElementById('fechaEmision').value = ahora.toLocaleDateString('es-ES', opciones);
     };
 
-    // Modo oscuro
+    // ---- Modo oscuro ----
     document.getElementById('darkToggle').addEventListener('change', function() {
       document.body.classList.toggle('dark-mode');
       localStorage.setItem('darkMode', this.checked ? 'true' : 'false');
@@ -1896,7 +2596,7 @@
       document.body.classList.add('dark-mode');
     }
 
-    // Logo
+    // ---- Logo ----
     document.getElementById('logoUpload').addEventListener('change', function(e) {
       const reader = new FileReader();
       reader.onload = function(ev) {
@@ -1921,7 +2621,7 @@
       document.getElementById('logoPreview').appendChild(img);
     }
 
-    // Croquis
+    // ---- Croquis ----
     document.getElementById('croquisUpload').addEventListener('change', function(e) {
       const reader = new FileReader();
       reader.onload = function(ev) {
@@ -1950,9 +2650,10 @@
       document.getElementById('croquisPreview').appendChild(img);
     }
 
-    // Botones de acción
+    // ---- Botones de acción ----
     document.getElementById('agregarEquipoBtn').addEventListener('click', agregarFilaEquipo);
     document.getElementById('agregarServicioBtn').addEventListener('click', agregarFilaServicio);
+
     document.getElementById('nuevaCotizacionBtn').addEventListener('click', () => {
       if (confirm('¿Reiniciar todo? Se perderán los datos actuales.')) {
         localStorage.removeItem('presupuestoData');
@@ -1960,6 +2661,7 @@
         location.reload();
       }
     });
+
     document.getElementById('limpiarBtn').addEventListener('click', () => {
       if (!confirm('¿Limpiar todos los campos? (Los datos guardados se conservarán)')) return;
       document.querySelectorAll('input:not([readonly])').forEach(inp => {
@@ -1981,22 +2683,34 @@
       recalcularTodo();
       guardarDatos();
     });
+
     document.getElementById('borrarEmpresaBtn').addEventListener('click', () => {
       if (!confirm('¿Borrar datos de la empresa?')) return;
       ['empresa', 'tecnico', 'telefono', 'correo', 'domicilio'].forEach(id => document.getElementById(id).value = '');
       guardarDatos();
     });
 
-    // Aquí se deben enlazar los botones de previsualizarPDF, generarContrato y generarCertificado
-    // (Se omiten por brevedad, pero el usuario puede reutilizar las funciones de la versión anterior)
-    // Se recomienda mantener la lógica existente y solo actualizar la lectura de los nuevos campos.
+    // ---- Botones de documentos ----
+    document.getElementById('previsualizarBtn').addEventListener('click', previsualizarPDF);
+    document.getElementById('contratoBtn').addEventListener('click', generarContrato);
+    document.getElementById('certificadoBtn').addEventListener('click', generarCertificado);
 
-    // Inicialización
+    // ---- Modal ----
+    document.getElementById('cerrarModalBtn').addEventListener('click', cerrarModal);
+    document.getElementById('imprimirModalBtn').addEventListener('click', imprimirDesdeModal);
+
+    // ---- Cerrar modal con ESC ----
+    document.addEventListener('keydown', (e) => {
+      if (e.key === 'Escape') cerrarModal();
+    });
+
+    // ---- Inicialización ----
     window.onload = function() {
       generarFolio();
       generarFechaHora();
       cargarDatos();
       initCamposCondicionales();
+
       // Sincronizar firmas
       document.getElementById('tecnico').addEventListener('input', function() {
         document.getElementById('tecnicoFirma').textContent = this.value || 'Ing. Alan Marcelo';
@@ -2006,26 +2720,14 @@
         document.getElementById('clienteFirma').textContent = this.value || 'Bruno Calderón Vega';
         guardarDatos();
       });
+
       // Guardar cambios en todos los inputs
       document.querySelectorAll('input, select, textarea').forEach(el => {
         el.addEventListener('change', guardarDatos);
       });
+
       recalcularTodo();
     };
-
-    // ================================================================
-    // 11. GENERACIÓN DE PDF (resumida)
-    // ================================================================
-
-    // NOTA: Las funciones previsualizarPDF, generarContrato y generarCertificado
-    // deben ser actualizadas para leer los nuevos campos:
-    // - cableElectrico, cajasEstancas, monitorIncluido, tipoServicio,
-    //   piezaReemplazar, frecuenciaMantenimiento
-    // y mostrarlos en el PDF y documentos.
-
-    // Esta actualización se puede hacer manualmente o solicitar el código completo
-    // en una siguiente interacción.
-    // ================================================================
   </script>
 </body>
 </html>
