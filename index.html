@@ -20,6 +20,9 @@
             --primary-dark: #6b0000;
             --gray: #6B6B6B;
             --light-gray: #fafafa;
+            --input-bg: #ffffff;
+            --input-border: #d0d0d0;
+            --firma-linea: #333;
         }
 
         body {
@@ -30,30 +33,34 @@
             transition: background 0.3s, color 0.3s;
         }
 
-        /* ====== MODO OSCURO ====== */
+        /* ====== MODO OSCURO (con contraste mejorado) ====== */
         body.dark-mode {
-            --bg-body: #1a1a1a;
-            --bg-container: #2d2d2d;
-            --text-color: #e0e0e0;
-            --border-color: #555;
+            --bg-body: #1e1e1e;
+            --bg-container: #3a3a3a;
+            --text-color: #f0f0f0;
+            --border-color: #666;
             --shadow: 0 4px 20px rgba(0,0,0,0.6);
-            --light-gray: #3a3a3a;
+            --light-gray: #4a4a4a;
+            --input-bg: #555;
+            --input-border: #888;
+            --firma-linea: #ccc;
         }
 
         body.dark-mode .section {
-            background: #3a3a3a;
-            border-left-color: #aa2e2e;
+            background: var(--light-gray);
+            border-left-color: #cc3333;
         }
 
         body.dark-mode .field input,
         body.dark-mode .field select {
-            background: #444;
-            color: #e0e0e0;
-            border-color: #666;
+            background: var(--input-bg);
+            color: #ffffff;
+            border-color: var(--input-border);
         }
 
         body.dark-mode .field input[readonly] {
-            background: #555;
+            background: #4a4a4a;
+            color: #f0f0f0;
         }
 
         body.dark-mode table tr:hover {
@@ -61,9 +68,9 @@
         }
 
         body.dark-mode .total-letras {
-            background: #3a3a3a;
-            color: #e0e0e0;
-            border-color: #555;
+            background: #4a4a4a;
+            color: #f0f0f0;
+            border-color: #666;
         }
 
         body.dark-mode .btn-warning {
@@ -74,6 +81,41 @@
             background: #8f5508;
         }
 
+        body.dark-mode .firma-box {
+            border-top-color: #ccc;
+        }
+
+        body.dark-mode .firma-box .firma-linea {
+            border-bottom-color: #ccc;
+        }
+
+        body.dark-mode .firma-box .leyenda {
+            color: #bbb;
+        }
+
+        body.dark-mode .modal-content {
+            background: #3a3a3a;
+            color: #f0f0f0;
+        }
+
+        body.dark-mode .modal-close {
+            background: #cc3333;
+        }
+
+        body.dark-mode .modal-close:hover {
+            background: #aa2222;
+        }
+
+        body.dark-mode .certificado-garantia {
+            background: #4a4a4a;
+            border-color: #666;
+            color: #f0f0f0;
+        }
+
+        body.dark-mode .checkbox-group label {
+            color: #f0f0f0;
+        }
+
         /* ====== CONTENEDOR PRINCIPAL ====== */
         .container {
             max-width: 1100px;
@@ -82,7 +124,7 @@
             padding: 30px;
             border-radius: 12px;
             box-shadow: var(--shadow);
-            transition: background 0.3s;
+            transition: background 0.3s, color 0.3s;
         }
 
         /* ====== TÍTULOS ====== */
@@ -94,6 +136,10 @@
             letter-spacing: 1px;
         }
 
+        body.dark-mode h1 {
+            color: #cc3333;
+        }
+
         .subtitulo {
             text-align: center;
             color: var(--gray);
@@ -103,6 +149,11 @@
             padding-bottom: 15px;
         }
 
+        body.dark-mode .subtitulo {
+            border-bottom-color: #cc3333;
+            color: #bbb;
+        }
+
         /* ====== SECCIONES ====== */
         .section {
             background: var(--light-gray);
@@ -110,7 +161,11 @@
             border-radius: 8px;
             margin-bottom: 25px;
             border-left: 5px solid var(--primary);
-            transition: background 0.3s;
+            transition: background 0.3s, border-color 0.3s;
+        }
+
+        body.dark-mode .section {
+            border-left-color: #cc3333;
         }
 
         .section-title {
@@ -123,6 +178,10 @@
             gap: 10px;
         }
 
+        body.dark-mode .section-title {
+            color: #cc3333;
+        }
+
         .section-title span {
             background: var(--primary);
             color: white;
@@ -133,6 +192,10 @@
             align-items: center;
             justify-content: center;
             font-size: 14px;
+        }
+
+        body.dark-mode .section-title span {
+            background: #cc3333;
         }
 
         /* ====== CAMPOS ====== */
@@ -156,28 +219,45 @@
             margin-bottom: 4px;
         }
 
-        .field input, .field select {
+        body.dark-mode .field label {
+            color: #bbb;
+        }
+
+        .field input, .field select, .field textarea {
             padding: 8px 12px;
             border: 1.5px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
             transition: border 0.3s, background 0.3s, color 0.3s;
-            background: white;
+            background: var(--input-bg);
             color: var(--text-color);
         }
 
-        .field input:focus, .field select:focus {
+        body.dark-mode .field input, body.dark-mode .field select, body.dark-mode .field textarea {
+            background: var(--input-bg);
+            color: #ffffff;
+            border-color: var(--input-border);
+        }
+
+        .field input:focus, .field select:focus, .field textarea:focus {
             border-color: var(--primary);
             outline: none;
             box-shadow: 0 0 0 3px rgba(139,0,0,0.1);
+        }
+
+        body.dark-mode .field input:focus, body.dark-mode .field select:focus, body.dark-mode .field textarea:focus {
+            border-color: #cc3333;
+            box-shadow: 0 0 0 3px rgba(204,51,51,0.3);
         }
 
         .field input[readonly] {
             background: #f0f0f0;
             cursor: not-allowed;
         }
+
         body.dark-mode .field input[readonly] {
-            background: #555;
+            background: #4a4a4a;
+            color: #f0f0f0;
         }
 
         .full-width { grid-column: 1 / -1; }
@@ -225,12 +305,49 @@
             font-weight: bold;
             transition: all 0.3s;
             width: 100%;
-            margin: 20px 0;
+            margin: 10px 0;
         }
+
+        body.dark-mode .btn-generate {
+            background: #cc3333;
+        }
+
         .btn-generate:hover {
             background: var(--primary-dark);
             transform: scale(1.02);
             box-shadow: 0 4px 20px rgba(139,0,0,0.4);
+        }
+
+        body.dark-mode .btn-generate:hover {
+            background: #aa2222;
+        }
+
+        .btn-contrato {
+            background: #1a237e;
+            color: white;
+            padding: 14px 40px;
+            font-size: 18px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            transition: all 0.3s;
+            width: 100%;
+            margin: 10px 0;
+        }
+
+        .btn-contrato:hover {
+            background: #0d1555;
+            transform: scale(1.02);
+            box-shadow: 0 4px 20px rgba(26,35,126,0.4);
+        }
+
+        body.dark-mode .btn-contrato {
+            background: #3949ab;
+        }
+
+        body.dark-mode .btn-contrato:hover {
+            background: #283593;
         }
 
         /* ====== TABLAS ====== */
@@ -252,6 +369,10 @@
             text-align: left;
         }
 
+        body.dark-mode table th {
+            background: #cc3333;
+        }
+
         table td {
             padding: 8px 12px;
             border-bottom: 1px solid #e0e0e0;
@@ -267,13 +388,14 @@
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 13px;
-            background: white;
+            background: var(--input-bg);
             color: var(--text-color);
         }
+
         body.dark-mode table input, body.dark-mode table select {
-            background: #444;
-            color: #e0e0e0;
-            border-color: #666;
+            background: var(--input-bg);
+            color: #ffffff;
+            border-color: var(--input-border);
         }
 
         table input[type="number"] { width: 90px; }
@@ -281,6 +403,10 @@
         .total-row td {
             border-top: 2px solid var(--primary);
             font-weight: bold;
+        }
+
+        body.dark-mode .total-row td {
+            border-top-color: #cc3333;
         }
 
         /* Botones de acción en tabla */
@@ -309,6 +435,11 @@
             grid-template-columns: 1fr 1fr 1fr;
             gap: 15px;
         }
+
+        body.dark-mode .summary-box {
+            background: #cc3333;
+        }
+
         .summary-box .item { text-align: center; }
         .summary-box .item .label { font-size: 13px; opacity: 0.8; }
         .summary-box .item .value { font-size: 24px; font-weight: bold; }
@@ -341,6 +472,10 @@
         }
         .total-letras strong { color: var(--primary); }
 
+        body.dark-mode .total-letras strong {
+            color: #cc3333;
+        }
+
         /* ====== FIRMAS ====== */
         .firmas-container {
             display: grid;
@@ -349,12 +484,12 @@
             margin-top: 20px;
         }
         .firma-box {
-            border-top: 2px solid #333;
+            border-top: 2px solid var(--firma-linea);
             padding-top: 10px;
         }
         .firma-box .firma-linea {
             height: 40px;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid var(--firma-linea);
             margin-bottom: 8px;
         }
         .firma-box .leyenda {
@@ -367,6 +502,10 @@
             font-weight: bold;
             font-size: 14px;
             margin-top: 5px;
+        }
+
+        body.dark-mode .firma-box .leyenda {
+            color: #bbb;
         }
 
         /* ====== CHECKBOXES ====== */
@@ -382,6 +521,10 @@
             gap: 6px;
             font-weight: normal;
             font-size: 13px;
+        }
+
+        body.dark-mode .checkbox-group label {
+            color: #f0f0f0;
         }
 
         /* ====== LOGO ====== */
@@ -439,6 +582,26 @@
             transform: translateX(18px);
         }
 
+        body.dark-mode .toggle-dark input[type="checkbox"]:checked {
+            background: #cc3333;
+        }
+
+        /* ====== VERSIÓN DE COTIZACIÓN ====== */
+        .version-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            padding: 4px 12px;
+            border-radius: 20px;
+            font-size: 12px;
+            font-weight: bold;
+            margin-left: 10px;
+        }
+
+        body.dark-mode .version-badge {
+            background: #cc3333;
+        }
+
         /* ====== MODAL DE PREVISUALIZACIÓN ====== */
         .modal-overlay {
             display: none;
@@ -477,6 +640,19 @@
         }
         .modal-close:hover { background: var(--primary-dark); }
 
+        body.dark-mode .modal-content {
+            background: #3a3a3a;
+            color: #f0f0f0;
+        }
+
+        body.dark-mode .modal-close {
+            background: #cc3333;
+        }
+
+        body.dark-mode .modal-close:hover {
+            background: #aa2222;
+        }
+
         /* ====== RESPONSIVE ====== */
         @media (max-width: 768px) {
             .row, .row-3 { grid-template-columns: 1fr; }
@@ -491,7 +667,7 @@
             body { background: white !important; padding: 0 !important; margin: 0 !important; font-family: 'Times New Roman', Times, serif !important; }
             .container { box-shadow: none !important; padding: 20px !important; border-radius: 0 !important; max-width: 100% !important; }
             .btn, .btn-group, .btn-generate, .btn-success, .btn-warning, .btn-danger, .btn-primary,
-            .logo-area input[type="file"], .btn-accion, .toggle-dark, .modal-overlay { display: none !important; }
+            .logo-area input[type="file"], .btn-accion, .toggle-dark, .modal-overlay, .btn-contrato { display: none !important; }
             .section { background: white !important; border-left: 3px solid #8B0000 !important; border-radius: 0 !important; box-shadow: none !important; page-break-inside: avoid !important; break-inside: avoid !important; padding: 10px 0 !important; margin-bottom: 10px !important; }
             h1 { color: black !important; font-size: 22pt !important; }
             .subtitulo { border-bottom-color: #8B0000 !important; color: #333 !important; }
@@ -508,12 +684,15 @@
             .firma-box .firma-linea { border-bottom: 1px solid #333 !important; }
             .firma-box .leyenda { font-size: 10pt !important; color: #333 !important; }
             .vigencia-leyenda { font-size: 10pt !important; color: #333 !important; text-align: center; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 10px; }
+            .certificado-garantia { font-size: 10pt !important; border: 1px solid #333; padding: 10px; margin-top: 15px; background: #fafafa; }
+            .contrato-seccion { font-size: 10pt !important; border: 1px solid #333; padding: 10px; margin-top: 15px; background: #fafafa; }
+            .observaciones-cliente { font-size: 10pt !important; border: 1px solid #333; padding: 10px; margin-top: 15px; background: #fafafa; }
+            .version-badge { display: none !important; }
             @page { margin: 1cm; @bottom-center { content: none !important; } @bottom-right { content: none !important; } @bottom-left { content: none !important; } @top-center { content: none !important; } @top-right { content: none !important; } @top-left { content: none !important; } }
             body, .container, .section, table, .field, input, select, label { font-size: 11pt !important; }
             h1 { font-size: 22pt !important; }
             .section-title { font-size: 14pt !important; }
             .summary-box .item .value { font-size: 18pt !important; }
-            .certificado-garantia { font-size: 10pt !important; border: 1px solid #333; padding: 10px; margin-top: 15px; background: #fafafa; }
         }
     </style>
 </head>
@@ -533,8 +712,11 @@
         <input type="file" id="logoUpload" accept="image/*">
     </div>
 
-    <!-- ====== TÍTULO ====== -->
-    <h1>PRESUPUESTO CCTV - MS SOLUTIONS</h1>
+    <!-- ====== TÍTULO Y VERSIÓN ====== -->
+    <div style="display: flex; align-items: center; justify-content: center; flex-wrap: wrap; gap: 10px;">
+        <h1>PRESUPUESTO CCTV - MS SOLUTIONS</h1>
+        <span class="version-badge" id="versionBadge">v1.0</span>
+    </div>
     <div class="subtitulo">Sistemas de Videovigilancia Profesional</div>
 
     <!-- ====== FOLIO Y FECHA ====== -->
@@ -711,8 +893,8 @@
                 </select>
             </div>
             <div class="field">
-                <label>FORMA DE PAGO</label>
-                <select id="formaPago">
+                <label>MÉTODO DE PAGO</label>
+                <select id="metodoPago">
                     <option value="Efectivo">Efectivo</option>
                     <option value="Transferencia" selected>Transferencia</option>
                     <option value="Tarjeta">Tarjeta</option>
@@ -842,7 +1024,7 @@
         </div>
     </div>
 
-    <!-- ====== RESUMEN CON DESCUENTO ====== -->
+    <!-- ====== RESUMEN CON DESCUENTO Y MÉTODO DE PAGO ====== -->
     <div class="section">
         <div class="section-title"><span>7</span> RESUMEN DE INVERSIÓN</div>
         <div class="summary-box">
@@ -883,11 +1065,36 @@
                 <input type="text" id="plazoEntregaTexto" value="5 días hábiles" placeholder="Ej. 5 días hábiles">
             </div>
         </div>
+        <!-- Método de pago (visible aquí también) -->
+        <div class="row">
+            <div class="field">
+                <label>MÉTODO DE PAGO</label>
+                <select id="metodoPagoResumen">
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Transferencia" selected>Transferencia</option>
+                    <option value="Tarjeta">Tarjeta</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>VERSIÓN DE COTIZACIÓN</label>
+                <input type="text" id="versionCotizacion" value="1.0" placeholder="Ej. 1.0">
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== OBSERVACIONES DEL CLIENTE ====== -->
+    <div class="section">
+        <div class="section-title"><span>8</span> OBSERVACIONES DEL CLIENTE</div>
+        <div class="field full-width">
+            <label>¿Tiene alguna pregunta o comentario sobre esta cotización?</label>
+            <textarea id="observacionesCliente" rows="4" placeholder="Escriba aquí sus observaciones..."></textarea>
+        </div>
     </div>
 
     <!-- ====== FIRMAS ====== -->
     <div class="section">
-        <div class="section-title"><span>8</span> FIRMAS DE ACEPTACIÓN</div>
+        <div class="section-title"><span>9</span> FIRMAS DE ACEPTACIÓN</div>
         <div class="firmas-container">
             <div class="firma-box">
                 <label>FIRMA DEL INSTALADOR / EMPRESA</label>
@@ -908,13 +1115,25 @@
         </div>
     </div>
 
+    <!-- ====== SUBIR PLANO / CROQUIS ====== -->
+    <div class="section">
+        <div class="section-title"><span>10</span> PLANO / CROQUIS DEL SITIO</div>
+        <div class="field full-width">
+            <label>Sube un plano, croquis o foto del lugar (opcional)</label>
+            <input type="file" id="croquisUpload" accept="image/*">
+            <div id="croquisPreview" style="margin-top:10px;"></div>
+        </div>
+    </div>
+
     <!-- ====== BOTONES DE ACCIÓN ====== -->
     <div class="btn-group">
         <button class="btn btn-primary" onclick="nuevaCotizacion()">🔄 NUEVA COTIZACIÓN</button>
         <button class="btn btn-warning" onclick="limpiarTodo()">🧹 LIMPIAR</button>
         <button class="btn btn-danger" onclick="borrarEmpresa()">🗑️ BORRAR DATOS EMPRESA</button>
     </div>
-    <button class="btn-generate" onclick="previsualizarPDF()">📄 PREVISUALIZAR PDF</button>
+
+    <button class="btn-generate" onclick="previsualizarPDF()">📄 PREVISUALIZAR COTIZACIÓN</button>
+    <button class="btn-contrato" onclick="generarContrato()">📜 GENERAR CONTRATO</button>
 
     <div style="text-align:center; color:#999; font-size:12px; margin-top:20px;">
         PRESUPUESTO CCTV - MS SOLUTIONS v5.0
@@ -1034,6 +1253,10 @@
 
         // Total en letra
         document.getElementById('totalLetras').innerText = numeroALetras(totalFinal);
+
+        // Sincronizar método de pago
+        const metodoPago = document.getElementById('metodoPago').value;
+        document.getElementById('metodoPagoResumen').value = metodoPago;
     }
 
     // Event listeners para cálculos automáticos
@@ -1043,6 +1266,20 @@
         ];
         if (targets.some(cls => e.target.classList.contains(cls)) || targets.includes(e.target.id)) {
             calcularTotales();
+            guardarDatos();
+        }
+        // Sincronizar método de pago
+        if (e.target.id === 'metodoPago') {
+            document.getElementById('metodoPagoResumen').value = e.target.value;
+            guardarDatos();
+        }
+        if (e.target.id === 'metodoPagoResumen') {
+            document.getElementById('metodoPago').value = e.target.value;
+            guardarDatos();
+        }
+        // Versión
+        if (e.target.id === 'versionCotizacion') {
+            document.getElementById('versionBadge').textContent = 'v' + e.target.value;
             guardarDatos();
         }
     });
@@ -1118,7 +1355,6 @@
     function duplicarFila(btn) {
         const row = btn.closest('tr');
         const clone = row.cloneNode(true);
-        // Resetear valores de inputs que puedan tener eventos
         clone.querySelectorAll('input').forEach(inp => inp.value = inp.value);
         clone.querySelectorAll('select').forEach(sel => sel.selectedIndex = sel.selectedIndex);
         row.parentNode.insertBefore(clone, row.nextSibling);
@@ -1196,7 +1432,7 @@
             cableado: document.getElementById('cableado').value,
             tuberia: document.getElementById('tuberia').value,
             fuente: document.getElementById('fuente').value,
-            formaPago: document.getElementById('formaPago').value,
+            metodoPago: document.getElementById('metodoPago').value,
             plazoEntrega: document.getElementById('plazoEntrega').value,
             vigenciaDias: document.getElementById('vigenciaDias').value,
             tiempo_ejecucion: document.getElementById('tiempo_ejecucion').value,
@@ -1209,6 +1445,8 @@
             descuentoPorcentaje: document.getElementById('descuentoPorcentaje').value,
             anticipacionPorcentaje: document.getElementById('anticipacionPorcentaje').value,
             plazoEntregaTexto: document.getElementById('plazoEntregaTexto').value,
+            versionCotizacion: document.getElementById('versionCotizacion').value,
+            observacionesCliente: document.getElementById('observacionesCliente').value,
             equipos: [],
             servicios: []
         };
@@ -1239,14 +1477,12 @@
         if (!raw) return;
         try {
             const data = JSON.parse(raw);
-            // Campos simples
             Object.keys(data).forEach(key => {
                 if (key === 'equipos' || key === 'servicios') return;
                 const el = document.getElementById(key);
                 if (el) el.value = data[key];
             });
 
-            // Equipos
             const tbodyEquipos = document.getElementById('tbodyEquipos');
             tbodyEquipos.innerHTML = '';
             if (data.equipos && data.equipos.length) {
@@ -1254,7 +1490,6 @@
                     tbodyEquipos.appendChild(crearFilaEquipo(e.desc, e.cat, e.uni, e.cant, e.punit));
                 });
             } else {
-                // Filas por defecto
                 tbodyEquipos.appendChild(crearFilaEquipo('Cámara Bala 4MP IP', 'Cámaras', 'Pieza', 4, 1800));
                 tbodyEquipos.appendChild(crearFilaEquipo('Grabador NVR 8 Canales', 'Grabadores', 'Pieza', 1, 4500));
                 tbodyEquipos.appendChild(crearFilaEquipo('Disco Duro 2TB', 'Accesorios', 'Pieza', 1, 2200));
@@ -1262,7 +1497,6 @@
                 tbodyEquipos.appendChild(crearFilaEquipo('Cable UTP Cat5e (por metro)', 'Otros', 'Metro', 30, 8.5));
             }
 
-            // Servicios
             const tbodyServicios = document.getElementById('tbodyServicios');
             tbodyServicios.innerHTML = '';
             if (data.servicios && data.servicios.length) {
@@ -1273,6 +1507,11 @@
                 tbodyServicios.appendChild(crearFilaServicio('Instalación de cámaras IP y configuración', 1, 1800));
                 tbodyServicios.appendChild(crearFilaServicio('Configuración de 3 celulares para visualización remota', 1,
                     600));
+            }
+
+            // Versión
+            if (data.versionCotizacion) {
+                document.getElementById('versionBadge').textContent = 'v' + data.versionCotizacion;
             }
 
             calcularTotales();
@@ -1301,7 +1540,6 @@
         });
         document.querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
         document.querySelectorAll('#condiciones input[type="checkbox"]').forEach(cb => cb.checked = false);
-        // Reiniciar filas a las predeterminadas (pero sin borrar las actuales, solo limpiar valores)
         document.querySelectorAll('#tbodyEquipos tr').forEach(row => {
             row.querySelector('.desc-equipo').value = '';
             row.querySelector('.cant-equipo').value = 1;
@@ -1312,6 +1550,7 @@
             row.querySelector('.cant-servicio').value = 1;
             row.querySelector('.punit-servicio').value = 0;
         });
+        document.getElementById('observacionesCliente').value = '';
         calcularTotales();
         guardarDatos();
     }
@@ -1330,7 +1569,6 @@
         localStorage.setItem('darkMode', this.checked ? 'true' : 'false');
     });
 
-    // Cargar preferencia de modo oscuro
     if (localStorage.getItem('darkMode') === 'true') {
         document.getElementById('darkToggle').checked = true;
         document.body.classList.add('dark-mode');
@@ -1361,6 +1599,35 @@
         document.getElementById('logoPreview').appendChild(img);
     }
 
+    // ====== CROQUIS ======
+    document.getElementById('croquisUpload').addEventListener('change', function(e) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
+            const img = document.createElement('img');
+            img.src = event.target.result;
+            img.style.maxHeight = '150px';
+            img.style.maxWidth = '100%';
+            img.style.border = '1px solid #ccc';
+            img.style.borderRadius = '4px';
+            const preview = document.getElementById('croquisPreview');
+            preview.innerHTML = '';
+            preview.appendChild(img);
+            localStorage.setItem('croquisData', event.target.result);
+        };
+        reader.readAsDataURL(e.target.files[0]);
+    });
+
+    const croquisGuardado = localStorage.getItem('croquisData');
+    if (croquisGuardado) {
+        const img = document.createElement('img');
+        img.src = croquisGuardado;
+        img.style.maxHeight = '150px';
+        img.style.maxWidth = '100%';
+        img.style.border = '1px solid #ccc';
+        img.style.borderRadius = '4px';
+        document.getElementById('croquisPreview').appendChild(img);
+    }
+
     // ====== FOLIO Y FECHA AUTOMÁTICOS ======
     function generarFolio() {
         const ahora = new Date();
@@ -1382,7 +1649,6 @@
     let pdfContentCache = '';
 
     function generarPDFContent() {
-        // Recolectar datos (igual que antes, pero ahora con descuento y anticipación)
         const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
         const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
         const telefono = document.getElementById('telefono').value || '';
@@ -1403,7 +1669,7 @@
         const cableado = document.getElementById('cableado').value || '';
         const tuberia = document.getElementById('tuberia').value || '';
         const fuente = document.getElementById('fuente').value || '';
-        const formaPago = document.getElementById('formaPago').value || '';
+        const metodoPago = document.getElementById('metodoPago').value || '';
         const plazoEntrega = document.getElementById('plazoEntrega').value || '5';
         const vigenciaDias = document.getElementById('vigenciaDias').value || '7';
 
@@ -1419,8 +1685,9 @@
         const insumos = parseFloat(document.getElementById('insumos').value) || 0;
         const notasTecnicas = document.getElementById('notas_tecnicas').value || '';
         const plazoEntregaTexto = document.getElementById('plazoEntregaTexto').value || '5 días hábiles';
+        const observaciones = document.getElementById('observacionesCliente').value || '';
+        const version = document.getElementById('versionCotizacion').value || '1.0';
 
-        // Obtener subtotales ya formateados
         const subtotalEquipos = document.getElementById('subtotalEquipos').value;
         const subtotalServicios = document.getElementById('subtotalServicios').value;
         const subtotalNeto = document.getElementById('subtotalNeto').value;
@@ -1429,7 +1696,6 @@
         const anticipacionMonto = document.getElementById('anticipacionMonto').value;
         const contraEntrega = document.getElementById('contra_entrega').value;
 
-        // Obtener filas de equipos con emojis
         let filasEquipos = [];
         document.querySelectorAll('#tbodyEquipos tr').forEach(row => {
             const desc = row.querySelector('.desc-equipo')?.value || '';
@@ -1451,7 +1717,18 @@
             filasServicios.push({ desc, cant, punit, total });
         });
 
-        // Construir HTML del PDF
+        // Croquis
+        let croquisHTML = '';
+        const croquisData = localStorage.getItem('croquisData');
+        if (croquisData) {
+            croquisHTML = `
+                    <div style="margin-top:15px; text-align:center;">
+                        <h4 style="color:#8B0000;">PLANO / CROQUIS DEL SITIO</h4>
+                        <img src="${croquisData}" style="max-width:100%; max-height:400px; border:1px solid #ccc; border-radius:4px;">
+                    </div>
+                `;
+        }
+
         return `
             <!DOCTYPE html>
             <html>
@@ -1489,6 +1766,10 @@
                     .certificado-garantia { border: 1px solid #333; padding: 10px; margin-top: 15px; background: #fafafa; font-size: 10pt; }
                     .certificado-garantia h4 { margin: 0 0 5px 0; color: #8B0000; }
                     .certificado-garantia p { margin: 0; }
+                    .observaciones { border: 1px solid #333; padding: 10px; margin-top: 15px; background: #fafafa; font-size: 10pt; }
+                    .observaciones h4 { margin: 0 0 5px 0; color: #8B0000; }
+                    .observaciones p { margin: 0; white-space: pre-wrap; }
+                    .version { font-size: 10pt; color: #555; text-align: right; margin-top: 5px; }
                     @page { margin: 1.5cm; }
                     @media print { body { margin: 0; } }
                     .emoji-col { width: 30px; text-align: center; }
@@ -1502,6 +1783,7 @@
                         <span><strong>Folio:</strong> ${document.getElementById('folio').value}</span>
                         <span><strong>Fecha:</strong> ${document.getElementById('fechaEmision').value}</span>
                     </div>
+                    <div class="version"><strong>Versión:</strong> ${version}</div>
                 </div>
 
                 <div class="seccion">
@@ -1526,7 +1808,7 @@
                         <div><strong>Cableado:</strong> ${cableado}</div>
                         <div><strong>Tubería:</strong> ${tuberia}</div>
                         <div><strong>Fuente:</strong> ${fuente}</div>
-                        <div><strong>Forma de pago:</strong> ${formaPago}</div>
+                        <div><strong>Método de pago:</strong> ${metodoPago}</div>
                         <div><strong>Plazo entrega:</strong> ${plazoEntrega} días</div>
                         <div><strong>Vigencia:</strong> ${vigenciaDias} días</div>
                     </div>
@@ -1580,6 +1862,7 @@
                         <div><strong>Contra entrega:</strong> ${contraEntrega}</div>
                         <div><strong>Plazo entrega:</strong> ${plazoEntregaTexto}</div>
                     </div>
+                    <div style="font-size:10pt; margin-top:5px;"><strong>Método de pago:</strong> ${metodoPago}</div>
                 </div>
 
                 <div class="seccion">
@@ -1593,6 +1876,13 @@
                     <div class="notas">${notasTecnicas}</div>
                     <div style="font-size:9pt; margin-top:5px;"><strong>Tiempo ejecución:</strong> ${tiempoEjecucion}</div>
                 </div>
+
+                ${observaciones ? `
+                    <div class="observaciones">
+                        <h4>📝 OBSERVACIONES DEL CLIENTE</h4>
+                        <p>${observaciones}</p>
+                    </div>
+                ` : ''}
 
                 <div class="seccion">
                     <div class="seccion-titulo">FIRMAS DE ACEPTACIÓN</div>
@@ -1611,6 +1901,8 @@
                         </div>
                     </div>
                 </div>
+
+                ${croquisHTML}
 
                 <div class="certificado-garantia">
                     <h4>📜 CERTIFICADO DE GARANTÍA</h4>
@@ -1647,6 +1939,128 @@
         iframe.contentWindow.print();
     }
 
+    // ====== GENERAR CONTRATO ======
+    function generarContrato() {
+        const cliente = document.getElementById('cliente_nombre').value || '_________________________';
+        const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
+        const clienteDir = document.getElementById('cliente_direccion').value || '_________________________';
+        const folio = document.getElementById('folio').value || '__________';
+        const fecha = document.getElementById('fechaEmision').value || '__________';
+        const total = document.getElementById('totalFinalInput').value || '$0.00';
+        const totalLetras = document.getElementById('totalLetras').innerText || 'CERO PESOS 00/100 M.N.';
+        const anticipacion = document.getElementById('anticipacionMonto').value || '$0.00';
+        const contraEntrega = document.getElementById('contra_entrega').value || '$0.00';
+        const plazoEntregaTexto = document.getElementById('plazoEntregaTexto').value || '5 días hábiles';
+        const metodoPago = document.getElementById('metodoPago').value || 'Transferencia';
+        const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
+        const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
+
+        // Fecha actual para el contrato
+        const ahora = new Date();
+        const dia = ahora.getDate();
+        const mes = ahora.toLocaleString('es-ES', { month: 'long' });
+        const año = ahora.getFullYear();
+
+        const contratoHTML = `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Contrato de Instalación - MS Solutions</title>
+                <style>
+                    body { font-family: 'Times New Roman', Times, serif; margin: 2cm; color: #000; line-height: 1.6; }
+                    h1 { text-align: center; font-size: 18pt; color: #8B0000; border-bottom: 2px solid #8B0000; padding-bottom: 10px; }
+                    h2 { font-size: 14pt; color: #8B0000; margin-top: 20px; }
+                    .info { display: flex; justify-content: space-between; font-size: 11pt; margin-bottom: 20px; }
+                    .clausula { margin-bottom: 15px; }
+                    .clausula strong { display: block; font-size: 12pt; }
+                    .firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; }
+                    .firma-box { border-top: 2px solid #333; padding-top: 10px; text-align: center; }
+                    .firma-box .linea { height: 30px; border-bottom: 1px solid #333; margin-bottom: 5px; }
+                    .firma-box .nombre { font-weight: bold; }
+                    .footer { text-align: center; font-size: 9pt; color: #555; margin-top: 30px; border-top: 1px solid #ccc; padding-top: 10px; }
+                    @page { margin: 2cm; }
+                </style>
+            </head>
+            <body>
+                <h1>CONTRATO DE PRESTACIÓN DE SERVICIOS DE INSTALACIÓN DE SISTEMA DE CCTV</h1>
+                <div class="info">
+                    <span><strong>Folio:</strong> ${folio}</span>
+                    <span><strong>Fecha:</strong> ${fecha}</span>
+                </div>
+
+                <p>Por medio del presente contrato, <strong>${empresa}</strong> (en adelante "EL INSTALADOR"), representado por <strong>${tecnico}</strong>, y el cliente <strong>${cliente}</strong> (en adelante "EL CLIENTE"), acuerdan los siguientes términos y condiciones para la instalación de un sistema de videovigilancia en la dirección: <strong>${clienteDir}</strong>.</p>
+
+                <div class="clausula">
+                    <strong>1. OBJETO DEL CONTRATO</strong>
+                    <p>EL INSTALADOR se compromete a suministrar e instalar el sistema de CCTV descrito en la cotización con folio <strong>${folio}</strong> de fecha <strong>${fecha}</strong>, el cual incluye los equipos y servicios detallados en el anexo A de la citada cotización.</p>
+                </div>
+
+                <div class="clausula">
+                    <strong>2. MONTO Y FORMA DE PAGO</strong>
+                    <p>El costo total del proyecto asciende a la cantidad de <strong>${total}</strong> (${totalLetras}), mismo que se pagará de la siguiente manera:</p>
+                    <ul>
+                        <li><strong>Anticipo (50%):</strong> ${anticipacion}</li>
+                        <li><strong>Saldo contra entrega:</strong> ${contraEntrega}</li>
+                    </ul>
+                    <p><strong>Método de pago:</strong> ${metodoPago}</p>
+                </div>
+
+                <div class="clausula">
+                    <strong>3. PLAZO DE EJECUCIÓN</strong>
+                    <p>EL INSTALADOR se compromete a realizar la instalación en un plazo de <strong>${plazoEntregaTexto}</strong> a partir de la fecha de aceptación del presente contrato.</p>
+                </div>
+
+                <div class="clausula">
+                    <strong>4. GARANTÍA</strong>
+                    <p>Todos los equipos suministrados cuentan con garantía de fábrica contra defectos de fabricación por 12 meses a partir de la fecha de instalación. La garantía no cubre daños por mal uso, descargas eléctricas o modificaciones no autorizadas.</p>
+                </div>
+
+                <div class="clausula">
+                    <strong>5. RESPONSABILIDADES DEL CLIENTE</strong>
+                    <ul>
+                        <li>Proporcionar acceso al sitio de instalación en el horario acordado.</li>
+                        <li>Asegurar la existencia de un punto de alimentación eléctrica (110V) cercano al lugar de instalación.</li>
+                        <li>Proporcionar acceso a la red Wi-Fi para la configuración remota del sistema.</li>
+                    </ul>
+                </div>
+
+                <div class="clausula">
+                    <strong>6. ACEPTACIÓN</strong>
+                    <p>Las partes firman el presente contrato en la ciudad de <strong>Ciudad de México</strong>, a los <strong>${dia}</strong> días del mes de <strong>${mes}</strong> de <strong>${año}</strong>.</p>
+                </div>
+
+                <div class="firmas">
+                    <div class="firma-box">
+                        <div><strong>EL INSTALADOR</strong></div>
+                        <div class="linea"></div>
+                        <div class="nombre">${empresa}</div>
+                        <div>${tecnico}</div>
+                    </div>
+                    <div class="firma-box">
+                        <div><strong>EL CLIENTE</strong></div>
+                        <div class="linea"></div>
+                        <div class="nombre">${cliente}</div>
+                        ${clienteEmpresa ? `<div>${clienteEmpresa}</div>` : ''}
+                    </div>
+                </div>
+
+                <div class="footer">
+                    MS SOLUTIONS - Seguridad Electrónica<br>
+                    Este contrato es un documento legal que respalda la instalación del sistema de CCTV.
+                </div>
+            </body>
+            </html>
+        `;
+
+        // Abrir contrato en nueva ventana para imprimir
+        const ventana = window.open('', '_blank', 'width=800,height=600');
+        ventana.document.write(contratoHTML);
+        ventana.document.close();
+        ventana.focus();
+        ventana.print();
+    }
+
     // ====== INICIALIZAR ======
     window.onload = function() {
         generarFolio();
@@ -1668,7 +2082,6 @@
         document.querySelectorAll('input, select, textarea').forEach(el => {
             el.addEventListener('change', guardarDatos);
         });
-        // Calcular inicialmente
         calcularTotales();
     };
 </script>
