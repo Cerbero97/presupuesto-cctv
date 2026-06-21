@@ -4,32 +4,90 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Presupuesto CCTV - MS Solutions</title>
+    <!-- SortableJS para arrastrar filas -->
+    <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
     <style>
-        /* ====== ESTILOS GENERALES ====== */
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
+        /* ====== RESET Y ESTILOS BASE ====== */
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        :root {
+            --bg-body: #f0f2f5;
+            --bg-container: #ffffff;
+            --text-color: #222;
+            --border-color: #d0d0d0;
+            --shadow: 0 4px 20px rgba(0,0,0,0.1);
+            --primary: #8B0000;
+            --primary-dark: #6b0000;
+            --gray: #6B6B6B;
+            --light-gray: #fafafa;
         }
 
         body {
             font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-            background: #f0f2f5;
+            background: var(--bg-body);
             padding: 20px;
+            color: var(--text-color);
+            transition: background 0.3s, color 0.3s;
         }
 
+        /* ====== MODO OSCURO ====== */
+        body.dark-mode {
+            --bg-body: #1a1a1a;
+            --bg-container: #2d2d2d;
+            --text-color: #e0e0e0;
+            --border-color: #555;
+            --shadow: 0 4px 20px rgba(0,0,0,0.6);
+            --light-gray: #3a3a3a;
+        }
+
+        body.dark-mode .section {
+            background: #3a3a3a;
+            border-left-color: #aa2e2e;
+        }
+
+        body.dark-mode .field input,
+        body.dark-mode .field select {
+            background: #444;
+            color: #e0e0e0;
+            border-color: #666;
+        }
+
+        body.dark-mode .field input[readonly] {
+            background: #555;
+        }
+
+        body.dark-mode table tr:hover {
+            background: #3f3f3f;
+        }
+
+        body.dark-mode .total-letras {
+            background: #3a3a3a;
+            color: #e0e0e0;
+            border-color: #555;
+        }
+
+        body.dark-mode .btn-warning {
+            background: #b76e0a;
+        }
+
+        body.dark-mode .btn-warning:hover {
+            background: #8f5508;
+        }
+
+        /* ====== CONTENEDOR PRINCIPAL ====== */
         .container {
             max-width: 1100px;
             margin: 0 auto;
-            background: white;
+            background: var(--bg-container);
             padding: 30px;
             border-radius: 12px;
-            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+            box-shadow: var(--shadow);
+            transition: background 0.3s;
         }
 
-        /* ====== TÍTULO ====== */
+        /* ====== TÍTULOS ====== */
         h1 {
-            color: #8B0000;
+            color: var(--primary);
             font-size: 28px;
             text-align: center;
             margin-bottom: 5px;
@@ -38,26 +96,27 @@
 
         .subtitulo {
             text-align: center;
-            color: #6B6B6B;
+            color: var(--gray);
             font-size: 14px;
             margin-bottom: 30px;
-            border-bottom: 2px solid #8B0000;
+            border-bottom: 2px solid var(--primary);
             padding-bottom: 15px;
         }
 
         /* ====== SECCIONES ====== */
         .section {
-            background: #fafafa;
+            background: var(--light-gray);
             padding: 20px;
             border-radius: 8px;
             margin-bottom: 25px;
-            border-left: 5px solid #8B0000;
+            border-left: 5px solid var(--primary);
+            transition: background 0.3s;
         }
 
         .section-title {
             font-size: 18px;
             font-weight: bold;
-            color: #8B0000;
+            color: var(--primary);
             margin-bottom: 15px;
             display: flex;
             align-items: center;
@@ -65,7 +124,7 @@
         }
 
         .section-title span {
-            background: #8B0000;
+            background: var(--primary);
             color: white;
             border-radius: 50%;
             width: 28px;
@@ -83,10 +142,7 @@
             gap: 15px;
             margin-bottom: 12px;
         }
-
-        .row-3 {
-            grid-template-columns: 1fr 1fr 1fr;
-        }
+        .row-3 { grid-template-columns: 1fr 1fr 1fr; }
 
         .field {
             display: flex;
@@ -96,35 +152,35 @@
         .field label {
             font-size: 13px;
             font-weight: 600;
-            color: #4A4A4A;
+            color: var(--gray);
             margin-bottom: 4px;
         }
 
-        .field input,
-        .field select {
+        .field input, .field select {
             padding: 8px 12px;
-            border: 1.5px solid #d0d0d0;
+            border: 1.5px solid var(--border-color);
             border-radius: 6px;
             font-size: 14px;
-            transition: border 0.3s;
+            transition: border 0.3s, background 0.3s, color 0.3s;
             background: white;
+            color: var(--text-color);
         }
 
-        .field input:focus,
-        .field select:focus {
-            border-color: #8B0000;
+        .field input:focus, .field select:focus {
+            border-color: var(--primary);
             outline: none;
-            box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+            box-shadow: 0 0 0 3px rgba(139,0,0,0.1);
         }
 
         .field input[readonly] {
             background: #f0f0f0;
             cursor: not-allowed;
         }
-
-        .full-width {
-            grid-column: 1 / -1;
+        body.dark-mode .field input[readonly] {
+            background: #555;
         }
+
+        .full-width { grid-column: 1 / -1; }
 
         /* ====== BOTONES ====== */
         .btn {
@@ -137,35 +193,19 @@
             transition: all 0.3s;
         }
 
-        .btn-success {
-            background: #2e7d32;
-            color: white;
-        }
-        .btn-success:hover {
-            background: #1b5e20;
-        }
+        .btn-success { background: #2e7d32; color: white; }
+        .btn-success:hover { background: #1b5e20; }
 
-        .btn-danger {
-            background: #8B0000;
-            color: white;
-        }
-        .btn-danger:hover {
-            background: #6b0000;
-        }
+        .btn-danger { background: #8B0000; color: white; }
+        .btn-danger:hover { background: #6b0000; }
 
-        .btn-warning {
-            background: #f57f17;
-            color: white;
-        }
-        .btn-warning:hover {
-            background: #e65100;
-        }
+        .btn-warning { background: #f57f17; color: white; }
+        .btn-warning:hover { background: #e65100; }
 
-        .btn-small {
-            padding: 4px 10px;
-            font-size: 12px;
-            border-radius: 4px;
-        }
+        .btn-primary { background: #0d47a1; color: white; }
+        .btn-primary:hover { background: #0a3575; }
+
+        .btn-small { padding: 4px 10px; font-size: 12px; border-radius: 4px; }
 
         .btn-group {
             display: flex;
@@ -175,7 +215,7 @@
         }
 
         .btn-generate {
-            background: #8B0000;
+            background: var(--primary);
             color: white;
             padding: 14px 40px;
             font-size: 18px;
@@ -187,11 +227,10 @@
             width: 100%;
             margin: 20px 0;
         }
-
         .btn-generate:hover {
-            background: #6b0000;
+            background: var(--primary-dark);
             transform: scale(1.02);
-            box-shadow: 0 4px 20px rgba(139, 0, 0, 0.4);
+            box-shadow: 0 4px 20px rgba(139,0,0,0.4);
         }
 
         /* ====== TABLAS ====== */
@@ -207,7 +246,7 @@
         }
 
         table th {
-            background: #8B0000;
+            background: var(--primary);
             color: white;
             padding: 10px 12px;
             text-align: left;
@@ -219,72 +258,63 @@
             vertical-align: middle;
         }
 
-        table tr:hover {
-            background: #f5f5f5;
-        }
+        table tr:hover { background: #f5f5f5; }
+        body.dark-mode table tr:hover { background: #3f3f3f; }
 
-        table input,
-        table select {
+        table input, table select {
             width: 100%;
             padding: 6px 8px;
             border: 1px solid #ccc;
             border-radius: 4px;
             font-size: 13px;
+            background: white;
+            color: var(--text-color);
+        }
+        body.dark-mode table input, body.dark-mode table select {
+            background: #444;
+            color: #e0e0e0;
+            border-color: #666;
         }
 
-        table input[type="number"] {
-            width: 90px;
-        }
+        table input[type="number"] { width: 90px; }
 
         .total-row td {
-            border-top: 2px solid #8B0000;
+            border-top: 2px solid var(--primary);
             font-weight: bold;
         }
 
-        /* Botón eliminar dentro de tabla */
-        .btn-eliminar-fila {
-            background: #c62828;
-            color: white;
+        /* Botones de acción en tabla */
+        .btn-accion {
+            background: transparent;
             border: none;
-            border-radius: 4px;
-            padding: 4px 10px;
             cursor: pointer;
-            font-size: 12px;
-            font-weight: bold;
+            font-size: 18px;
+            padding: 4px 6px;
+            border-radius: 4px;
+            transition: background 0.2s;
         }
-        .btn-eliminar-fila:hover {
-            background: #b71c1c;
-        }
+        .btn-accion:hover { background: rgba(0,0,0,0.1); }
+        .btn-accion.duplicar { color: #2e7d32; }
+        .btn-accion.eliminar { color: #c62828; }
+        .btn-accion.arrastrar { color: #6B6B6B; cursor: grab; }
 
-        /* ====== RESUMEN ====== */
+        /* ====== RESUMEN Y DESCUENTO ====== */
         .summary-box {
-            background: #8B0000;
+            background: var(--primary);
             color: white;
             padding: 20px;
             border-radius: 8px;
             margin: 20px 0;
             display: grid;
-            grid-template-columns: 1fr 1fr;
+            grid-template-columns: 1fr 1fr 1fr;
             gap: 15px;
         }
-
-        .summary-box .item {
-            text-align: center;
-        }
-
-        .summary-box .item .label {
-            font-size: 13px;
-            opacity: 0.8;
-        }
-
-        .summary-box .item .value {
-            font-size: 24px;
-            font-weight: bold;
-        }
-
+        .summary-box .item { text-align: center; }
+        .summary-box .item .label { font-size: 13px; opacity: 0.8; }
+        .summary-box .item .value { font-size: 24px; font-weight: bold; }
         .summary-box .item input {
             background: transparent;
-            border: 1px solid rgba(255, 255, 255, 0.3);
+            border: 1px solid rgba(255,255,255,0.3);
             color: white;
             padding: 6px 10px;
             border-radius: 4px;
@@ -293,7 +323,6 @@
             font-size: 18px;
             font-weight: bold;
         }
-
         .summary-box .item input:focus {
             border-color: white;
             outline: none;
@@ -305,14 +334,12 @@
             border-radius: 8px;
             text-align: center;
             font-size: 16px;
-            color: #4A4A4A;
+            color: var(--text-color);
             border: 1px solid #ddd;
             margin: 10px 0;
+            transition: background 0.3s, color 0.3s;
         }
-
-        .total-letras strong {
-            color: #8B0000;
-        }
+        .total-letras strong { color: var(--primary); }
 
         /* ====== FIRMAS ====== */
         .firmas-container {
@@ -321,25 +348,21 @@
             gap: 30px;
             margin-top: 20px;
         }
-
         .firma-box {
             border-top: 2px solid #333;
             padding-top: 10px;
         }
-
         .firma-box .firma-linea {
             height: 40px;
             border-bottom: 1px solid #333;
             margin-bottom: 8px;
         }
-
         .firma-box .leyenda {
             font-size: 12px;
             color: #555;
             font-style: italic;
             margin-top: 5px;
         }
-
         .firma-box .nombre {
             font-weight: bold;
             font-size: 14px;
@@ -353,7 +376,6 @@
             gap: 12px;
             padding: 8px 0;
         }
-
         .checkbox-group label {
             display: flex;
             align-items: center;
@@ -367,1114 +389,1288 @@
             text-align: center;
             margin-bottom: 20px;
         }
-
         .logo-area img {
             max-height: 80px;
             max-width: 200px;
         }
-
         .logo-area input[type="file"] {
             display: block;
             margin: 10px auto;
             font-size: 12px;
         }
 
-        /* ====== RESPONSIVE ====== */
-        @media (max-width: 768px) {
-            .row {
-                grid-template-columns: 1fr;
-            }
-            .row-3 {
-                grid-template-columns: 1fr;
-            }
-            .summary-box {
-                grid-template-columns: 1fr;
-            }
-            .firmas-container {
-                grid-template-columns: 1fr;
-            }
-            .container {
-                padding: 15px;
-            }
+        /* ====== MODO OSCURO TOGGLE ====== */
+        .toggle-dark {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            justify-content: flex-end;
+            margin-bottom: 10px;
+        }
+        .toggle-dark label {
+            font-size: 14px;
+            cursor: pointer;
+        }
+        .toggle-dark input[type="checkbox"] {
+            width: 40px;
+            height: 22px;
+            appearance: none;
+            background: #ccc;
+            border-radius: 20px;
+            position: relative;
+            cursor: pointer;
+            transition: background 0.3s;
+        }
+        .toggle-dark input[type="checkbox"]::before {
+            content: '';
+            width: 18px;
+            height: 18px;
+            background: white;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: transform 0.3s;
+        }
+        .toggle-dark input[type="checkbox"]:checked {
+            background: var(--primary);
+        }
+        .toggle-dark input[type="checkbox"]:checked::before {
+            transform: translateX(18px);
         }
 
-        /* ====== ESTILOS PARA IMPRESIÓN (SOLO PDF) ====== */
+        /* ====== MODAL DE PREVISUALIZACIÓN ====== */
+        .modal-overlay {
+            display: none;
+            position: fixed;
+            top: 0; left: 0; width: 100%; height: 100%;
+            background: rgba(0,0,0,0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-overlay.active { display: flex; }
+        .modal-content {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            max-width: 90%;
+            max-height: 90%;
+            overflow: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.5);
+        }
+        .modal-content iframe {
+            width: 800px;
+            height: 600px;
+            border: none;
+        }
+        .modal-close {
+            display: block;
+            margin: 10px auto 0;
+            padding: 10px 30px;
+            background: var(--primary);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-weight: bold;
+        }
+        .modal-close:hover { background: var(--primary-dark); }
+
+        /* ====== RESPONSIVE ====== */
+        @media (max-width: 768px) {
+            .row, .row-3 { grid-template-columns: 1fr; }
+            .summary-box { grid-template-columns: 1fr; }
+            .firmas-container { grid-template-columns: 1fr; }
+            .container { padding: 15px; }
+            .modal-content iframe { width: 100%; height: 400px; }
+        }
+
+        /* ====== ESTILOS PARA IMPRESIÓN (PDF) ====== */
         @media print {
-            body {
-                background: white !important;
-                padding: 0 !important;
-                margin: 0 !important;
-                font-family: 'Times New Roman', Times, serif !important;
-            }
-
-            .container {
-                box-shadow: none !important;
-                padding: 20px !important;
-                border-radius: 0 !important;
-                max-width: 100% !important;
-            }
-
-            /* Ocultar todo lo que no debe aparecer en el PDF */
-            .btn,
-            .btn-group,
-            .btn-generate,
-            .btn-success,
-            .btn-warning,
-            .btn-danger,
-            .logo-area input[type="file"],
-            .btn-eliminar-fila {
-                display: none !important;
-            }
-
-            /* Secciones sin bordes redondeados */
-            .section {
-                background: white !important;
-                border-left: 3px solid #8B0000 !important;
-                border-radius: 0 !important;
-                box-shadow: none !important;
-                page-break-inside: avoid !important;
-                break-inside: avoid !important;
-                padding: 10px 0 !important;
-                margin-bottom: 10px !important;
-            }
-
-            h1 {
-                color: black !important;
-                font-size: 22pt !important;
-            }
-            .subtitulo {
-                border-bottom-color: #8B0000 !important;
-                color: #333 !important;
-            }
-            .section-title {
-                color: black !important;
-                font-size: 14pt !important;
-            }
-            .section-title span {
-                background: #8B0000 !important;
-                color: white !important;
-            }
-
-            /* Tablas */
-            table th {
-                background: #8B0000 !important;
-                color: white !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-            }
-            table td {
-                border-bottom: 1px solid #aaa !important;
-            }
-
-            /* Inputs y selects: mostrar valor como texto */
-            input,
-            select,
-            textarea {
-                border: 1px solid #555 !important;
-                background: transparent !important;
-                color: black !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                font-family: 'Times New Roman', Times, serif !important;
-                padding: 2px !important;
-            }
-
-            input[readonly] {
-                background: transparent !important;
-                border: none !important;
-                font-weight: bold !important;
-                font-size: 12pt !important;
-            }
-
-            /* Resumen */
-            .summary-box {
-                background: #8B0000 !important;
-                -webkit-print-color-adjust: exact !important;
-                print-color-adjust: exact !important;
-                border-radius: 0 !important;
-            }
-            .summary-box input {
-                background: transparent !important;
-                border: 1px solid rgba(255, 255, 255, 0.4) !important;
-                color: white !important;
-            }
-
-            .total-letras {
-                border: 1px solid #333 !important;
-                background: #f9f9f9 !important;
-                font-size: 14pt !important;
-            }
-
-            /* Firmas */
-            .firma-box {
-                border-top: 2px solid #333 !important;
-            }
-            .firma-box .firma-linea {
-                border-bottom: 1px solid #333 !important;
-            }
-            .firma-box .leyenda {
-                font-size: 10pt !important;
-                color: #333 !important;
-            }
-
-            /* Leyenda de vigencia y términos */
-            .vigencia-leyenda {
-                font-size: 10pt !important;
-                color: #333 !important;
-                text-align: center;
-                margin-top: 15px;
-                border-top: 1px solid #ccc;
-                padding-top: 10px;
-            }
-
-            /* Ocultar URL de página */
-            @page {
-                margin: 1cm;
-                @bottom-center {
-                    content: none !important;
-                }
-                @bottom-right {
-                    content: none !important;
-                }
-                @bottom-left {
-                    content: none !important;
-                }
-                @top-center {
-                    content: none !important;
-                }
-                @top-right {
-                    content: none !important;
-                }
-                @top-left {
-                    content: none !important;
-                }
-            }
-
-            /* Ajustes de tamaño */
-            body,
-            .container,
-            .section,
-            table,
-            .field,
-            input,
-            select,
-            label {
-                font-size: 11pt !important;
-            }
-
-            h1 {
-                font-size: 22pt !important;
-            }
-            .section-title {
-                font-size: 14pt !important;
-            }
-            .summary-box .item .value {
-                font-size: 18pt !important;
-            }
+            body { background: white !important; padding: 0 !important; margin: 0 !important; font-family: 'Times New Roman', Times, serif !important; }
+            .container { box-shadow: none !important; padding: 20px !important; border-radius: 0 !important; max-width: 100% !important; }
+            .btn, .btn-group, .btn-generate, .btn-success, .btn-warning, .btn-danger, .btn-primary,
+            .logo-area input[type="file"], .btn-accion, .toggle-dark, .modal-overlay { display: none !important; }
+            .section { background: white !important; border-left: 3px solid #8B0000 !important; border-radius: 0 !important; box-shadow: none !important; page-break-inside: avoid !important; break-inside: avoid !important; padding: 10px 0 !important; margin-bottom: 10px !important; }
+            h1 { color: black !important; font-size: 22pt !important; }
+            .subtitulo { border-bottom-color: #8B0000 !important; color: #333 !important; }
+            .section-title { color: black !important; font-size: 14pt !important; }
+            .section-title span { background: #8B0000 !important; color: white !important; }
+            table th { background: #8B0000 !important; color: white !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }
+            table td { border-bottom: 1px solid #aaa !important; }
+            input, select, textarea { border: 1px solid #555 !important; background: transparent !important; color: black !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; font-family: 'Times New Roman', Times, serif !important; padding: 2px !important; }
+            input[readonly] { background: transparent !important; border: none !important; font-weight: bold !important; font-size: 12pt !important; }
+            .summary-box { background: #8B0000 !important; -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; border-radius: 0 !important; }
+            .summary-box input { background: transparent !important; border: 1px solid rgba(255,255,255,0.4) !important; color: white !important; }
+            .total-letras { border: 1px solid #333 !important; background: #f9f9f9 !important; font-size: 14pt !important; }
+            .firma-box { border-top: 2px solid #333 !important; }
+            .firma-box .firma-linea { border-bottom: 1px solid #333 !important; }
+            .firma-box .leyenda { font-size: 10pt !important; color: #333 !important; }
+            .vigencia-leyenda { font-size: 10pt !important; color: #333 !important; text-align: center; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 10px; }
+            @page { margin: 1cm; @bottom-center { content: none !important; } @bottom-right { content: none !important; } @bottom-left { content: none !important; } @top-center { content: none !important; } @top-right { content: none !important; } @top-left { content: none !important; } }
+            body, .container, .section, table, .field, input, select, label { font-size: 11pt !important; }
+            h1 { font-size: 22pt !important; }
+            .section-title { font-size: 14pt !important; }
+            .summary-box .item .value { font-size: 18pt !important; }
+            .certificado-garantia { font-size: 10pt !important; border: 1px solid #333; padding: 10px; margin-top: 15px; background: #fafafa; }
         }
     </style>
 </head>
 <body>
 
-    <div class="container" id="app">
+<div class="container" id="app">
 
-        <!-- ====== LOGO ====== -->
-        <div class="logo-area">
-            <div id="logoPreview"></div>
-            <input type="file" id="logoUpload" accept="image/*">
+    <!-- ====== TOGGLE MODO OSCURO ====== -->
+    <div class="toggle-dark">
+        <label for="darkToggle">🌙 Modo Oscuro</label>
+        <input type="checkbox" id="darkToggle">
+    </div>
+
+    <!-- ====== LOGO ====== -->
+    <div class="logo-area">
+        <div id="logoPreview"></div>
+        <input type="file" id="logoUpload" accept="image/*">
+    </div>
+
+    <!-- ====== TÍTULO ====== -->
+    <h1>PRESUPUESTO CCTV - MS SOLUTIONS</h1>
+    <div class="subtitulo">Sistemas de Videovigilancia Profesional</div>
+
+    <!-- ====== FOLIO Y FECHA ====== -->
+    <div class="row">
+        <div class="field">
+            <label>FOLIO</label>
+            <input type="text" id="folio" readonly>
         </div>
-
-        <!-- ====== TÍTULO ====== -->
-        <h1>PRESUPUESTO CCTV - MS SOLUTIONS</h1>
-        <div class="subtitulo">Sistemas de Videovigilancia Profesional</div>
-
-        <!-- ====== FOLIO Y FECHA ====== -->
-        <div class="row">
-            <div class="field">
-                <label>FOLIO</label>
-                <input type="text" id="folio" readonly>
-            </div>
-            <div class="field">
-                <label>FECHA DE EMISIÓN</label>
-                <input type="text" id="fechaEmision" readonly>
-            </div>
-        </div>
-
-        <!-- ====== DATOS PROFESIONALES ====== -->
-        <div class="section">
-            <div class="section-title"><span>1</span> DATOS PROFESIONALES</div>
-            <div class="row">
-                <div class="field">
-                    <label>EMPRESA</label>
-                    <input type="text" id="empresa" value="MS SOLUTIONS" placeholder="Nombre de tu empresa">
-                </div>
-                <div class="field">
-                    <label>TÉCNICO RESPONSABLE</label>
-                    <input type="text" id="tecnico" value="Ing. Alan Marcelo" placeholder="Nombre del técnico">
-                </div>
-            </div>
-            <div class="row">
-                <div class="field">
-                    <label>TELÉFONO (WhatsApp)</label>
-                    <input type="text" id="telefono" value="55 1234 5678" placeholder="Teléfono">
-                </div>
-                <div class="field">
-                    <label>CORREO ELECTRÓNICO</label>
-                    <input type="email" id="correo" value="contacto@mssolutions.com" placeholder="correo@empresa.com">
-                </div>
-            </div>
-            <div class="field full-width">
-                <label>DOMICILIO</label>
-                <input type="text" id="domicilio" value="Calle Independencia #45, Col. Centro, CDMX" placeholder="Dirección">
-            </div>
-        </div>
-
-        <!-- ====== DATOS DEL CLIENTE ====== -->
-        <div class="section">
-            <div class="section-title"><span>2</span> DATOS DEL CLIENTE</div>
-            <div class="row">
-                <div class="field">
-                    <label>NOMBRE DEL CLIENTE</label>
-                    <input type="text" id="cliente_nombre" value="Bruno Calderón Vega" placeholder="Nombre completo">
-                </div>
-                <div class="field">
-                    <label>EMPRESA (Opcional)</label>
-                    <input type="text" id="cliente_empresa" value="Oficina Particular" placeholder="Empresa">
-                </div>
-            </div>
-            <div class="row">
-                <div class="field">
-                    <label>TELÉFONO (WhatsApp)</label>
-                    <input type="text" id="cliente_telefono" value="6647795280" placeholder="Teléfono">
-                </div>
-                <div class="field">
-                    <label>CORREO ELECTRÓNICO</label>
-                    <input type="email" id="cliente_correo" value="brunocald123@gmail.com" placeholder="cliente@mail.com">
-                </div>
-            </div>
-            <div class="field full-width">
-                <label>DIRECCIÓN DEL SITIO</label>
-                <input type="text" id="cliente_direccion" value="Av. Américas 1250" placeholder="Ubicación de la instalación">
-            </div>
-        </div>
-
-        <!-- ====== CONFIGURACIÓN DEL SISTEMA ====== -->
-        <div class="section">
-            <div class="section-title"><span>3</span> CONFIGURACIÓN DEL SISTEMA CCTV</div>
-            <div class="row row-3">
-                <div class="field">
-                    <label>TIPO DE SISTEMA</label>
-                    <select id="tipo_sistema">
-                        <option value="Sistema IP (Digital)">Sistema IP (Digital)</option>
-                        <option value="Sistema HD (Analógico)">Sistema HD (Analógico)</option>
-                        <option value="Sistema Híbrido">Sistema Híbrido</option>
-                        <option value="NO APLICA">NO APLICA</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>UBICACIÓN / ÁREA</label>
-                    <select id="ubicacion">
-                        <option value="Oficinas">Oficinas</option>
-                        <option value="Exterior">Exterior</option>
-                        <option value="Nave Industrial">Nave Industrial</option>
-                        <option value="Almacén">Almacén</option>
-                        <option value="Residencial">Residencial</option>
-                        <option value="Comercial">Comercial</option>
-                        <option value="NO APLICA">NO APLICA</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>RESOLUCIÓN</label>
-                    <select id="resolucion">
-                        <option value="1MP (720p)">1MP (720p)</option>
-                        <option value="1.3MP (960p)">1.3MP (960p)</option>
-                        <option value="2MP (1080p)">2MP (1080p)</option>
-                        <option value="4MP (1440p)" selected>4MP (1440p)</option>
-                        <option value="5MP (1944p)">5MP (1944p)</option>
-                        <option value="8MP (4K)">8MP (4K)</option>
-                        <option value="12MP">12MP</option>
-                        <option value="NO APLICA">NO APLICA</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row row-3">
-                <div class="field">
-                    <label>DVR / CANALES</label>
-                    <select id="canales">
-                        <option value="4 Canales">4 Canales</option>
-                        <option value="8 Canales" selected>8 Canales</option>
-                        <option value="16 Canales">16 Canales</option>
-                        <option value="32 Canales">32 Canales</option>
-                        <option value="64 Canales">64 Canales</option>
-                        <option value="NO APLICA">NO APLICA</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>ALMACENAMIENTO</label>
-                    <select id="almacenamiento">
-                        <option value="SD 128GB">SD 128GB</option>
-                        <option value="SD 256GB">SD 256GB</option>
-                        <option value="500GB HDD">500GB HDD</option>
-                        <option value="1 TB">1 TB</option>
-                        <option value="2 TB" selected>2 TB</option>
-                        <option value="4 TB">4 TB</option>
-                        <option value="6 TB">6 TB</option>
-                        <option value="8 TB">8 TB</option>
-                        <option value="NO APLICA">NO APLICA</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>CABLEADO</label>
-                    <select id="cableado">
-                        <option value="UTP Cat5e">UTP Cat5e</option>
-                        <option value="UTP Cat6">UTP Cat6</option>
-                        <option value="UTP Cat6A">UTP Cat6A</option>
-                        <option value="Fibra Óptica">Fibra Óptica</option>
-                        <option value="Cable de luz (eléctrico)">Cable de luz (eléctrico)</option>
-                        <option value="Cable prefabricado">Cable prefabricado</option>
-                        <option value="Cable coaxial RG59">Cable coaxial RG59</option>
-                        <option value="NO APLICA">NO APLICA</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row row-3">
-                <div class="field">
-                    <label>TUBERÍA / CANALIZACIÓN</label>
-                    <select id="tuberia">
-                        <option value="Tubería Conduit PVC">Tubería Conduit PVC</option>
-                        <option value="Tubería Metálica EMT">Tubería Metálica EMT</option>
-                        <option value="Canaleta Plástica" selected>Canaleta Plástica</option>
-                        <option value="Tubería Flexible">Tubería Flexible</option>
-                        <option value="Sin tubería (visible)">Sin tubería (visible)</option>
-                        <option value="NO APLICA">NO APLICA</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>FUENTE / ENERGÍA</label>
-                    <select id="fuente">
-                        <option value="PoE (Switch)">PoE (Switch)</option>
-                        <option value="Fuente 12V DC" selected>Fuente 12V DC</option>
-                        <option value="Fuente 24V AC">Fuente 24V AC</option>
-                        <option value="Híbrido">Híbrido</option>
-                        <option value="Fuente 5V DC (USB)">Fuente 5V DC (USB)</option>
-                        <option value="Batería recargable">Batería recargable</option>
-                        <option value="NO APLICA">NO APLICA</option>
-                    </select>
-                </div>
-                <div class="field">
-                    <label>FORMA DE PAGO</label>
-                    <select id="formaPago">
-                        <option value="Efectivo">Efectivo</option>
-                        <option value="Transferencia" selected>Transferencia</option>
-                        <option value="Tarjeta">Tarjeta</option>
-                        <option value="Otro">Otro</option>
-                    </select>
-                </div>
-            </div>
-            <div class="row">
-                <div class="field">
-                    <label>PLAZO DE ENTREGA (días hábiles)</label>
-                    <input type="number" id="plazoEntrega" value="5" min="1">
-                </div>
-                <div class="field">
-                    <label>VIGENCIA (días)</label>
-                    <input type="number" id="vigenciaDias" value="7" min="1">
-                </div>
-            </div>
-        </div>
-
-        <!-- ====== DESGLOSE DE EQUIPOS ====== -->
-        <div class="section">
-            <div class="section-title"><span>4</span> DESGLOSE DE EQUIPOS (HARDWARE)</div>
-            <div class="table-wrap">
-                <table id="tablaEquipos">
-                    <thead>
-                        <tr>
-                            <th style="width:30%">DESCRIPCIÓN</th>
-                            <th style="width:15%">CATEGORÍA</th>
-                            <th style="width:12%">UNIDAD</th>
-                            <th style="width:10%">CANT</th>
-                            <th style="width:14%">P. UNIT ($)</th>
-                            <th style="width:12%">TOTAL ($)</th>
-                            <th style="width:7%">ACC</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbodyEquipos">
-                        <!-- Las filas se generan con JavaScript para incluir botón eliminar -->
-                    </tbody>
-                    <tfoot>
-                        <tr class="total-row">
-                            <td colspan="6" style="text-align:right; font-weight:bold;">SUBTOTAL EQUIPOS</td>
-                            <td style="font-weight:bold;"><input type="text" id="subtotalEquipos" value="0.00" readonly style="border:none; background:transparent; font-weight:bold; font-size:16px;"></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            <button class="btn btn-success" onclick="agregarFilaEquipo()">+ AGREGAR EQUIPO / ACCESORIO</button>
-        </div>
-
-        <!-- ====== MANO DE OBRA ====== -->
-        <div class="section">
-            <div class="section-title"><span>5</span> MANO DE OBRA Y SERVICIOS</div>
-            <div class="table-wrap">
-                <table id="tablaServicios">
-                    <thead>
-                        <tr>
-                            <th style="width:45%">DESCRIPCIÓN</th>
-                            <th style="width:15%">CANT</th>
-                            <th style="width:17%">P. UNIT ($)</th>
-                            <th style="width:16%">TOTAL ($)</th>
-                            <th style="width:7%">ACC</th>
-                        </tr>
-                    </thead>
-                    <tbody id="tbodyServicios">
-                        <!-- Filas generadas con JavaScript -->
-                    </tbody>
-                    <tfoot>
-                        <tr class="total-row">
-                            <td colspan="4" style="text-align:right; font-weight:bold;">SUBTOTAL SERVICIOS</td>
-                            <td style="font-weight:bold;"><input type="text" id="subtotalServicios" value="0.00" readonly style="border:none; background:transparent; font-weight:bold; font-size:16px;"></td>
-                        </tr>
-                    </tfoot>
-                </table>
-            </div>
-            <button class="btn btn-success" onclick="agregarFilaServicio()">+ AGREGAR SERVICIO / MANO DE OBRA</button>
-        </div>
-
-        <!-- ====== CONDICIONES Y GASTOS ====== -->
-        <div class="section">
-            <div class="section-title"><span>6</span> TIEMPOS, REQUISITOS Y GASTOS</div>
-            <div class="row">
-                <div class="field">
-                    <label>TIEMPO DE EJECUCIÓN</label>
-                    <input type="text" id="tiempo_ejecucion" value="2 días hábiles" placeholder="Ej. 2 días hábiles">
-                </div>
-                <div class="field">
-                    <label>VIGENCIA (texto)</label>
-                    <input type="text" id="vigenciaTexto" value="7 días" placeholder="Ej. 7 días">
-                </div>
-            </div>
-            <div class="field full-width">
-                <label>CONDICIONES DEL SERVICIO</label>
-                <div class="checkbox-group" id="condiciones">
-                    <label><input type="checkbox" checked> Requiere Internet (App)</label>
-                    <label><input type="checkbox" checked> No incluye obra civil</label>
-                    <label><input type="checkbox" checked> Punto 110V (Cliente)</label>
-                    <label><input type="checkbox" checked> Config. 3 Celulares</label>
-                    <label><input type="checkbox" checked> Horario Diurno (L-V)</label>
-                    <label><input type="checkbox" checked> Sin Albañilería/Pintura</label>
-                    <label><input type="checkbox" checked> Acceso a Wi-Fi Cliente</label>
-                    <label><input type="checkbox" checked> Garantía Fabricante</label>
-                </div>
-            </div>
-            <div class="field full-width">
-                <label>OTRA CONDICIÓN ESPECÍFICA</label>
-                <input type="text" id="otra_condicion" value="" placeholder="Especifique otro requisito si es necesario...">
-            </div>
-            <div class="row row-3">
-                <div class="field">
-                    <label>VIÁTICOS / TRANSPORTE ($)</label>
-                    <input type="number" id="viaticos" value="350" step="0.01">
-                </div>
-                <div class="field">
-                    <label>RENTA DE ESCALERAS/ANDAMIO ($)</label>
-                    <input type="number" id="renta" value="0" step="0.01">
-                </div>
-                <div class="field">
-                    <label>INSUMOS MENORES / VARIOS ($)</label>
-                    <input type="number" id="insumos" value="0" step="0.01">
-                </div>
-            </div>
-            <div class="field full-width">
-                <label>NOTAS TÉCNICAS</label>
-                <input type="text" id="notas_tecnicas" value="Altura máxima de instalación 3mts, tubería visible" placeholder="Ej. Altura máxima de instalación 3mts...">
-            </div>
-        </div>
-
-        <!-- ====== RESUMEN ====== -->
-        <div class="section">
-            <div class="section-title"><span>7</span> RESUMEN DE INVERSIÓN</div>
-            <div class="summary-box">
-                <div class="item">
-                    <div class="label">SUBTOTAL NETO</div>
-                    <div class="value"><input type="text" id="subtotalNeto" value="0.00" readonly></div>
-                </div>
-                <div class="item">
-                    <div class="label">TOTAL FINAL</div>
-                    <div class="value"><input type="text" id="totalFinalInput" value="0.00" readonly></div>
-                </div>
-            </div>
-            <div class="total-letras">
-                <strong>Total con letra:</strong> <span id="totalLetras">CERO PESOS 00/100 M.N.</span>
-            </div>
-            <div class="row">
-                <div class="field">
-                    <label>ANTICIPACIÓN (50-70%)</label>
-                    <input type="number" id="anticipacion" value="0" step="0.01" placeholder="$0.00">
-                </div>
-                <div class="field">
-                    <label>CONTRA ENTREGA</label>
-                    <input type="text" id="contra_entrega" value="0.00" readonly>
-                </div>
-            </div>
-        </div>
-
-        <!-- ====== FIRMAS ====== -->
-        <div class="section">
-            <div class="section-title"><span>8</span> FIRMAS DE ACEPTACIÓN</div>
-            <div class="firmas-container">
-                <div class="firma-box">
-                    <label>FIRMA DEL INSTALADOR / EMPRESA</label>
-                    <div class="firma-linea"></div>
-                    <div class="leyenda">
-                        Al generar este documento, MS SOLUTIONS certifica que esta cotización ha sido emitida de manera oficial y cuenta con validez legal para su uso como propuesta comercial.
-                    </div>
-                    <div class="nombre"><strong>MS SOLUTIONS</strong> - <span id="tecnicoFirma">Ing. Alan Marcelo</span></div>
-                </div>
-                <div class="firma-box">
-                    <label>FIRMA DEL CLIENTE</label>
-                    <div class="firma-linea"></div>
-                    <div class="leyenda">
-                        El cliente reconoce haber recibido esta cotización a través de medios digitales (correo electrónico, WhatsApp u otros) y acepta que los términos aquí descritos son de su conocimiento y conformidad para el inicio del proyecto.
-                    </div>
-                    <div class="nombre"><strong>Cliente:</strong> <span id="clienteFirma">Bruno Calderón Vega</span></div>
-                </div>
-            </div>
-        </div>
-
-        <!-- ====== BOTONES ====== -->
-        <div class="btn-group">
-            <button class="btn-generate" onclick="generarPDF()">📄 GENERAR PDF</button>
-            <button class="btn btn-warning" onclick="limpiarTodo()">🧹 LIMPIAR</button>
-            <button class="btn btn-danger" onclick="borrarEmpresa()">🗑️ BORRAR DATOS EMPRESA</button>
-        </div>
-
-        <div style="text-align:center; color:#999; font-size:12px; margin-top:20px;">
-            PRESUPUESTO CCTV - MS SOLUTIONS v4.0
+        <div class="field">
+            <label>FECHA DE EMISIÓN</label>
+            <input type="text" id="fechaEmision" readonly>
         </div>
     </div>
 
-    <script>
-        // ====== FUNCIÓN PARA NÚMERO A LETRAS ======
-        function numeroALetras(num) {
-            const unidades = ['', 'UN', 'DOS', 'TRES', 'CUATRO', 'CINCO', 'SEIS', 'SIETE', 'OCHO', 'NUEVE'];
-            const decenas = ['', 'DIEZ', 'VEINTE', 'TREINTA', 'CUARENTA', 'CINCUENTA', 'SESENTA', 'SETENTA', 'OCHENTA', 'NOVENTA'];
-            const centenas = ['', 'CIENTO', 'DOSCIENTOS', 'TRESCIENTOS', 'CUATROCIENTOS', 'QUINIENTOS', 'SEISCIENTOS',
-                'SETECIENTOS', 'OCHOCIENTOS', 'NOVECIENTOS'
-            ];
+    <!-- ====== DATOS PROFESIONALES ====== -->
+    <div class="section">
+        <div class="section-title"><span>1</span> DATOS PROFESIONALES</div>
+        <div class="row">
+            <div class="field">
+                <label>EMPRESA</label>
+                <input type="text" id="empresa" value="MS SOLUTIONS" placeholder="Nombre de tu empresa">
+            </div>
+            <div class="field">
+                <label>TÉCNICO RESPONSABLE</label>
+                <input type="text" id="tecnico" value="Ing. Alan Marcelo" placeholder="Nombre del técnico">
+            </div>
+        </div>
+        <div class="row">
+            <div class="field">
+                <label>TELÉFONO (WhatsApp)</label>
+                <input type="text" id="telefono" value="55 1234 5678" placeholder="Teléfono">
+            </div>
+            <div class="field">
+                <label>CORREO ELECTRÓNICO</label>
+                <input type="email" id="correo" value="contacto@mssolutions.com" placeholder="correo@empresa.com">
+            </div>
+        </div>
+        <div class="field full-width">
+            <label>DOMICILIO</label>
+            <input type="text" id="domicilio" value="Calle Independencia #45, Col. Centro, CDMX" placeholder="Dirección">
+        </div>
+    </div>
 
-            function convertirGrupo(n) {
-                let texto = '';
-                const c = Math.floor(n / 100);
-                const d = Math.floor((n % 100) / 10);
-                const u = n % 10;
+    <!-- ====== DATOS DEL CLIENTE ====== -->
+    <div class="section">
+        <div class="section-title"><span>2</span> DATOS DEL CLIENTE</div>
+        <div class="row">
+            <div class="field">
+                <label>NOMBRE DEL CLIENTE</label>
+                <input type="text" id="cliente_nombre" value="Bruno Calderón Vega" placeholder="Nombre completo">
+            </div>
+            <div class="field">
+                <label>EMPRESA (Opcional)</label>
+                <input type="text" id="cliente_empresa" value="Oficina Particular" placeholder="Empresa">
+            </div>
+        </div>
+        <div class="row">
+            <div class="field">
+                <label>TELÉFONO (WhatsApp)</label>
+                <input type="text" id="cliente_telefono" value="6647795280" placeholder="Teléfono">
+            </div>
+            <div class="field">
+                <label>CORREO ELECTRÓNICO</label>
+                <input type="email" id="cliente_correo" value="brunocald123@gmail.com" placeholder="cliente@mail.com">
+            </div>
+        </div>
+        <div class="field full-width">
+            <label>DIRECCIÓN DEL SITIO</label>
+            <input type="text" id="cliente_direccion" value="Av. Américas 1250" placeholder="Ubicación de la instalación">
+        </div>
+    </div>
 
-                if (c > 0) {
-                    if (c === 1 && d === 0 && u === 0) texto += 'CIEN';
-                    else texto += centenas[c];
-                }
-                if (d > 0) {
-                    if (d === 1 && u > 0) {
-                        const especiales = ['', 'ONCE', 'DOCE', 'TRECE', 'CATORCE', 'QUINCE', 'DIECISÉIS', 'DIECISIETE',
-                            'DIECIOCHO', 'DIECINUEVE'
-                        ];
-                        texto += (texto ? ' ' : '') + especiales[u];
-                        return texto;
-                    } else {
-                        texto += (texto ? ' ' : '') + decenas[d];
-                    }
-                }
-                if (u > 0 && d !== 1) {
-                    if (d > 0) texto += ' Y ';
-                    texto += unidades[u];
-                }
-                return texto;
+    <!-- ====== CONFIGURACIÓN DEL SISTEMA ====== -->
+    <div class="section">
+        <div class="section-title"><span>3</span> CONFIGURACIÓN DEL SISTEMA CCTV</div>
+        <div class="row row-3">
+            <div class="field">
+                <label>TIPO DE SISTEMA</label>
+                <select id="tipo_sistema">
+                    <option value="Sistema IP (Digital)">Sistema IP (Digital)</option>
+                    <option value="Sistema HD (Analógico)">Sistema HD (Analógico)</option>
+                    <option value="Sistema Híbrido">Sistema Híbrido</option>
+                    <option value="NO APLICA">NO APLICA</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>UBICACIÓN / ÁREA</label>
+                <select id="ubicacion">
+                    <option value="Oficinas">Oficinas</option>
+                    <option value="Exterior">Exterior</option>
+                    <option value="Nave Industrial">Nave Industrial</option>
+                    <option value="Almacén">Almacén</option>
+                    <option value="Residencial">Residencial</option>
+                    <option value="Comercial">Comercial</option>
+                    <option value="NO APLICA">NO APLICA</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>RESOLUCIÓN</label>
+                <select id="resolucion">
+                    <option value="1MP (720p)">1MP (720p)</option>
+                    <option value="1.3MP (960p)">1.3MP (960p)</option>
+                    <option value="2MP (1080p)">2MP (1080p)</option>
+                    <option value="4MP (1440p)" selected>4MP (1440p)</option>
+                    <option value="5MP (1944p)">5MP (1944p)</option>
+                    <option value="8MP (4K)">8MP (4K)</option>
+                    <option value="12MP">12MP</option>
+                    <option value="NO APLICA">NO APLICA</option>
+                </select>
+            </div>
+        </div>
+        <div class="row row-3">
+            <div class="field">
+                <label>DVR / CANALES</label>
+                <select id="canales">
+                    <option value="4 Canales">4 Canales</option>
+                    <option value="8 Canales" selected>8 Canales</option>
+                    <option value="16 Canales">16 Canales</option>
+                    <option value="32 Canales">32 Canales</option>
+                    <option value="64 Canales">64 Canales</option>
+                    <option value="NO APLICA">NO APLICA</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>ALMACENAMIENTO</label>
+                <select id="almacenamiento">
+                    <option value="SD 128GB">SD 128GB</option>
+                    <option value="SD 256GB">SD 256GB</option>
+                    <option value="500GB HDD">500GB HDD</option>
+                    <option value="1 TB">1 TB</option>
+                    <option value="2 TB" selected>2 TB</option>
+                    <option value="4 TB">4 TB</option>
+                    <option value="6 TB">6 TB</option>
+                    <option value="8 TB">8 TB</option>
+                    <option value="NO APLICA">NO APLICA</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>CABLEADO</label>
+                <select id="cableado">
+                    <option value="UTP Cat5e">UTP Cat5e</option>
+                    <option value="UTP Cat6">UTP Cat6</option>
+                    <option value="UTP Cat6A">UTP Cat6A</option>
+                    <option value="Fibra Óptica">Fibra Óptica</option>
+                    <option value="Cable de luz (eléctrico)">Cable de luz (eléctrico)</option>
+                    <option value="Cable prefabricado">Cable prefabricado</option>
+                    <option value="Cable coaxial RG59">Cable coaxial RG59</option>
+                    <option value="NO APLICA">NO APLICA</option>
+                </select>
+            </div>
+        </div>
+        <div class="row row-3">
+            <div class="field">
+                <label>TUBERÍA / CANALIZACIÓN</label>
+                <select id="tuberia">
+                    <option value="Tubería Conduit PVC">Tubería Conduit PVC</option>
+                    <option value="Tubería Metálica EMT">Tubería Metálica EMT</option>
+                    <option value="Canaleta Plástica" selected>Canaleta Plástica</option>
+                    <option value="Tubería Flexible">Tubería Flexible</option>
+                    <option value="Sin tubería (visible)">Sin tubería (visible)</option>
+                    <option value="NO APLICA">NO APLICA</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>FUENTE / ENERGÍA</label>
+                <select id="fuente">
+                    <option value="PoE (Switch)">PoE (Switch)</option>
+                    <option value="Fuente 12V DC" selected>Fuente 12V DC</option>
+                    <option value="Fuente 24V AC">Fuente 24V AC</option>
+                    <option value="Híbrido">Híbrido</option>
+                    <option value="Fuente 5V DC (USB)">Fuente 5V DC (USB)</option>
+                    <option value="Batería recargable">Batería recargable</option>
+                    <option value="NO APLICA">NO APLICA</option>
+                </select>
+            </div>
+            <div class="field">
+                <label>FORMA DE PAGO</label>
+                <select id="formaPago">
+                    <option value="Efectivo">Efectivo</option>
+                    <option value="Transferencia" selected>Transferencia</option>
+                    <option value="Tarjeta">Tarjeta</option>
+                    <option value="Otro">Otro</option>
+                </select>
+            </div>
+        </div>
+        <div class="row">
+            <div class="field">
+                <label>PLAZO DE ENTREGA (días hábiles)</label>
+                <input type="number" id="plazoEntrega" value="5" min="1">
+            </div>
+            <div class="field">
+                <label>VIGENCIA (días)</label>
+                <input type="number" id="vigenciaDias" value="7" min="1">
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== DESGLOSE DE EQUIPOS ====== -->
+    <div class="section">
+        <div class="section-title"><span>4</span> DESGLOSE DE EQUIPOS (HARDWARE)</div>
+        <div class="table-wrap">
+            <table id="tablaEquipos">
+                <thead>
+                    <tr>
+                        <th style="width:5%;">#</th>
+                        <th style="width:28%;">DESCRIPCIÓN</th>
+                        <th style="width:14%;">CATEGORÍA</th>
+                        <th style="width:12%;">UNIDAD</th>
+                        <th style="width:10%;">CANT</th>
+                        <th style="width:13%;">P. UNIT ($)</th>
+                        <th style="width:13%;">TOTAL ($)</th>
+                        <th style="width:5%;">ACC</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyEquipos">
+                    <!-- Se genera con JS -->
+                </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td colspan="7" style="text-align:right; font-weight:bold;">SUBTOTAL EQUIPOS</td>
+                        <td style="font-weight:bold;"><input type="text" id="subtotalEquipos" value="$0.00" readonly style="border:none; background:transparent; font-weight:bold; font-size:16px; width:100px;"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <button class="btn btn-success" onclick="agregarFilaEquipo()">+ AGREGAR EQUIPO / ACCESORIO</button>
+    </div>
+
+    <!-- ====== MANO DE OBRA ====== -->
+    <div class="section">
+        <div class="section-title"><span>5</span> MANO DE OBRA Y SERVICIOS</div>
+        <div class="table-wrap">
+            <table id="tablaServicios">
+                <thead>
+                    <tr>
+                        <th style="width:5%;">#</th>
+                        <th style="width:45%;">DESCRIPCIÓN</th>
+                        <th style="width:15%;">CANT</th>
+                        <th style="width:17%;">P. UNIT ($)</th>
+                        <th style="width:13%;">TOTAL ($)</th>
+                        <th style="width:5%;">ACC</th>
+                    </tr>
+                </thead>
+                <tbody id="tbodyServicios">
+                    <!-- Se genera con JS -->
+                </tbody>
+                <tfoot>
+                    <tr class="total-row">
+                        <td colspan="5" style="text-align:right; font-weight:bold;">SUBTOTAL SERVICIOS</td>
+                        <td style="font-weight:bold;"><input type="text" id="subtotalServicios" value="$0.00" readonly style="border:none; background:transparent; font-weight:bold; font-size:16px; width:100px;"></td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+        <button class="btn btn-success" onclick="agregarFilaServicio()">+ AGREGAR SERVICIO / MANO DE OBRA</button>
+    </div>
+
+    <!-- ====== CONDICIONES Y GASTOS ====== -->
+    <div class="section">
+        <div class="section-title"><span>6</span> TIEMPOS, REQUISITOS Y GASTOS</div>
+        <div class="row">
+            <div class="field">
+                <label>TIEMPO DE EJECUCIÓN</label>
+                <input type="text" id="tiempo_ejecucion" value="2 días hábiles" placeholder="Ej. 2 días hábiles">
+            </div>
+            <div class="field">
+                <label>VIGENCIA (texto)</label>
+                <input type="text" id="vigenciaTexto" value="7 días" placeholder="Ej. 7 días">
+            </div>
+        </div>
+        <div class="field full-width">
+            <label>CONDICIONES DEL SERVICIO</label>
+            <div class="checkbox-group" id="condiciones">
+                <label><input type="checkbox" checked> Requiere Internet (App)</label>
+                <label><input type="checkbox" checked> No incluye obra civil</label>
+                <label><input type="checkbox" checked> Punto 110V (Cliente)</label>
+                <label><input type="checkbox" checked> Config. 3 Celulares</label>
+                <label><input type="checkbox" checked> Horario Diurno (L-V)</label>
+                <label><input type="checkbox" checked> Sin Albañilería/Pintura</label>
+                <label><input type="checkbox" checked> Acceso a Wi-Fi Cliente</label>
+                <label><input type="checkbox" checked> Garantía Fabricante</label>
+            </div>
+        </div>
+        <div class="field full-width">
+            <label>OTRA CONDICIÓN ESPECÍFICA</label>
+            <input type="text" id="otra_condicion" value="" placeholder="Especifique otro requisito si es necesario...">
+        </div>
+        <div class="row row-3">
+            <div class="field">
+                <label>VIÁTICOS / TRANSPORTE ($)</label>
+                <input type="number" id="viaticos" value="350" step="0.01">
+            </div>
+            <div class="field">
+                <label>RENTA DE ESCALERAS/ANDAMIO ($)</label>
+                <input type="number" id="renta" value="0" step="0.01">
+            </div>
+            <div class="field">
+                <label>INSUMOS MENORES / VARIOS ($)</label>
+                <input type="number" id="insumos" value="0" step="0.01">
+            </div>
+        </div>
+        <div class="field full-width">
+            <label>NOTAS TÉCNICAS</label>
+            <input type="text" id="notas_tecnicas" value="Altura máxima de instalación 3mts, tubería visible" placeholder="Ej. Altura máxima de instalación 3mts...">
+        </div>
+    </div>
+
+    <!-- ====== RESUMEN CON DESCUENTO ====== -->
+    <div class="section">
+        <div class="section-title"><span>7</span> RESUMEN DE INVERSIÓN</div>
+        <div class="summary-box">
+            <div class="item">
+                <div class="label">SUBTOTAL NETO</div>
+                <div class="value"><input type="text" id="subtotalNeto" value="$0.00" readonly></div>
+            </div>
+            <div class="item">
+                <div class="label">DESCUENTO (%)</div>
+                <div class="value"><input type="number" id="descuentoPorcentaje" value="0" min="0" max="100" step="0.5"></div>
+            </div>
+            <div class="item">
+                <div class="label">TOTAL FINAL</div>
+                <div class="value"><input type="text" id="totalFinalInput" value="$0.00" readonly></div>
+            </div>
+        </div>
+        <div class="total-letras">
+            <strong>Total con letra:</strong> <span id="totalLetras">CERO PESOS 00/100 M.N.</span>
+        </div>
+        <div class="row">
+            <div class="field">
+                <label>ANTICIPACIÓN (50-70%)</label>
+                <input type="number" id="anticipacionPorcentaje" value="50" min="0" max="100" step="5">
+                <small style="color:var(--gray);">% del total final</small>
+            </div>
+            <div class="field">
+                <label>MONTO DE ANTICIPACIÓN</label>
+                <input type="text" id="anticipacionMonto" value="$0.00" readonly>
+            </div>
+        </div>
+        <div class="row">
+            <div class="field">
+                <label>CONTRA ENTREGA</label>
+                <input type="text" id="contra_entrega" value="$0.00" readonly>
+            </div>
+            <div class="field">
+                <label>PLAZO DE ENTREGA (texto)</label>
+                <input type="text" id="plazoEntregaTexto" value="5 días hábiles" placeholder="Ej. 5 días hábiles">
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== FIRMAS ====== -->
+    <div class="section">
+        <div class="section-title"><span>8</span> FIRMAS DE ACEPTACIÓN</div>
+        <div class="firmas-container">
+            <div class="firma-box">
+                <label>FIRMA DEL INSTALADOR / EMPRESA</label>
+                <div class="firma-linea"></div>
+                <div class="leyenda">
+                    Al generar este documento, MS SOLUTIONS certifica que esta cotización ha sido emitida de manera oficial y cuenta con validez legal para su uso como propuesta comercial.
+                </div>
+                <div class="nombre"><strong>MS SOLUTIONS</strong> - <span id="tecnicoFirma">Ing. Alan Marcelo</span></div>
+            </div>
+            <div class="firma-box">
+                <label>FIRMA DEL CLIENTE</label>
+                <div class="firma-linea"></div>
+                <div class="leyenda">
+                    El cliente reconoce haber recibido esta cotización a través de medios digitales (correo electrónico, WhatsApp u otros) y acepta que los términos aquí descritos son de su conocimiento y conformidad para el inicio del proyecto.
+                </div>
+                <div class="nombre"><strong>Cliente:</strong> <span id="clienteFirma">Bruno Calderón Vega</span></div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== BOTONES DE ACCIÓN ====== -->
+    <div class="btn-group">
+        <button class="btn btn-primary" onclick="nuevaCotizacion()">🔄 NUEVA COTIZACIÓN</button>
+        <button class="btn btn-warning" onclick="limpiarTodo()">🧹 LIMPIAR</button>
+        <button class="btn btn-danger" onclick="borrarEmpresa()">🗑️ BORRAR DATOS EMPRESA</button>
+    </div>
+    <button class="btn-generate" onclick="previsualizarPDF()">📄 PREVISUALIZAR PDF</button>
+
+    <div style="text-align:center; color:#999; font-size:12px; margin-top:20px;">
+        PRESUPUESTO CCTV - MS SOLUTIONS v5.0
+    </div>
+</div>
+
+<!-- ====== MODAL DE PREVISUALIZACIÓN ====== -->
+<div class="modal-overlay" id="modalPreview">
+    <div class="modal-content">
+        <iframe id="pdfPreviewFrame"></iframe>
+        <button class="modal-close" onclick="cerrarModal()">Cerrar</button>
+        <button class="btn-generate" onclick="imprimirDesdeModal()" style="margin-top:10px;">🖨️ IMPRIMIR / GUARDAR PDF</button>
+    </div>
+</div>
+
+<script>
+    // ====== FUNCIÓN PARA NÚMERO A LETRAS ======
+    function numeroALetras(num) {
+        const unidades = ['', 'UN', 'DOS', 'TRES', 'CUATRO', 'CINCO', 'SEIS', 'SIETE', 'OCHO', 'NUEVE'];
+        const decenas = ['', 'DIEZ', 'VEINTE', 'TREINTA', 'CUARENTA', 'CINCUENTA', 'SESENTA', 'SETENTA', 'OCHENTA', 'NOVENTA'];
+        const centenas = ['', 'CIENTO', 'DOSCIENTOS', 'TRESCIENTOS', 'CUATROCIENTOS', 'QUINIENTOS', 'SEISCIENTOS',
+            'SETECIENTOS', 'OCHOCIENTOS', 'NOVECIENTOS'
+        ];
+
+        function convertirGrupo(n) {
+            let texto = '';
+            const c = Math.floor(n / 100);
+            const d = Math.floor((n % 100) / 10);
+            const u = n % 10;
+            if (c > 0) {
+                if (c === 1 && d === 0 && u === 0) texto += 'CIEN';
+                else texto += centenas[c];
             }
-
-            const entero = Math.floor(num);
-            const decimal = Math.round((num - entero) * 100);
-
-            if (entero === 0) return 'CERO PESOS 00/100 M.N.';
-
-            let partes = [];
-            const miles = Math.floor(entero / 1000);
-            const resto = entero % 1000;
-
-            if (miles > 0) {
-                if (miles === 1) partes.push('MIL');
-                else partes.push(convertirGrupo(miles) + ' MIL');
+            if (d > 0) {
+                if (d === 1 && u > 0) {
+                    const especiales = ['', 'ONCE', 'DOCE', 'TRECE', 'CATORCE', 'QUINCE', 'DIECISÉIS', 'DIECISIETE',
+                        'DIECIOCHO', 'DIECINUEVE'
+                    ];
+                    texto += (texto ? ' ' : '') + especiales[u];
+                    return texto;
+                } else {
+                    texto += (texto ? ' ' : '') + decenas[d];
+                }
             }
-            if (resto > 0) {
-                partes.push(convertirGrupo(resto));
+            if (u > 0 && d !== 1) {
+                if (d > 0) texto += ' Y ';
+                texto += unidades[u];
             }
-
-            let texto = partes.join(' ');
-            texto += ' PESOS ' + (decimal < 10 ? '0' : '') + decimal + '/100 M.N.';
             return texto;
         }
 
-        // ====== ACTUALIZAR TOTALES ======
-        function calcularTotales() {
-            let subtotalEquipos = 0;
-            const filasEquipos = document.querySelectorAll('#tbodyEquipos tr');
-            filasEquipos.forEach(row => {
-                const cant = parseFloat(row.querySelector('.cant-equipo')?.value) || 0;
-                const punit = parseFloat(row.querySelector('.punit-equipo')?.value) || 0;
-                const total = cant * punit;
-                const totalInput = row.querySelector('.total-equipo');
-                if (totalInput) totalInput.value = total.toFixed(2);
-                subtotalEquipos += total;
-            });
-            document.getElementById('subtotalEquipos').value = subtotalEquipos.toFixed(2);
-
-            let subtotalServicios = 0;
-            const filasServicios = document.querySelectorAll('#tbodyServicios tr');
-            filasServicios.forEach(row => {
-                const cant = parseFloat(row.querySelector('.cant-servicio')?.value) || 0;
-                const punit = parseFloat(row.querySelector('.punit-servicio')?.value) || 0;
-                const total = cant * punit;
-                const totalInput = row.querySelector('.total-servicio');
-                if (totalInput) totalInput.value = total.toFixed(2);
-                subtotalServicios += total;
-            });
-            document.getElementById('subtotalServicios').value = subtotalServicios.toFixed(2);
-
-            const viaticos = parseFloat(document.getElementById('viaticos').value) || 0;
-            const renta = parseFloat(document.getElementById('renta').value) || 0;
-            const insumos = parseFloat(document.getElementById('insumos').value) || 0;
-            const extras = viaticos + renta + insumos;
-
-            const subtotalNeto = subtotalEquipos + subtotalServicios + extras;
-            document.getElementById('subtotalNeto').value = subtotalNeto.toFixed(2);
-            document.getElementById('totalFinalInput').value = subtotalNeto.toFixed(2);
-            document.getElementById('contra_entrega').value = subtotalNeto.toFixed(2);
-
-            const totalLetras = numeroALetras(subtotalNeto);
-            document.getElementById('totalLetras').innerText = totalLetras;
+        const entero = Math.floor(num);
+        const decimal = Math.round((num - entero) * 100);
+        if (entero === 0) return 'CERO PESOS 00/100 M.N.';
+        let partes = [];
+        const miles = Math.floor(entero / 1000);
+        const resto = entero % 1000;
+        if (miles > 0) {
+            if (miles === 1) partes.push('MIL');
+            else partes.push(convertirGrupo(miles) + ' MIL');
         }
+        if (resto > 0) {
+            partes.push(convertirGrupo(resto));
+        }
+        let texto = partes.join(' ');
+        texto += ' PESOS ' + (decimal < 10 ? '0' : '') + decimal + '/100 M.N.';
+        return texto;
+    }
 
-        // Event listener para cálculos automáticos
-        document.addEventListener('input', function(e) {
-            if (e.target.classList.contains('cant-equipo') || e.target.classList.contains('punit-equipo') ||
-                e.target.classList.contains('cant-servicio') || e.target.classList.contains('punit-servicio') ||
-                e.target.id === 'viaticos' || e.target.id === 'renta' || e.target.id === 'insumos') {
-                calcularTotales();
+    // ====== FORMATEAR MONEDA ======
+    function formatearMoneda(valor) {
+        return '$' + valor.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+    }
+
+    // ====== ACTUALIZAR TOTALES ======
+    function calcularTotales() {
+        let subtotalEquipos = 0;
+        document.querySelectorAll('#tbodyEquipos tr').forEach(row => {
+            const cant = parseFloat(row.querySelector('.cant-equipo')?.value) || 0;
+            const punit = parseFloat(row.querySelector('.punit-equipo')?.value) || 0;
+            const total = cant * punit;
+            const totalInput = row.querySelector('.total-equipo');
+            if (totalInput) totalInput.value = formatearMoneda(total);
+            subtotalEquipos += total;
+        });
+        document.getElementById('subtotalEquipos').value = formatearMoneda(subtotalEquipos);
+
+        let subtotalServicios = 0;
+        document.querySelectorAll('#tbodyServicios tr').forEach(row => {
+            const cant = parseFloat(row.querySelector('.cant-servicio')?.value) || 0;
+            const punit = parseFloat(row.querySelector('.punit-servicio')?.value) || 0;
+            const total = cant * punit;
+            const totalInput = row.querySelector('.total-servicio');
+            if (totalInput) totalInput.value = formatearMoneda(total);
+            subtotalServicios += total;
+        });
+        document.getElementById('subtotalServicios').value = formatearMoneda(subtotalServicios);
+
+        const viaticos = parseFloat(document.getElementById('viaticos').value) || 0;
+        const renta = parseFloat(document.getElementById('renta').value) || 0;
+        const insumos = parseFloat(document.getElementById('insumos').value) || 0;
+        const extras = viaticos + renta + insumos;
+
+        let subtotalNeto = subtotalEquipos + subtotalServicios + extras;
+        const descuentoPorc = parseFloat(document.getElementById('descuentoPorcentaje').value) || 0;
+        const descuento = subtotalNeto * (descuentoPorc / 100);
+        const totalFinal = subtotalNeto - descuento;
+
+        document.getElementById('subtotalNeto').value = formatearMoneda(subtotalNeto);
+        document.getElementById('totalFinalInput').value = formatearMoneda(totalFinal);
+
+        // Anticipación automática
+        const anticipacionPorc = parseFloat(document.getElementById('anticipacionPorcentaje').value) || 0;
+        const anticipacionMonto = totalFinal * (anticipacionPorc / 100);
+        document.getElementById('anticipacionMonto').value = formatearMoneda(anticipacionMonto);
+        document.getElementById('contra_entrega').value = formatearMoneda(totalFinal - anticipacionMonto);
+
+        // Total en letra
+        document.getElementById('totalLetras').innerText = numeroALetras(totalFinal);
+    }
+
+    // Event listeners para cálculos automáticos
+    document.addEventListener('input', function(e) {
+        const targets = ['cant-equipo', 'punit-equipo', 'cant-servicio', 'punit-servicio', 'viaticos', 'renta', 'insumos',
+            'descuentoPorcentaje', 'anticipacionPorcentaje'
+        ];
+        if (targets.some(cls => e.target.classList.contains(cls)) || targets.includes(e.target.id)) {
+            calcularTotales();
+            guardarDatos();
+        }
+    });
+
+    // ====== OBTENER EMOJI POR CATEGORÍA ======
+    function getEmoji(categoria) {
+        const mapa = { 'Cámaras': '📹', 'Grabadores': '💾', 'Accesorios': '🔌', 'Otros': '🛠️' };
+        return mapa[categoria] || '📦';
+    }
+
+    // ====== AGREGAR FILAS CON BOTONES DUPLICAR/ELIMINAR ======
+    function crearFilaEquipo(desc = '', cat = 'Cámaras', uni = 'Pieza', cant = 1, punit = 0) {
+        const tr = document.createElement('tr');
+        const idx = document.querySelectorAll('#tbodyEquipos tr').length + 1;
+        tr.innerHTML = `
+                <td>${idx}</td>
+                <td><input type="text" class="desc-equipo" value="${desc}" placeholder="Descripción"></td>
+                <td>
+                    <select class="categoria-equipo">
+                        <option value="Cámaras" ${cat==='Cámaras'?'selected':''}>📹 Cámaras</option>
+                        <option value="Grabadores" ${cat==='Grabadores'?'selected':''}>💾 Grabadores</option>
+                        <option value="Accesorios" ${cat==='Accesorios'?'selected':''}>🔌 Accesorios</option>
+                        <option value="Otros" ${cat==='Otros'?'selected':''}>🛠️ Otros</option>
+                    </select>
+                </td>
+                <td><select class="unidad-equipo"><option value="Pieza" ${uni==='Pieza'?'selected':''}>Pieza</option><option value="Metro" ${uni==='Metro'?'selected':''}>Metro</option><option value="Kit" ${uni==='Kit'?'selected':''}>Kit</option><option value="Juego" ${uni==='Juego'?'selected':''}>Juego</option></select></td>
+                <td><input type="number" class="cant-equipo" value="${cant}" min="1"></td>
+                <td><input type="number" class="punit-equipo" value="${punit}" step="0.01"></td>
+                <td><input type="text" class="total-equipo" value="$0.00" readonly></td>
+                <td>
+                    <button class="btn-accion duplicar" onclick="duplicarFila(this)" title="Duplicar">📋</button>
+                    <button class="btn-accion eliminar" onclick="eliminarFila(this)" title="Eliminar">✕</button>
+                    <span class="btn-accion arrastrar" title="Arrastrar para reordenar">⠿</span>
+                </td>
+            `;
+        return tr;
+    }
+
+    function crearFilaServicio(desc = '', cant = 1, punit = 0) {
+        const tr = document.createElement('tr');
+        const idx = document.querySelectorAll('#tbodyServicios tr').length + 1;
+        tr.innerHTML = `
+                <td>${idx}</td>
+                <td><input type="text" class="desc-servicio" value="${desc}" placeholder="Descripción del servicio"></td>
+                <td><input type="number" class="cant-servicio" value="${cant}" min="1"></td>
+                <td><input type="number" class="punit-servicio" value="${punit}" step="0.01"></td>
+                <td><input type="text" class="total-servicio" value="$0.00" readonly></td>
+                <td>
+                    <button class="btn-accion duplicar" onclick="duplicarFila(this)" title="Duplicar">📋</button>
+                    <button class="btn-accion eliminar" onclick="eliminarFila(this)" title="Eliminar">✕</button>
+                    <span class="btn-accion arrastrar" title="Arrastrar para reordenar">⠿</span>
+                </td>
+            `;
+        return tr;
+    }
+
+    function agregarFilaEquipo() {
+        const tbody = document.getElementById('tbodyEquipos');
+        tbody.appendChild(crearFilaEquipo());
+        calcularTotales();
+        guardarDatos();
+        actualizarNumeros();
+    }
+
+    function agregarFilaServicio() {
+        const tbody = document.getElementById('tbodyServicios');
+        tbody.appendChild(crearFilaServicio());
+        calcularTotales();
+        guardarDatos();
+        actualizarNumeros();
+    }
+
+    function duplicarFila(btn) {
+        const row = btn.closest('tr');
+        const clone = row.cloneNode(true);
+        // Resetear valores de inputs que puedan tener eventos
+        clone.querySelectorAll('input').forEach(inp => inp.value = inp.value);
+        clone.querySelectorAll('select').forEach(sel => sel.selectedIndex = sel.selectedIndex);
+        row.parentNode.insertBefore(clone, row.nextSibling);
+        calcularTotales();
+        guardarDatos();
+        actualizarNumeros();
+    }
+
+    function eliminarFila(btn) {
+        const row = btn.closest('tr');
+        const tbody = row.parentNode;
+        if (tbody.children.length <= 1) {
+            alert('Debe quedar al menos una fila.');
+            return;
+        }
+        if (confirm('¿Eliminar esta fila?')) {
+            row.remove();
+            calcularTotales();
+            guardarDatos();
+            actualizarNumeros();
+        }
+    }
+
+    function actualizarNumeros() {
+        document.querySelectorAll('#tbodyEquipos tr').forEach((row, i) => {
+            row.cells[0].textContent = i + 1;
+        });
+        document.querySelectorAll('#tbodyServicios tr').forEach((row, i) => {
+            row.cells[0].textContent = i + 1;
+        });
+    }
+
+    // ====== ORDENAR FILAS (SORTABLEJS) ======
+    function initSortable() {
+        const tbodyEquipos = document.getElementById('tbodyEquipos');
+        const tbodyServicios = document.getElementById('tbodyServicios');
+
+        new Sortable(tbodyEquipos, {
+            handle: '.arrastrar',
+            animation: 150,
+            onEnd: function() {
+                actualizarNumeros();
+                guardarDatos();
             }
         });
 
-        // ====== AGREGAR FILAS CON BOTÓN ELIMINAR ======
-        function agregarFilaEquipo() {
-            const tbody = document.getElementById('tbodyEquipos');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                    <td><input type="text" class="desc-equipo" placeholder="Descripción"></td>
-                    <td><select class="categoria-equipo"><option value="Cámaras">Cámaras</option><option value="Grabadores">Grabadores</option><option value="Accesorios">Accesorios</option><option value="Otros">Otros</option></select></td>
-                    <td><select class="unidad-equipo"><option value="Pieza" selected>Pieza</option><option value="Metro">Metro</option><option value="Kit">Kit</option><option value="Juego">Juego</option></select></td>
-                    <td><input type="number" class="cant-equipo" value="1" min="1"></td>
-                    <td><input type="number" class="punit-equipo" value="0" step="0.01"></td>
-                    <td><input type="text" class="total-equipo" value="0.00" readonly></td>
-                    <td><button class="btn-eliminar-fila" onclick="eliminarFila(this)">✕</button></td>
-                `;
-            tbody.appendChild(tr);
-            calcularTotales();
-        }
-
-        function agregarFilaServicio() {
-            const tbody = document.getElementById('tbodyServicios');
-            const tr = document.createElement('tr');
-            tr.innerHTML = `
-                    <td><input type="text" class="desc-servicio" placeholder="Descripción del servicio"></td>
-                    <td><input type="number" class="cant-servicio" value="1" min="1"></td>
-                    <td><input type="number" class="punit-servicio" value="0" step="0.01"></td>
-                    <td><input type="text" class="total-servicio" value="0.00" readonly></td>
-                    <td><button class="btn-eliminar-fila" onclick="eliminarFila(this)">✕</button></td>
-                `;
-            tbody.appendChild(tr);
-            calcularTotales();
-        }
-
-        function eliminarFila(btn) {
-            const row = btn.closest('tr');
-            if (document.querySelectorAll('#tbodyEquipos tr').length + document.querySelectorAll('#tbodyServicios tr')
-                .length <= 2) {
-                alert('Debe quedar al menos una fila en cada tabla.');
-                return;
+        new Sortable(tbodyServicios, {
+            handle: '.arrastrar',
+            animation: 150,
+            onEnd: function() {
+                actualizarNumeros();
+                guardarDatos();
             }
-            if (confirm('¿Eliminar esta fila?')) {
-                row.remove();
-                calcularTotales();
-            }
-        }
+        });
+    }
 
-        // ====== INICIALIZAR FILAS PREDETERMINADAS ======
-        function inicializarFilas() {
+    // ====== GUARDADO AUTOMÁTICO (LocalStorage) ======
+    function guardarDatos() {
+        const data = {
+            empresa: document.getElementById('empresa').value,
+            tecnico: document.getElementById('tecnico').value,
+            telefono: document.getElementById('telefono').value,
+            correo: document.getElementById('correo').value,
+            domicilio: document.getElementById('domicilio').value,
+            cliente_nombre: document.getElementById('cliente_nombre').value,
+            cliente_empresa: document.getElementById('cliente_empresa').value,
+            cliente_telefono: document.getElementById('cliente_telefono').value,
+            cliente_correo: document.getElementById('cliente_correo').value,
+            cliente_direccion: document.getElementById('cliente_direccion').value,
+            tipo_sistema: document.getElementById('tipo_sistema').value,
+            ubicacion: document.getElementById('ubicacion').value,
+            resolucion: document.getElementById('resolucion').value,
+            canales: document.getElementById('canales').value,
+            almacenamiento: document.getElementById('almacenamiento').value,
+            cableado: document.getElementById('cableado').value,
+            tuberia: document.getElementById('tuberia').value,
+            fuente: document.getElementById('fuente').value,
+            formaPago: document.getElementById('formaPago').value,
+            plazoEntrega: document.getElementById('plazoEntrega').value,
+            vigenciaDias: document.getElementById('vigenciaDias').value,
+            tiempo_ejecucion: document.getElementById('tiempo_ejecucion').value,
+            vigenciaTexto: document.getElementById('vigenciaTexto').value,
+            otra_condicion: document.getElementById('otra_condicion').value,
+            viaticos: document.getElementById('viaticos').value,
+            renta: document.getElementById('renta').value,
+            insumos: document.getElementById('insumos').value,
+            notas_tecnicas: document.getElementById('notas_tecnicas').value,
+            descuentoPorcentaje: document.getElementById('descuentoPorcentaje').value,
+            anticipacionPorcentaje: document.getElementById('anticipacionPorcentaje').value,
+            plazoEntregaTexto: document.getElementById('plazoEntregaTexto').value,
+            equipos: [],
+            servicios: []
+        };
+
+        document.querySelectorAll('#tbodyEquipos tr').forEach(row => {
+            data.equipos.push({
+                desc: row.querySelector('.desc-equipo').value,
+                cat: row.querySelector('.categoria-equipo').value,
+                uni: row.querySelector('.unidad-equipo').value,
+                cant: row.querySelector('.cant-equipo').value,
+                punit: row.querySelector('.punit-equipo').value
+            });
+        });
+
+        document.querySelectorAll('#tbodyServicios tr').forEach(row => {
+            data.servicios.push({
+                desc: row.querySelector('.desc-servicio').value,
+                cant: row.querySelector('.cant-servicio').value,
+                punit: row.querySelector('.punit-servicio').value
+            });
+        });
+
+        localStorage.setItem('presupuestoData', JSON.stringify(data));
+    }
+
+    function cargarDatos() {
+        const raw = localStorage.getItem('presupuestoData');
+        if (!raw) return;
+        try {
+            const data = JSON.parse(raw);
+            // Campos simples
+            Object.keys(data).forEach(key => {
+                if (key === 'equipos' || key === 'servicios') return;
+                const el = document.getElementById(key);
+                if (el) el.value = data[key];
+            });
+
             // Equipos
             const tbodyEquipos = document.getElementById('tbodyEquipos');
-            const equiposDefault = [
-                { desc: 'Cámara Bala 4MP IP', cat: 'Cámaras', uni: 'Pieza', cant: 4, punit: 1800 },
-                { desc: 'Grabador NVR 8 Canales', cat: 'Grabadores', uni: 'Pieza', cant: 1, punit: 4500 },
-                { desc: 'Disco Duro 2TB', cat: 'Accesorios', uni: 'Pieza', cant: 1, punit: 2200 },
-                { desc: 'Switch PoE 8 Puertos', cat: 'Accesorios', uni: 'Pieza', cant: 1, punit: 2600 },
-                { desc: 'Cable UTP Cat5e (por metro)', cat: 'Otros', uni: 'Metro', cant: 30, punit: 8.5 }
-            ];
-            equiposDefault.forEach(e => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                        <td><input type="text" class="desc-equipo" value="${e.desc}"></td>
-                        <td><select class="categoria-equipo"><option value="Cámaras" ${e.cat==='Cámaras'?'selected':''}>Cámaras</option><option value="Grabadores" ${e.cat==='Grabadores'?'selected':''}>Grabadores</option><option value="Accesorios" ${e.cat==='Accesorios'?'selected':''}>Accesorios</option><option value="Otros" ${e.cat==='Otros'?'selected':''}>Otros</option></select></td>
-                        <td><select class="unidad-equipo"><option value="Pieza" ${e.uni==='Pieza'?'selected':''}>Pieza</option><option value="Metro" ${e.uni==='Metro'?'selected':''}>Metro</option><option value="Kit" ${e.uni==='Kit'?'selected':''}>Kit</option><option value="Juego" ${e.uni==='Juego'?'selected':''}>Juego</option></select></td>
-                        <td><input type="number" class="cant-equipo" value="${e.cant}" min="1"></td>
-                        <td><input type="number" class="punit-equipo" value="${e.punit}" step="0.01"></td>
-                        <td><input type="text" class="total-equipo" value="0.00" readonly></td>
-                        <td><button class="btn-eliminar-fila" onclick="eliminarFila(this)">✕</button></td>
-                    `;
-                tbodyEquipos.appendChild(tr);
-            });
+            tbodyEquipos.innerHTML = '';
+            if (data.equipos && data.equipos.length) {
+                data.equipos.forEach(e => {
+                    tbodyEquipos.appendChild(crearFilaEquipo(e.desc, e.cat, e.uni, e.cant, e.punit));
+                });
+            } else {
+                // Filas por defecto
+                tbodyEquipos.appendChild(crearFilaEquipo('Cámara Bala 4MP IP', 'Cámaras', 'Pieza', 4, 1800));
+                tbodyEquipos.appendChild(crearFilaEquipo('Grabador NVR 8 Canales', 'Grabadores', 'Pieza', 1, 4500));
+                tbodyEquipos.appendChild(crearFilaEquipo('Disco Duro 2TB', 'Accesorios', 'Pieza', 1, 2200));
+                tbodyEquipos.appendChild(crearFilaEquipo('Switch PoE 8 Puertos', 'Accesorios', 'Pieza', 1, 2600));
+                tbodyEquipos.appendChild(crearFilaEquipo('Cable UTP Cat5e (por metro)', 'Otros', 'Metro', 30, 8.5));
+            }
 
             // Servicios
             const tbodyServicios = document.getElementById('tbodyServicios');
-            const serviciosDefault = [
-                { desc: 'Instalación de cámaras IP y configuración', cant: 1, punit: 1800 },
-                { desc: 'Configuración de 3 celulares para visualización remota', cant: 1, punit: 600 }
-            ];
-            serviciosDefault.forEach(s => {
-                const tr = document.createElement('tr');
-                tr.innerHTML = `
-                        <td><input type="text" class="desc-servicio" value="${s.desc}"></td>
-                        <td><input type="number" class="cant-servicio" value="${s.cant}" min="1"></td>
-                        <td><input type="number" class="punit-servicio" value="${s.punit}" step="0.01"></td>
-                        <td><input type="text" class="total-servicio" value="0.00" readonly></td>
-                        <td><button class="btn-eliminar-fila" onclick="eliminarFila(this)">✕</button></td>
-                    `;
-                tbodyServicios.appendChild(tr);
-            });
+            tbodyServicios.innerHTML = '';
+            if (data.servicios && data.servicios.length) {
+                data.servicios.forEach(s => {
+                    tbodyServicios.appendChild(crearFilaServicio(s.desc, s.cant, s.punit));
+                });
+            } else {
+                tbodyServicios.appendChild(crearFilaServicio('Instalación de cámaras IP y configuración', 1, 1800));
+                tbodyServicios.appendChild(crearFilaServicio('Configuración de 3 celulares para visualización remota', 1,
+                    600));
+            }
+
             calcularTotales();
+            actualizarNumeros();
+            initSortable();
+        } catch (e) {
+            console.warn('Error al cargar datos guardados', e);
         }
+    }
 
-        // ====== LIMPIAR TODO ======
-        function limpiarTodo() {
-            if (!confirm('¿Estás seguro de limpiar todos los campos?')) return;
-            document.querySelectorAll('input:not([readonly])').forEach(inp => {
-                if (inp.type === 'number' || inp.type === 'text' || inp.type === 'email') {
-                    inp.value = '';
-                }
-            });
-            document.querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
-            document.querySelectorAll('#condiciones input[type="checkbox"]').forEach(cb => cb.checked = false);
-            // Reiniciar filas a las predeterminadas
-            document.getElementById('tbodyEquipos').innerHTML = '';
-            document.getElementById('tbodyServicios').innerHTML = '';
-            inicializarFilas();
-        }
+    // ====== NUEVA COTIZACIÓN ======
+    function nuevaCotizacion() {
+        if (!confirm('¿Reiniciar todo? Se perderán los datos actuales y se generará un nuevo folio.')) return;
+        localStorage.removeItem('presupuestoData');
+        localStorage.removeItem('folioConsecutivo');
+        location.reload();
+    }
 
-        function borrarEmpresa() {
-            if (!confirm('¿Borrar datos de la empresa?')) return;
-            document.getElementById('empresa').value = '';
-            document.getElementById('tecnico').value = '';
-            document.getElementById('telefono').value = '';
-            document.getElementById('correo').value = '';
-            document.getElementById('domicilio').value = '';
-        }
-
-        // ====== GENERAR PDF PROFESIONAL (UNA SOLA HOJA) ======
-        function generarPDF() {
-            // Recolectar datos
-            const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
-            const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
-            const telefono = document.getElementById('telefono').value || '';
-            const correo = document.getElementById('correo').value || '';
-            const domicilio = document.getElementById('domicilio').value || '';
-
-            const cliente = document.getElementById('cliente_nombre').value || '';
-            const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
-            const clienteTel = document.getElementById('cliente_telefono').value || '';
-            const clienteCorreo = document.getElementById('cliente_correo').value || '';
-            const clienteDir = document.getElementById('cliente_direccion').value || '';
-
-            const tipoSistema = document.getElementById('tipo_sistema').value || '';
-            const ubicacion = document.getElementById('ubicacion').value || '';
-            const resolucion = document.getElementById('resolucion').value || '';
-            const canales = document.getElementById('canales').value || '';
-            const almacenamiento = document.getElementById('almacenamiento').value || '';
-            const cableado = document.getElementById('cableado').value || '';
-            const tuberia = document.getElementById('tuberia').value || '';
-            const fuente = document.getElementById('fuente').value || '';
-            const formaPago = document.getElementById('formaPago').value || '';
-            const plazoEntrega = document.getElementById('plazoEntrega').value || '5';
-            const vigenciaDias = document.getElementById('vigenciaDias').value || '7';
-
-            const tiempoEjecucion = document.getElementById('tiempo_ejecucion').value || '2 días hábiles';
-            const vigenciaTexto = document.getElementById('vigenciaTexto').value || '7 días';
-            const condiciones = [];
-            document.querySelectorAll('#condiciones input[type="checkbox"]:checked').forEach(cb => {
-                condiciones.push(cb.parentElement.textContent.trim());
-            });
-            const otraCondicion = document.getElementById('otra_condicion').value || '';
-            const viaticos = parseFloat(document.getElementById('viaticos').value) || 0;
-            const renta = parseFloat(document.getElementById('renta').value) || 0;
-            const insumos = parseFloat(document.getElementById('insumos').value) || 0;
-            const notasTecnicas = document.getElementById('notas_tecnicas').value || '';
-
-            const subtotalNeto = parseFloat(document.getElementById('subtotalNeto').value) || 0;
-            const totalLetras = document.getElementById('totalLetras').innerText || 'CERO PESOS 00/100 M.N.';
-            const anticipacion = document.getElementById('anticipacion').value || '0';
-
-            // Obtener filas de equipos
-            let filasEquipos = [];
-            document.querySelectorAll('#tbodyEquipos tr').forEach(row => {
-                const desc = row.querySelector('.desc-equipo')?.value || '';
-                const cat = row.querySelector('.categoria-equipo')?.value || '';
-                const uni = row.querySelector('.unidad-equipo')?.value || '';
-                const cant = row.querySelector('.cant-equipo')?.value || '0';
-                const punit = row.querySelector('.punit-equipo')?.value || '0';
-                const total = row.querySelector('.total-equipo')?.value || '0';
-                filasEquipos.push({ desc, cat, uni, cant, punit, total });
-            });
-
-            // Obtener filas de servicios
-            let filasServicios = [];
-            document.querySelectorAll('#tbodyServicios tr').forEach(row => {
-                const desc = row.querySelector('.desc-servicio')?.value || '';
-                const cant = row.querySelector('.cant-servicio')?.value || '0';
-                const punit = row.querySelector('.punit-servicio')?.value || '0';
-                const total = row.querySelector('.total-servicio')?.value || '0';
-                filasServicios.push({ desc, cant, punit, total });
-            });
-
-            // Construir HTML del PDF
-            const pdfContent = `
-                    <!DOCTYPE html>
-                    <html>
-                    <head>
-                        <meta charset="UTF-8">
-                        <title>Presupuesto CCTV - MS Solutions</title>
-                        <style>
-                            body { font-family: 'Times New Roman', Times, serif; margin: 1.5cm; color: #000; }
-                            .header { text-align: center; border-bottom: 2px solid #8B0000; padding-bottom: 10px; margin-bottom: 15px; }
-                            .header h1 { font-size: 22pt; margin: 0; color: #8B0000; }
-                            .header .subt { font-size: 12pt; color: #555; }
-                            .header .folio-fecha { display: flex; justify-content: space-between; font-size: 11pt; margin-top: 5px; }
-                            .seccion { margin-bottom: 12px; }
-                            .seccion-titulo { font-weight: bold; font-size: 13pt; border-bottom: 1px solid #8B0000; padding-bottom: 3px; margin-bottom: 8px; color: #8B0000; }
-                            .datos-cliente { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 20px; font-size: 11pt; }
-                            .datos-cliente .label { font-weight: bold; }
-                            .tabla { width: 100%; border-collapse: collapse; font-size: 10pt; margin: 6px 0; }
-                            .tabla th { background: #8B0000; color: white; padding: 5px 8px; text-align: left; }
-                            .tabla td { padding: 4px 8px; border-bottom: 1px solid #ccc; }
-                            .tabla .total-row td { border-top: 2px solid #8B0000; font-weight: bold; }
-                            .resumen { display: flex; justify-content: space-between; font-size: 13pt; font-weight: bold; margin: 10px 0; }
-                            .resumen .total { color: #8B0000; font-size: 16pt; }
-                            .total-letras { font-size: 11pt; margin: 8px 0; padding: 8px; border: 1px solid #333; background: #f9f9f9; }
-                            .firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
-                            .firma-box { border-top: 2px solid #333; padding-top: 8px; }
-                            .firma-box .linea { height: 30px; border-bottom: 1px solid #333; margin-bottom: 5px; }
-                            .firma-box .leyenda { font-size: 9pt; font-style: italic; color: #555; }
-                            .firma-box .nombre { font-weight: bold; font-size: 11pt; margin-top: 5px; }
-                            .vigencia { font-size: 9pt; text-align: center; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 8px; color: #555; }
-                            .condiciones { font-size: 9pt; margin: 5px 0; }
-                            .condiciones ul { list-style: none; padding: 0; margin: 0; }
-                            .condiciones ul li::before { content: "• "; color: #8B0000; }
-                            .notas { font-size: 9pt; font-style: italic; color: #555; }
-                            .extra { font-size: 9pt; }
-                            @page { margin: 1.5cm; }
-                            @media print { body { margin: 0; } }
-                        </style>
-                    </head>
-                    <body>
-                        <div class="header">
-                            <h1>PRESUPUESTO CCTV - MS SOLUTIONS</h1>
-                            <div class="subt">Sistemas de Videovigilancia Profesional</div>
-                            <div class="folio-fecha">
-                                <span><strong>Folio:</strong> ${document.getElementById('folio').value}</span>
-                                <span><strong>Fecha:</strong> ${document.getElementById('fechaEmision').value}</span>
-                            </div>
-                        </div>
-
-                        <div class="seccion">
-                            <div class="seccion-titulo">DATOS DEL CLIENTE</div>
-                            <div class="datos-cliente">
-                                <div><span class="label">Cliente:</span> ${cliente}</div>
-                                <div><span class="label">Empresa:</span> ${clienteEmpresa || '---'}</div>
-                                <div><span class="label">Teléfono:</span> ${clienteTel}</div>
-                                <div><span class="label">Correo:</span> ${clienteCorreo}</div>
-                                <div style="grid-column:1/-1;"><span class="label">Dirección:</span> ${clienteDir}</div>
-                            </div>
-                        </div>
-
-                        <div class="seccion">
-                            <div class="seccion-titulo">CONFIGURACIÓN DEL SISTEMA</div>
-                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px 15px; font-size:10pt;">
-                                <div><strong>Tipo:</strong> ${tipoSistema}</div>
-                                <div><strong>Ubicación:</strong> ${ubicacion}</div>
-                                <div><strong>Resolución:</strong> ${resolucion}</div>
-                                <div><strong>Canales:</strong> ${canales}</div>
-                                <div><strong>Almacenamiento:</strong> ${almacenamiento}</div>
-                                <div><strong>Cableado:</strong> ${cableado}</div>
-                                <div><strong>Tubería:</strong> ${tuberia}</div>
-                                <div><strong>Fuente:</strong> ${fuente}</div>
-                                <div><strong>Forma de pago:</strong> ${formaPago}</div>
-                                <div><strong>Plazo entrega:</strong> ${plazoEntrega} días</div>
-                                <div><strong>Vigencia:</strong> ${vigenciaDias} días</div>
-                            </div>
-                        </div>
-
-                        <div class="seccion">
-                            <div class="seccion-titulo">DESGLOSE DE EQUIPOS</div>
-                            <table class="tabla">
-                                <thead><tr><th>Descripción</th><th>Categoría</th><th>Unidad</th><th>Cant</th><th>P.Unitario</th><th>Total</th></tr></thead>
-                                <tbody>
-                                    ${filasEquipos.map(f => `<tr><td>${f.desc}</td><td>${f.cat}</td><td>${f.uni}</td><td>${f.cant}</td><td>$${f.punit}</td><td>$${f.total}</td></tr>`).join('')}
-                                </tbody>
-                                <tfoot>
-                                    <tr class="total-row"><td colspan="5" style="text-align:right;">SUBTOTAL EQUIPOS</td><td>$${document.getElementById('subtotalEquipos').value}</td></tr>
-                                </tfoot>
-                            </table>
-                        </div>
-
-                        <div class="seccion">
-                            <div class="seccion-titulo">MANO DE OBRA Y SERVICIOS</div>
-                            <table class="tabla">
-                                <thead><tr><th>Descripción</th><th>Cant</th><th>P.Unitario</th><th>Total</th></tr></thead>
-                                <tbody>
-                                    ${filasServicios.map(f => `<tr><td>${f.desc}</td><td>${f.cant}</td><td>$${f.punit}</td><td>$${f.total}</td></tr>`).join('')}
-                                </tbody>
-                                <tfoot>
-                                    <tr class="total-row"><td colspan="3" style="text-align:right;">SUBTOTAL SERVICIOS</td><td>$${document.getElementById('subtotalServicios').value}</td></tr>
-                                </tfoot>
-                            </table>
-                        </div>
-
-                        <div class="seccion">
-                            <div class="seccion-titulo">GASTOS EXTRA</div>
-                            <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px 15px; font-size:10pt;">
-                                <div><strong>Viáticos:</strong> $${viaticos.toFixed(2)}</div>
-                                <div><strong>Renta escaleras:</strong> $${renta.toFixed(2)}</div>
-                                <div><strong>Insumos menores:</strong> $${insumos.toFixed(2)}</div>
-                            </div>
-                        </div>
-
-                        <div class="seccion">
-                            <div class="seccion-titulo">RESUMEN DE INVERSIÓN</div>
-                            <div class="resumen">
-                                <span>Subtotal Neto: $${subtotalNeto.toFixed(2)}</span>
-                                <span class="total">Total Final: $${subtotalNeto.toFixed(2)}</span>
-                            </div>
-                            <div class="total-letras"><strong>Total con letra:</strong> ${totalLetras}</div>
-                            <div style="display:grid; grid-template-columns:1fr 1fr; gap:4px 15px; font-size:10pt; margin-top:5px;">
-                                <div><strong>Anticipación (50-70%):</strong> $${anticipacion}</div>
-                                <div><strong>Contra entrega:</strong> $${subtotalNeto.toFixed(2)}</div>
-                            </div>
-                        </div>
-
-                        <div class="seccion">
-                            <div class="seccion-titulo">CONDICIONES Y NOTAS</div>
-                            <div class="condiciones">
-                                <ul>
-                                    ${condiciones.map(c => `<li>${c}</li>`).join('')}
-                                    ${otraCondicion ? `<li>${otraCondicion}</li>` : ''}
-                                </ul>
-                            </div>
-                            <div class="notas">${notasTecnicas}</div>
-                            <div style="font-size:9pt; margin-top:5px;"><strong>Tiempo ejecución:</strong> ${tiempoEjecucion}</div>
-                        </div>
-
-                        <div class="seccion">
-                            <div class="seccion-titulo">FIRMAS DE ACEPTACIÓN</div>
-                            <div class="firmas">
-                                <div class="firma-box">
-                                    <div><strong>FIRMA DEL INSTALADOR / EMPRESA</strong></div>
-                                    <div class="linea"></div>
-                                    <div class="leyenda">Al generar este documento, MS SOLUTIONS certifica que esta cotización ha sido emitida de manera oficial y cuenta con validez legal para su uso como propuesta comercial.</div>
-                                    <div class="nombre"><strong>MS SOLUTIONS</strong> - ${tecnico}</div>
-                                </div>
-                                <div class="firma-box">
-                                    <div><strong>FIRMA DEL CLIENTE</strong></div>
-                                    <div class="linea"></div>
-                                    <div class="leyenda">El cliente reconoce haber recibido esta cotización a través de medios digitales (correo electrónico, WhatsApp u otros) y acepta que los términos aquí descritos son de su conocimiento y conformidad para el inicio del proyecto.</div>
-                                    <div class="nombre"><strong>Cliente:</strong> ${cliente}</div>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="vigencia">
-                            <strong>Vigencia:</strong> ${vigenciaTexto} naturales a partir de la fecha de emisión. Los precios están sujetos a cambios sin previo aviso por fluctuaciones del mercado o tipo de cambio.
-                            <br>Este documento es una cotización oficial de MS SOLUTIONS.
-                        </div>
-                    </body>
-                    </html>
-                `;
-
-            // Abrir ventana nueva para imprimir
-            const ventana = window.open('', '_blank', 'width=800,height=600');
-            ventana.document.write(pdfContent);
-            ventana.document.close();
-            ventana.focus();
-            ventana.print();
-        }
-
-        // ====== FOLIO Y FECHA AUTOMÁTICOS ======
-        function generarFolio() {
-            const ahora = new Date();
-            const año = ahora.getFullYear();
-            let consecutivo = localStorage.getItem('folioConsecutivo');
-            if (!consecutivo) consecutivo = 1;
-            else consecutivo = parseInt(consecutivo) + 1;
-            localStorage.setItem('folioConsecutivo', consecutivo);
-            const folio = 'CCTV-' + año + '-' + String(consecutivo).padStart(4, '0');
-            document.getElementById('folio').value = folio;
-        }
-
-        function generarFechaHora() {
-            const ahora = new Date();
-            const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',
-                hour12: true };
-            const fecha = ahora.toLocaleDateString('es-ES', opciones);
-            document.getElementById('fechaEmision').value = fecha;
-        }
-
-        // ====== LOGO ======
-        document.getElementById('logoUpload').addEventListener('change', function(e) {
-            const reader = new FileReader();
-            reader.onload = function(event) {
-                const img = document.createElement('img');
-                img.src = event.target.result;
-                img.alt = 'Logo MS Solutions';
-                img.style.maxHeight = '80px';
-                img.style.maxWidth = '200px';
-                const preview = document.getElementById('logoPreview');
-                preview.innerHTML = '';
-                preview.appendChild(img);
-                localStorage.setItem('logoData', event.target.result);
-            };
-            reader.readAsDataURL(e.target.files[0]);
+    // ====== LIMPIAR TODO ======
+    function limpiarTodo() {
+        if (!confirm('¿Limpiar todos los campos? (Los datos guardados se conservarán)')) return;
+        document.querySelectorAll('input:not([readonly])').forEach(inp => {
+            if (inp.type === 'number' || inp.type === 'text' || inp.type === 'email') {
+                inp.value = '';
+            }
         });
+        document.querySelectorAll('select').forEach(sel => sel.selectedIndex = 0);
+        document.querySelectorAll('#condiciones input[type="checkbox"]').forEach(cb => cb.checked = false);
+        // Reiniciar filas a las predeterminadas (pero sin borrar las actuales, solo limpiar valores)
+        document.querySelectorAll('#tbodyEquipos tr').forEach(row => {
+            row.querySelector('.desc-equipo').value = '';
+            row.querySelector('.cant-equipo').value = 1;
+            row.querySelector('.punit-equipo').value = 0;
+        });
+        document.querySelectorAll('#tbodyServicios tr').forEach(row => {
+            row.querySelector('.desc-servicio').value = '';
+            row.querySelector('.cant-servicio').value = 1;
+            row.querySelector('.punit-servicio').value = 0;
+        });
+        calcularTotales();
+        guardarDatos();
+    }
 
-        const logoGuardado = localStorage.getItem('logoData');
-        if (logoGuardado) {
+    function borrarEmpresa() {
+        if (!confirm('¿Borrar datos de la empresa?')) return;
+        ['empresa', 'tecnico', 'telefono', 'correo', 'domicilio'].forEach(id => {
+            document.getElementById(id).value = '';
+        });
+        guardarDatos();
+    }
+
+    // ====== MODO OSCURO ======
+    document.getElementById('darkToggle').addEventListener('change', function() {
+        document.body.classList.toggle('dark-mode');
+        localStorage.setItem('darkMode', this.checked ? 'true' : 'false');
+    });
+
+    // Cargar preferencia de modo oscuro
+    if (localStorage.getItem('darkMode') === 'true') {
+        document.getElementById('darkToggle').checked = true;
+        document.body.classList.add('dark-mode');
+    }
+
+    // ====== LOGO ======
+    document.getElementById('logoUpload').addEventListener('change', function(e) {
+        const reader = new FileReader();
+        reader.onload = function(event) {
             const img = document.createElement('img');
-            img.src = logoGuardado;
-            img.alt = 'Logo MS Solutions';
+            img.src = event.target.result;
             img.style.maxHeight = '80px';
             img.style.maxWidth = '200px';
-            document.getElementById('logoPreview').appendChild(img);
-        }
-
-        // ====== INICIALIZAR ======
-        window.onload = function() {
-            generarFolio();
-            generarFechaHora();
-            inicializarFilas();
-            // Actualizar nombres en firmas
-            document.getElementById('tecnicoFirma').textContent = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
-            document.getElementById('clienteFirma').textContent = document.getElementById('cliente_nombre').value || 'Bruno Calderón Vega';
-            // Actualizar cuando cambien los campos
-            document.getElementById('tecnico').addEventListener('input', function() {
-                document.getElementById('tecnicoFirma').textContent = this.value || 'Ing. Alan Marcelo';
-            });
-            document.getElementById('cliente_nombre').addEventListener('input', function() {
-                document.getElementById('clienteFirma').textContent = this.value || 'Bruno Calderón Vega';
-            });
+            const preview = document.getElementById('logoPreview');
+            preview.innerHTML = '';
+            preview.appendChild(img);
+            localStorage.setItem('logoData', event.target.result);
         };
-    </script>
+        reader.readAsDataURL(e.target.files[0]);
+    });
+
+    const logoGuardado = localStorage.getItem('logoData');
+    if (logoGuardado) {
+        const img = document.createElement('img');
+        img.src = logoGuardado;
+        img.style.maxHeight = '80px';
+        img.style.maxWidth = '200px';
+        document.getElementById('logoPreview').appendChild(img);
+    }
+
+    // ====== FOLIO Y FECHA AUTOMÁTICOS ======
+    function generarFolio() {
+        const ahora = new Date();
+        const año = ahora.getFullYear();
+        let consecutivo = parseInt(localStorage.getItem('folioConsecutivo')) || 1;
+        localStorage.setItem('folioConsecutivo', consecutivo + 1);
+        const folio = 'CCTV-' + año + '-' + String(consecutivo).padStart(4, '0');
+        document.getElementById('folio').value = folio;
+    }
+
+    function generarFechaHora() {
+        const ahora = new Date();
+        const opciones = { year: 'numeric', month: 'long', day: 'numeric', hour: '2-digit', minute: '2-digit',
+            hour12: true };
+        document.getElementById('fechaEmision').value = ahora.toLocaleDateString('es-ES', opciones);
+    }
+
+    // ====== PREVISUALIZACIÓN Y PDF ======
+    let pdfContentCache = '';
+
+    function generarPDFContent() {
+        // Recolectar datos (igual que antes, pero ahora con descuento y anticipación)
+        const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
+        const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
+        const telefono = document.getElementById('telefono').value || '';
+        const correo = document.getElementById('correo').value || '';
+        const domicilio = document.getElementById('domicilio').value || '';
+
+        const cliente = document.getElementById('cliente_nombre').value || '';
+        const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
+        const clienteTel = document.getElementById('cliente_telefono').value || '';
+        const clienteCorreo = document.getElementById('cliente_correo').value || '';
+        const clienteDir = document.getElementById('cliente_direccion').value || '';
+
+        const tipoSistema = document.getElementById('tipo_sistema').value || '';
+        const ubicacion = document.getElementById('ubicacion').value || '';
+        const resolucion = document.getElementById('resolucion').value || '';
+        const canales = document.getElementById('canales').value || '';
+        const almacenamiento = document.getElementById('almacenamiento').value || '';
+        const cableado = document.getElementById('cableado').value || '';
+        const tuberia = document.getElementById('tuberia').value || '';
+        const fuente = document.getElementById('fuente').value || '';
+        const formaPago = document.getElementById('formaPago').value || '';
+        const plazoEntrega = document.getElementById('plazoEntrega').value || '5';
+        const vigenciaDias = document.getElementById('vigenciaDias').value || '7';
+
+        const tiempoEjecucion = document.getElementById('tiempo_ejecucion').value || '2 días hábiles';
+        const vigenciaTexto = document.getElementById('vigenciaTexto').value || '7 días';
+        const condiciones = [];
+        document.querySelectorAll('#condiciones input[type="checkbox"]:checked').forEach(cb => {
+            condiciones.push(cb.parentElement.textContent.trim());
+        });
+        const otraCondicion = document.getElementById('otra_condicion').value || '';
+        const viaticos = parseFloat(document.getElementById('viaticos').value) || 0;
+        const renta = parseFloat(document.getElementById('renta').value) || 0;
+        const insumos = parseFloat(document.getElementById('insumos').value) || 0;
+        const notasTecnicas = document.getElementById('notas_tecnicas').value || '';
+        const plazoEntregaTexto = document.getElementById('plazoEntregaTexto').value || '5 días hábiles';
+
+        // Obtener subtotales ya formateados
+        const subtotalEquipos = document.getElementById('subtotalEquipos').value;
+        const subtotalServicios = document.getElementById('subtotalServicios').value;
+        const subtotalNeto = document.getElementById('subtotalNeto').value;
+        const totalFinal = document.getElementById('totalFinalInput').value;
+        const totalLetras = document.getElementById('totalLetras').innerText;
+        const anticipacionMonto = document.getElementById('anticipacionMonto').value;
+        const contraEntrega = document.getElementById('contra_entrega').value;
+
+        // Obtener filas de equipos con emojis
+        let filasEquipos = [];
+        document.querySelectorAll('#tbodyEquipos tr').forEach(row => {
+            const desc = row.querySelector('.desc-equipo')?.value || '';
+            const cat = row.querySelector('.categoria-equipo')?.value || '';
+            const uni = row.querySelector('.unidad-equipo')?.value || '';
+            const cant = row.querySelector('.cant-equipo')?.value || '0';
+            const punit = row.querySelector('.punit-equipo')?.value || '0';
+            const total = row.querySelector('.total-equipo')?.value || '$0.00';
+            const emoji = getEmoji(cat);
+            filasEquipos.push({ desc, cat, uni, cant, punit, total, emoji });
+        });
+
+        let filasServicios = [];
+        document.querySelectorAll('#tbodyServicios tr').forEach(row => {
+            const desc = row.querySelector('.desc-servicio')?.value || '';
+            const cant = row.querySelector('.cant-servicio')?.value || '0';
+            const punit = row.querySelector('.punit-servicio')?.value || '0';
+            const total = row.querySelector('.total-servicio')?.value || '$0.00';
+            filasServicios.push({ desc, cant, punit, total });
+        });
+
+        // Construir HTML del PDF
+        return `
+            <!DOCTYPE html>
+            <html>
+            <head>
+                <meta charset="UTF-8">
+                <title>Presupuesto CCTV - MS Solutions</title>
+                <style>
+                    body { font-family: 'Times New Roman', Times, serif; margin: 1.5cm; color: #000; }
+                    .header { text-align: center; border-bottom: 2px solid #8B0000; padding-bottom: 10px; margin-bottom: 15px; }
+                    .header h1 { font-size: 22pt; margin: 0; color: #8B0000; }
+                    .header .subt { font-size: 12pt; color: #555; }
+                    .header .folio-fecha { display: flex; justify-content: space-between; font-size: 11pt; margin-top: 5px; }
+                    .seccion { margin-bottom: 12px; }
+                    .seccion-titulo { font-weight: bold; font-size: 13pt; border-bottom: 1px solid #8B0000; padding-bottom: 3px; margin-bottom: 8px; color: #8B0000; }
+                    .datos-cliente { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 20px; font-size: 11pt; }
+                    .datos-cliente .label { font-weight: bold; }
+                    .tabla { width: 100%; border-collapse: collapse; font-size: 10pt; margin: 6px 0; }
+                    .tabla th { background: #8B0000; color: white; padding: 5px 8px; text-align: left; }
+                    .tabla td { padding: 4px 8px; border-bottom: 1px solid #ccc; }
+                    .tabla .total-row td { border-top: 2px solid #8B0000; font-weight: bold; }
+                    .resumen { display: flex; justify-content: space-between; font-size: 13pt; font-weight: bold; margin: 10px 0; }
+                    .resumen .total { color: #8B0000; font-size: 16pt; }
+                    .total-letras { font-size: 11pt; margin: 8px 0; padding: 8px; border: 1px solid #333; background: #f9f9f9; }
+                    .firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
+                    .firma-box { border-top: 2px solid #333; padding-top: 8px; }
+                    .firma-box .linea { height: 30px; border-bottom: 1px solid #333; margin-bottom: 5px; }
+                    .firma-box .leyenda { font-size: 9pt; font-style: italic; color: #555; }
+                    .firma-box .nombre { font-weight: bold; font-size: 11pt; margin-top: 5px; }
+                    .vigencia { font-size: 9pt; text-align: center; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 8px; color: #555; }
+                    .condiciones { font-size: 9pt; margin: 5px 0; }
+                    .condiciones ul { list-style: none; padding: 0; margin: 0; }
+                    .condiciones ul li::before { content: "• "; color: #8B0000; }
+                    .notas { font-size: 9pt; font-style: italic; color: #555; }
+                    .extra { font-size: 9pt; }
+                    .certificado-garantia { border: 1px solid #333; padding: 10px; margin-top: 15px; background: #fafafa; font-size: 10pt; }
+                    .certificado-garantia h4 { margin: 0 0 5px 0; color: #8B0000; }
+                    .certificado-garantia p { margin: 0; }
+                    @page { margin: 1.5cm; }
+                    @media print { body { margin: 0; } }
+                    .emoji-col { width: 30px; text-align: center; }
+                </style>
+            </head>
+            <body>
+                <div class="header">
+                    <h1>PRESUPUESTO CCTV - MS SOLUTIONS</h1>
+                    <div class="subt">Sistemas de Videovigilancia Profesional</div>
+                    <div class="folio-fecha">
+                        <span><strong>Folio:</strong> ${document.getElementById('folio').value}</span>
+                        <span><strong>Fecha:</strong> ${document.getElementById('fechaEmision').value}</span>
+                    </div>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">DATOS DEL CLIENTE</div>
+                    <div class="datos-cliente">
+                        <div><span class="label">Cliente:</span> ${cliente}</div>
+                        <div><span class="label">Empresa:</span> ${clienteEmpresa || '---'}</div>
+                        <div><span class="label">Teléfono:</span> ${clienteTel}</div>
+                        <div><span class="label">Correo:</span> ${clienteCorreo}</div>
+                        <div style="grid-column:1/-1;"><span class="label">Dirección:</span> ${clienteDir}</div>
+                    </div>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">CONFIGURACIÓN DEL SISTEMA</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px 15px; font-size:10pt;">
+                        <div><strong>Tipo:</strong> ${tipoSistema}</div>
+                        <div><strong>Ubicación:</strong> ${ubicacion}</div>
+                        <div><strong>Resolución:</strong> ${resolucion}</div>
+                        <div><strong>Canales:</strong> ${canales}</div>
+                        <div><strong>Almacenamiento:</strong> ${almacenamiento}</div>
+                        <div><strong>Cableado:</strong> ${cableado}</div>
+                        <div><strong>Tubería:</strong> ${tuberia}</div>
+                        <div><strong>Fuente:</strong> ${fuente}</div>
+                        <div><strong>Forma de pago:</strong> ${formaPago}</div>
+                        <div><strong>Plazo entrega:</strong> ${plazoEntrega} días</div>
+                        <div><strong>Vigencia:</strong> ${vigenciaDias} días</div>
+                    </div>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">DESGLOSE DE EQUIPOS</div>
+                    <table class="tabla">
+                        <thead><tr><th>#</th><th>Descripción</th><th>Categoría</th><th>Unidad</th><th>Cant</th><th>P.Unitario</th><th>Total</th></tr></thead>
+                        <tbody>
+                            ${filasEquipos.map((f,i) => `<tr><td>${i+1}</td><td>${f.emoji} ${f.desc}</td><td>${f.cat}</td><td>${f.uni}</td><td>${f.cant}</td><td>${f.punit}</td><td>${f.total}</td></tr>`).join('')}
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row"><td colspan="6" style="text-align:right;">SUBTOTAL EQUIPOS</td><td>${subtotalEquipos}</td></tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">MANO DE OBRA Y SERVICIOS</div>
+                    <table class="tabla">
+                        <thead><tr><th>#</th><th>Descripción</th><th>Cant</th><th>P.Unitario</th><th>Total</th></tr></thead>
+                        <tbody>
+                            ${filasServicios.map((f,i) => `<tr><td>${i+1}</td><td>${f.desc}</td><td>${f.cant}</td><td>${f.punit}</td><td>${f.total}</td></tr>`).join('')}
+                        </tbody>
+                        <tfoot>
+                            <tr class="total-row"><td colspan="4" style="text-align:right;">SUBTOTAL SERVICIOS</td><td>${subtotalServicios}</td></tr>
+                        </tfoot>
+                    </table>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">GASTOS EXTRA</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px 15px; font-size:10pt;">
+                        <div><strong>Viáticos:</strong> ${formatearMoneda(viaticos)}</div>
+                        <div><strong>Renta escaleras:</strong> ${formatearMoneda(renta)}</div>
+                        <div><strong>Insumos menores:</strong> ${formatearMoneda(insumos)}</div>
+                    </div>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">RESUMEN DE INVERSIÓN</div>
+                    <div class="resumen">
+                        <span>Subtotal Neto: ${subtotalNeto}</span>
+                        <span>Descuento: ${document.getElementById('descuentoPorcentaje').value}%</span>
+                        <span class="total">Total Final: ${totalFinal}</span>
+                    </div>
+                    <div class="total-letras"><strong>Total con letra:</strong> ${totalLetras}</div>
+                    <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px 15px; font-size:10pt; margin-top:5px;">
+                        <div><strong>Anticipación (${document.getElementById('anticipacionPorcentaje').value}%):</strong> ${anticipacionMonto}</div>
+                        <div><strong>Contra entrega:</strong> ${contraEntrega}</div>
+                        <div><strong>Plazo entrega:</strong> ${plazoEntregaTexto}</div>
+                    </div>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">CONDICIONES Y NOTAS</div>
+                    <div class="condiciones">
+                        <ul>
+                            ${condiciones.map(c => `<li>${c}</li>`).join('')}
+                            ${otraCondicion ? `<li>${otraCondicion}</li>` : ''}
+                        </ul>
+                    </div>
+                    <div class="notas">${notasTecnicas}</div>
+                    <div style="font-size:9pt; margin-top:5px;"><strong>Tiempo ejecución:</strong> ${tiempoEjecucion}</div>
+                </div>
+
+                <div class="seccion">
+                    <div class="seccion-titulo">FIRMAS DE ACEPTACIÓN</div>
+                    <div class="firmas">
+                        <div class="firma-box">
+                            <div><strong>FIRMA DEL INSTALADOR / EMPRESA</strong></div>
+                            <div class="linea"></div>
+                            <div class="leyenda">Al generar este documento, MS SOLUTIONS certifica que esta cotización ha sido emitida de manera oficial y cuenta con validez legal para su uso como propuesta comercial.</div>
+                            <div class="nombre"><strong>MS SOLUTIONS</strong> - ${tecnico}</div>
+                        </div>
+                        <div class="firma-box">
+                            <div><strong>FIRMA DEL CLIENTE</strong></div>
+                            <div class="linea"></div>
+                            <div class="leyenda">El cliente reconoce haber recibido esta cotización a través de medios digitales y acepta los términos aquí descritos.</div>
+                            <div class="nombre"><strong>Cliente:</strong> ${cliente}</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="certificado-garantia">
+                    <h4>📜 CERTIFICADO DE GARANTÍA</h4>
+                    <p>MS SOLUTIONS garantiza que todos los equipos incluidos en esta cotización son 100% originales y cuentan con garantía de fábrica contra defectos de fabricación por 12 meses a partir de la fecha de instalación. La garantía cubre reparación o reposición del equipo, no aplica a daños por mal uso, descargas eléctricas, modificaciones no autorizadas o desgaste normal por uso. Para hacer válida la garantía, el cliente deberá conservar el comprobante de compra y notificar cualquier falla dentro del periodo establecido.</p>
+                </div>
+
+                <div class="vigencia">
+                    <strong>Vigencia:</strong> ${vigenciaTexto} naturales a partir de la fecha de emisión. Los precios están sujetos a cambios sin previo aviso por fluctuaciones del mercado o tipo de cambio.
+                    <br>Este documento es una cotización oficial de MS SOLUTIONS.
+                </div>
+
+                <div style="text-align:center; font-size:8pt; color:#999; margin-top:10px;">
+                    Página 1 de 1 - Generado el ${new Date().toLocaleString('es-ES')}
+                </div>
+            </body>
+            </html>
+        `;
+    }
+
+    function previsualizarPDF() {
+        const content = generarPDFContent();
+        pdfContentCache = content;
+        const iframe = document.getElementById('pdfPreviewFrame');
+        iframe.srcdoc = content;
+        document.getElementById('modalPreview').classList.add('active');
+    }
+
+    function cerrarModal() {
+        document.getElementById('modalPreview').classList.remove('active');
+    }
+
+    function imprimirDesdeModal() {
+        const iframe = document.getElementById('pdfPreviewFrame');
+        iframe.contentWindow.print();
+    }
+
+    // ====== INICIALIZAR ======
+    window.onload = function() {
+        generarFolio();
+        generarFechaHora();
+        cargarDatos();
+        initSortable();
+        // Actualizar nombres en firmas
+        document.getElementById('tecnicoFirma').textContent = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
+        document.getElementById('clienteFirma').textContent = document.getElementById('cliente_nombre').value || 'Bruno Calderón Vega';
+        document.getElementById('tecnico').addEventListener('input', function() {
+            document.getElementById('tecnicoFirma').textContent = this.value || 'Ing. Alan Marcelo';
+            guardarDatos();
+        });
+        document.getElementById('cliente_nombre').addEventListener('input', function() {
+            document.getElementById('clienteFirma').textContent = this.value || 'Bruno Calderón Vega';
+            guardarDatos();
+        });
+        // Guardar cambios en todos los inputs
+        document.querySelectorAll('input, select, textarea').forEach(el => {
+            el.addEventListener('change', guardarDatos);
+        });
+        // Calcular inicialmente
+        calcularTotales();
+    };
+</script>
 </body>
 </html>
