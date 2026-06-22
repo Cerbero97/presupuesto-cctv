@@ -1033,6 +1033,16 @@
       </div>
     </div>
 
+    <!-- ====== PLANO / CROQUIS ====== -->
+    <div class="section">
+      <div class="section-title"><span>5</span> PLANO / CROQUIS DEL SITIO</div>
+      <div class="field full-width">
+        <label>Sube un plano, croquis o foto del lugar (opcional)</label>
+        <input type="file" id="croquisUpload" accept="image/*" />
+        <div id="croquisPreview" style="margin-top:10px;"></div>
+      </div>
+    </div>
+
     <!-- ====== BOTONES DE ACCIÓN ====== -->
     <div class="btn-group">
       <button class="btn btn-primary" id="nuevaCotizacionBtn">🔄 NUEVA COTIZACIÓN</button>
@@ -1063,7 +1073,6 @@
     // 1. CONSTANTES Y UTILIDADES
     // ================================================================
 
-    /** Obtiene el emoji según categoría */
     const getEmoji = (cat) => ({
       'Cámaras': '📹',
       'Grabadores': '💾',
@@ -1082,10 +1091,8 @@
       'Periférico': '⌨️'
     } [cat] || '📦');
 
-    /** Formatea un número como moneda MXN */
     const formatCurrency = (value) => '$' + value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
-    /** Convierte un número a letras (MXN) */
     const numberToLetters = (num) => {
       const unidades = ['', 'UN', 'DOS', 'TRES', 'CUATRO', 'CINCO', 'SEIS', 'SIETE', 'OCHO', 'NUEVE'];
       const decenas = ['', 'DIEZ', 'VEINTE', 'TREINTA', 'CUARENTA', 'CINCUENTA', 'SESENTA', 'SETENTA', 'OCHENTA', 'NOVENTA'];
@@ -1139,17 +1146,9 @@
     };
 
     // ================================================================
-    // 2. ESTADO GLOBAL
+    // 2. FUNCIONES DE NEGOCIO
     // ================================================================
 
-    let proyectos = [];
-    let nextProyectoId = 1;
-
-    // ================================================================
-    // 3. FUNCIONES DE NEGOCIO (cálculos)
-    // ================================================================
-
-    /** Calcula el subtotal de un proyecto (equipos + servicios + gastos extra) */
     const calcularSubtotalProyecto = (proyectoId) => {
       const container = document.getElementById(`proyecto-${proyectoId}`);
       if (!container) return 0;
@@ -1185,7 +1184,6 @@
       return subtotal;
     };
 
-    /** Recalcula todos los proyectos y actualiza el resumen general */
     const recalcularTodo = () => {
       let subtotalGeneral = 0;
       document.querySelectorAll('.proyecto-container').forEach(container => {
@@ -1211,12 +1209,11 @@
     };
 
     // ================================================================
-    // 4. FUNCIONES DE UI (crear filas, agregar, eliminar, duplicar)
+    // 3. FUNCIONES DE UI (crear filas, etc.)
     // ================================================================
 
     const crearFilaEquipo = (tipo = 'cctv', desc = '', cat = '', uni = 'Pieza', cant = 1, punit = 0) => {
       const tr = document.createElement('tr');
-      const idx = 1; // se actualizará después
       let categoriaOptions = '';
       if (tipo === 'cctv') {
         categoriaOptions = `
@@ -1242,7 +1239,7 @@
             `;
       }
       tr.innerHTML = `
-            <td class="fila-num">${idx}</td>
+            <td class="fila-num">1</td>
             <td><input type="text" class="desc-equipo" value="${desc}" placeholder="Descripción"></td>
             <td>
               <select class="categoria-equipo">
@@ -1298,8 +1295,11 @@
     };
 
     // ================================================================
-    // 5. RENDERIZADO DE PROYECTOS
+    // 4. RENDERIZADO DE PROYECTOS
     // ================================================================
+
+    let proyectos = [];
+    let nextProyectoId = 1;
 
     const renderProyecto = (proyecto) => {
       const container = document.createElement('div');
@@ -1310,7 +1310,6 @@
       const tipo = proyecto.tipo || 'cctv';
       const tipoLabel = tipo === 'cctv' ? 'CCTV' : 'Reparación de PC';
 
-      // Configuración específica por tipo
       let configHTML = '';
       if (tipo === 'cctv') {
         configHTML = `
@@ -1450,7 +1449,6 @@
               </div>
             `;
       } else {
-        // Reparación de PC
         configHTML = `
               <div class="row row-3">
                 <div class="field">
@@ -1568,7 +1566,6 @@
             `;
       }
 
-      // HTML del proyecto
       container.innerHTML = `
             <div class="proyecto-header">
               <span class="titulo">📌 PROYECTO #${proyecto.id}</span>
@@ -1664,7 +1661,6 @@
       const tbodyServicios = container.querySelector('.tabla-servicios tbody');
 
       if (tipo === 'cctv') {
-        // Ejemplos CCTV
         [
           ['Cámara Bala 4MP IP', 'Cámaras', 'Pieza', 4, 1800],
           ['Grabador NVR 8 Canales', 'Grabadores', 'Pieza', 1, 4500],
@@ -1677,7 +1673,6 @@
         tbodyServicios.appendChild(crearFilaServicio('Instalación de cámaras IP y configuración', 1, 1800));
         tbodyServicios.appendChild(crearFilaServicio('Configuración de 3 celulares para visualización remota', 1, 600));
       } else {
-        // Ejemplos Reparación PC
         [
           ['Disco SSD 512GB SATA III', 'Almacenamiento', 'Pieza', 1, 850],
           ['Memoria RAM 8GB DDR4 3200MHz', 'Memoria RAM', 'Pieza', 2, 450],
@@ -1697,11 +1692,9 @@
         const proyecto = proyectos.find(p => p.id === proyectoId);
         if (proyecto) {
           proyecto.tipo = nuevoTipo;
-          // Re-renderizar el proyecto
           const parent = container.parentNode;
           const newContainer = renderProyecto(proyecto);
           parent.replaceChild(newContainer, container);
-          // Recalcular
           recalcularTodo();
           guardarDatos();
           initSortable();
@@ -1725,7 +1718,6 @@
         actualizarNumerosFilas(container);
       });
 
-      // Event listeners para inputs que afectan cálculos
       container.querySelectorAll('input, select').forEach(el => {
         el.addEventListener('input', function() {
           recalcularTodo();
@@ -1737,7 +1729,6 @@
         });
       });
 
-      // Delegación para botones de acción en tablas (duplicar/eliminar)
       container.addEventListener('click', function(e) {
         const btn = e.target.closest('.btn-accion');
         if (!btn) return;
@@ -1768,7 +1759,6 @@
         }
       });
 
-      // Botón eliminar proyecto
       container.querySelector('.btn-eliminar-proyecto').addEventListener('click', function() {
         const id = parseInt(container.dataset.proyectoId);
         if (proyectos.length <= 1) {
@@ -1783,7 +1773,6 @@
         }
       });
 
-      // Botón duplicar proyecto
       container.querySelector('.btn-duplicar-proyecto').addEventListener('click', function() {
         const id = parseInt(container.dataset.proyectoId);
         const original = proyectos.find(p => p.id === id);
@@ -1799,21 +1788,16 @@
         initSortable();
       });
 
-      // Actualizar números de filas
       actualizarNumerosFilas(container);
-
       return container;
     };
 
     // ================================================================
-    // 6. MANEJO DE PROYECTOS (agregar, eliminar, duplicar)
+    // 5. MANEJO DE PROYECTOS (agregar, eliminar, duplicar)
     // ================================================================
 
     const agregarProyecto = (tipo = 'cctv') => {
-      const proyecto = {
-        id: nextProyectoId++,
-        tipo: tipo
-      };
+      const proyecto = { id: nextProyectoId++, tipo: tipo };
       proyectos.push(proyecto);
       const container = document.getElementById('proyectosContainer');
       const nuevoContainer = renderProyecto(proyecto);
@@ -1824,19 +1808,16 @@
     };
 
     // ================================================================
-    // 7. PERSISTENCIA (LocalStorage)
+    // 6. PERSISTENCIA (LocalStorage)
     // ================================================================
 
     const guardarDatos = () => {
-      // Guardar proyectos
       const proyectosData = proyectos.map(p => {
         const container = document.getElementById(`proyecto-${p.id}`);
         if (!container) return p;
-        // Recolectar datos específicos del proyecto
         const data = {
           id: p.id,
           tipo: container.querySelector('.tipo-proyecto-select').value,
-          // Configuración (se puede expandir)
           equipos: [],
           servicios: []
         };
@@ -1887,14 +1868,12 @@
       if (!raw) return;
       try {
         const data = JSON.parse(raw);
-        // Cargar general
         Object.keys(data.general).forEach(key => {
           const el = document.getElementById(key);
           if (el) el.value = data.general[key];
         });
         if (data.nextProyectoId) nextProyectoId = data.nextProyectoId;
 
-        // Cargar proyectos
         const container = document.getElementById('proyectosContainer');
         container.innerHTML = '';
         proyectos = [];
@@ -1903,7 +1882,6 @@
           proyectos.push(proyecto);
           const nuevoContainer = renderProyecto(proyecto);
           container.appendChild(nuevoContainer);
-          // Rellenar equipos y servicios
           const containerEl = document.getElementById(`proyecto-${p.id}`);
           if (containerEl) {
             const tbodyEquipos = containerEl.querySelector('.tabla-equipos tbody');
@@ -1927,7 +1905,7 @@
     };
 
     // ================================================================
-    // 8. SORTABLE (arrastrar filas)
+    // 7. SORTABLE (arrastrar filas)
     // ================================================================
 
     const initSortable = () => {
@@ -1956,15 +1934,10 @@
     };
 
     // ================================================================
-    // 9. GENERACIÓN DE PDF, CONTRATO Y CERTIFICADO
+    // 8. GENERACIÓN DE PDF, CONTRATO Y CERTIFICADO
     // ================================================================
 
-    // (Se mantienen las funciones de la versión anterior, pero se adaptan a múltiples proyectos.
-    // Por brevedad, se incluye la generación de PDF con todos los proyectos.
-    // Las funciones de contrato y certificado se mantienen iguales, pero se pueden extender si se desea.)
-
     const generarPDFContent = () => {
-      // Recolectar datos generales
       const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
       const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
       const telefono = document.getElementById('telefono').value || '';
@@ -1989,7 +1962,6 @@
       const contraEntrega = document.getElementById('contra_entrega').value;
       const descuentoPorc = document.getElementById('descuentoPorcentaje').value || '0';
 
-      // Construir HTML de cada proyecto
       let proyectosHTML = '';
       document.querySelectorAll('.proyecto-container').forEach(container => {
         const id = container.dataset.proyectoId;
@@ -1997,7 +1969,6 @@
         const tipoLabel = tipo === 'cctv' ? 'CCTV' : 'Reparación de PC';
         const subtotal = container.querySelector('.subtotal-proyecto-input').value;
 
-        // Configuración (resumida)
         let configText = '';
         if (tipo === 'cctv') {
           const sistema = container.querySelector('.tipo_sistema')?.value || '';
@@ -2017,7 +1988,6 @@
               `;
         }
 
-        // Equipos
         let equiposRows = '';
         container.querySelectorAll('.tabla-equipos tbody tr').forEach((row, i) => {
           const desc = row.querySelector('.desc-equipo')?.value || '';
@@ -2102,9 +2072,8 @@
             `;
       });
 
-      // Croquis
-      let croquisHTML = '';
       const croquisData = localStorage.getItem('croquisData');
+      let croquisHTML = '';
       if (croquisData) {
         croquisHTML = `
               <div style="margin-top:15px; text-align:center;">
@@ -2114,7 +2083,6 @@
             `;
       }
 
-      // Logo
       const logoData = localStorage.getItem('logoData');
       let logoHTML = '';
       if (logoData) {
@@ -2244,7 +2212,7 @@
     };
 
     // ================================================================
-    // 10. FUNCIONES DE DOCUMENTOS (PDF, CONTRATO, CERTIFICADO)
+    // 9. FUNCIONES DE DOCUMENTOS (PDF, CONTRATO, CERTIFICADO)
     // ================================================================
 
     let pdfContentCache = '';
@@ -2267,7 +2235,6 @@
     };
 
     const generarContrato = () => {
-      // Se genera un contrato simple basado en el primer proyecto (o general)
       const cliente = document.getElementById('cliente_nombre').value || '_________________________';
       const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
       const clienteDir = document.getElementById('cliente_direccion').value || '_________________________';
@@ -2369,7 +2336,6 @@
     };
 
     const generarCertificado = () => {
-      // Certificado de instalación para el primer proyecto CCTV si existe, o genérico
       const cliente = document.getElementById('cliente_nombre').value || '_________________________';
       const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
       const clienteDir = document.getElementById('cliente_direccion').value || '_________________________';
@@ -2501,7 +2467,7 @@
     };
 
     // ================================================================
-    // 11. INICIALIZACIÓN Y EVENTOS
+    // 10. INICIALIZACIÓN Y EVENTOS
     // ================================================================
 
     const generarFolio = () => {
@@ -2555,14 +2521,13 @@
       document.getElementById('logoPreview').appendChild(img);
     }
 
-    // Croquis (se mantiene la funcionalidad, pero se puede usar en el PDF)
+    // Croquis
+    document.getElementById('croquisUpload').addEventListener('change', function(e) {
+      const file = e.target.files[0];
+      if (!file) return;
 
-document.getElementById('croquisUpload').addEventListener('change', function(e) {
-    const file = e.target.files[0];
-    if (!file) return;
-    
-    const reader = new FileReader();
-    reader.onload = function(event) {
+      const reader = new FileReader();
+      reader.onload = function(event) {
         const img = document.createElement('img');
         img.src = event.target.result;
         img.style.maxHeight = '150px';
@@ -2573,9 +2538,9 @@ document.getElementById('croquisUpload').addEventListener('change', function(e) 
         preview.innerHTML = '';
         preview.appendChild(img);
         localStorage.setItem('croquisData', event.target.result);
-    };
-    reader.readAsDataURL(file);
-});
+      };
+      reader.readAsDataURL(file);
+    });
 
     const croquisGuardado = localStorage.getItem('croquisData');
     if (croquisGuardado) {
@@ -2590,8 +2555,7 @@ document.getElementById('croquisUpload').addEventListener('change', function(e) 
 
     // Botones
     document.getElementById('agregarProyectoBtn').addEventListener('click', () => {
-      const tipo = 'cctv'; // por defecto
-      agregarProyecto(tipo);
+      agregarProyecto('cctv');
     });
 
     document.getElementById('nuevaCotizacionBtn').addEventListener('click', () => {
@@ -2619,19 +2583,16 @@ document.getElementById('croquisUpload').addEventListener('change', function(e) 
       guardarDatos();
     });
 
-    // Botones de documentos
     document.getElementById('previsualizarBtn').addEventListener('click', previsualizarPDF);
     document.getElementById('contratoBtn').addEventListener('click', generarContrato);
     document.getElementById('certificadoBtn').addEventListener('click', generarCertificado);
 
-    // Modal
     document.getElementById('cerrarModalBtn').addEventListener('click', cerrarModal);
     document.getElementById('imprimirModalBtn').addEventListener('click', imprimirDesdeModal);
     document.addEventListener('keydown', (e) => {
       if (e.key === 'Escape') cerrarModal();
     });
 
-    // Sincronizar firmas
     document.getElementById('tecnico').addEventListener('input', function() {
       document.getElementById('tecnicoFirma').textContent = this.value || 'Ing. Alan Marcelo';
       guardarDatos();
@@ -2641,18 +2602,15 @@ document.getElementById('croquisUpload').addEventListener('change', function(e) 
       guardarDatos();
     });
 
-    // Guardar cambios en inputs generales
     document.querySelectorAll('#app input, #app select, #app textarea').forEach(el => {
       el.addEventListener('change', guardarDatos);
       el.addEventListener('input', guardarDatos);
     });
 
-    // Inicializar
     window.onload = function() {
       generarFolio();
       generarFechaHora();
       cargarDatos();
-      // Si no hay proyectos, crear uno por defecto
       if (proyectos.length === 0) {
         agregarProyecto('cctv');
       }
