@@ -4,44 +4,54 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cotizador · MS Solutions</title>
-  <!-- SortableJS para arrastrar filas -->
   <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js">
   </script>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
     /* ============================================================
-       CSS VARIABLES (tema claro/oscuro)
+       CSS VARIABLES
        ============================================================ */
     :root {
-      --bg-body: #f0f2f5;
+      --bg-body: #f4f6f9;
       --bg-container: #ffffff;
-      --text-color: #222;
-      --border-color: #d0d0d0;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+      --text-color: #1a1a2e;
+      --border-color: #e2e8f0;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.06);
       --primary: #8B0000;
+      --primary-light: #a52a2a;
       --primary-dark: #6b0000;
-      --gray: #6B6B6B;
-      --light-gray: #fafafa;
+      --gray: #64748b;
+      --gray-light: #f1f5f9;
       --input-bg: #ffffff;
       --input-border: #d0d0d0;
       --firma-linea: #333;
-      --radius: 8px;
+      --radius: 12px;
+      --radius-sm: 6px;
       --transition: 0.25s ease;
-      --proyecto-border: #ddd;
+      --proyecto-border: #e2e8f0;
+      --badge-cctv: #8B0000;
+      --badge-pc: #0d47a1;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.06);
+      --font: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
     }
 
     body.dark-mode {
-      --bg-body: #1e1e1e;
-      --bg-container: #3a3a3a;
-      --text-color: #f0f0f0;
-      --border-color: #666;
-      --shadow: 0 4px 20px rgba(0, 0, 0, 0.6);
-      --light-gray: #4a4a4a;
-      --input-bg: #555;
-      --input-border: #888;
-      --firma-linea: #ccc;
+      --bg-body: #0f0f1a;
+      --bg-container: #1e1e2e;
+      --text-color: #e2e8f0;
+      --border-color: #334155;
+      --shadow: 0 4px 20px rgba(0, 0, 0, 0.4);
+      --gray: #94a3b8;
+      --gray-light: #2d2d44;
+      --input-bg: #2d2d44;
+      --input-border: #4a4a6a;
+      --firma-linea: #64748b;
       --primary: #cc3333;
       --primary-dark: #aa2222;
-      --proyecto-border: #555;
+      --proyecto-border: #334155;
+      --badge-cctv: #cc3333;
+      --badge-pc: #4a7db5;
+      --card-shadow: 0 4px 12px rgba(0, 0, 0, 0.3);
     }
 
     /* ============================================================
@@ -54,11 +64,12 @@
     }
 
     body {
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      font-family: var(--font);
       background: var(--bg-body);
       padding: 20px;
       color: var(--text-color);
       transition: background var(--transition), color var(--transition);
+      line-height: 1.6;
     }
 
     .container {
@@ -66,7 +77,7 @@
       margin: 0 auto;
       background: var(--bg-container);
       padding: 30px;
-      border-radius: 12px;
+      border-radius: var(--radius);
       box-shadow: var(--shadow);
       transition: background var(--transition), box-shadow var(--transition);
     }
@@ -79,7 +90,8 @@
       font-size: 28px;
       text-align: center;
       margin-bottom: 4px;
-      letter-spacing: 0.5px;
+      letter-spacing: -0.5px;
+      font-weight: 700;
       transition: color var(--transition);
     }
 
@@ -91,6 +103,7 @@
       border-bottom: 2px solid var(--primary);
       padding-bottom: 14px;
       transition: border-color var(--transition), color var(--transition);
+      font-weight: 400;
     }
 
     .version-badge {
@@ -100,85 +113,243 @@
       padding: 4px 14px;
       border-radius: 20px;
       font-size: 12px;
-      font-weight: 700;
+      font-weight: 600;
       margin-left: 10px;
       transition: background var(--transition);
     }
 
     /* ============================================================
-       PROYECTOS (contenedores)
+       SECCIONES
+       ============================================================ */
+    .section {
+      background: var(--gray-light);
+      padding: 20px;
+      border-radius: var(--radius-sm);
+      margin-bottom: 20px;
+      border-left: 4px solid var(--primary);
+      transition: background var(--transition), border-color var(--transition);
+    }
+
+    .section-title {
+      font-size: 16px;
+      font-weight: 600;
+      color: var(--primary);
+      margin-bottom: 14px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      transition: color var(--transition);
+    }
+
+    .section-title span {
+      background: var(--primary);
+      color: #fff;
+      border-radius: 50%;
+      width: 26px;
+      height: 26px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 13px;
+      font-weight: 700;
+      transition: background var(--transition);
+    }
+
+    /* ============================================================
+       CAMPOS Y FILAS
+       ============================================================ */
+    .row {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px;
+      margin-bottom: 10px;
+    }
+
+    .row-3 {
+      grid-template-columns: 1fr 1fr 1fr;
+    }
+
+    .field {
+      display: flex;
+      flex-direction: column;
+    }
+
+    .field label {
+      font-size: 12px;
+      font-weight: 500;
+      color: var(--gray);
+      margin-bottom: 3px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      transition: color var(--transition);
+    }
+
+    .field input,
+    .field select,
+    .field textarea {
+      padding: 8px 12px;
+      border: 1.5px solid var(--input-border);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      background: var(--input-bg);
+      color: var(--text-color);
+      font-family: var(--font);
+      transition: border-color var(--transition), background var(--transition), color var(--transition);
+    }
+
+    .field input:focus,
+    .field select:focus,
+    .field textarea:focus {
+      border-color: var(--primary);
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(139, 0, 0, 0.1);
+    }
+
+    body.dark-mode .field input:focus,
+    body.dark-mode .field select:focus,
+    body.dark-mode .field textarea:focus {
+      box-shadow: 0 0 0 3px rgba(204, 51, 51, 0.2);
+    }
+
+    .field input[readonly] {
+      background: var(--gray-light);
+      cursor: not-allowed;
+    }
+
+    .full-width {
+      grid-column: 1 / -1;
+    }
+
+    /* ============================================================
+       PROYECTOS - TARJETAS MODERNAS
        ============================================================ */
     .proyecto-container {
-      background: var(--light-gray);
-      border: 2px solid var(--proyecto-border);
+      background: var(--bg-container);
+      border: 1px solid var(--proyecto-border);
       border-radius: var(--radius);
-      padding: 20px;
-      margin-bottom: 25px;
-      position: relative;
-      transition: background var(--transition), border-color var(--transition);
+      padding: 24px;
+      margin-bottom: 24px;
+      box-shadow: var(--card-shadow);
+      transition: background var(--transition), border-color var(--transition), box-shadow var(--transition);
+    }
+
+    .proyecto-container:hover {
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.08);
+    }
+
+    body.dark-mode .proyecto-container:hover {
+      box-shadow: 0 8px 25px rgba(0, 0, 0, 0.25);
     }
 
     .proyecto-header {
       display: flex;
       justify-content: space-between;
       align-items: center;
-      margin-bottom: 15px;
+      margin-bottom: 16px;
       flex-wrap: wrap;
       gap: 10px;
     }
 
-    .proyecto-header .titulo {
-      font-weight: 700;
-      font-size: 16px;
-      color: var(--primary);
-      transition: color var(--transition);
+    .proyecto-header .titulo-wrapper {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      flex: 1;
+      min-width: 200px;
+    }
+
+    .proyecto-header .badge-tipo {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 4px 14px;
+      border-radius: 20px;
+      font-size: 12px;
+      font-weight: 600;
+      color: #fff;
+      white-space: nowrap;
+      transition: background var(--transition);
+    }
+
+    .badge-tipo.cctv {
+      background: var(--badge-cctv);
+    }
+    .badge-tipo.pc {
+      background: var(--badge-pc);
+    }
+
+    .proyecto-header .titulo-input {
+      border: none;
+      background: transparent;
+      font-size: 18px;
+      font-weight: 600;
+      color: var(--text-color);
+      padding: 4px 8px;
+      border-radius: var(--radius-sm);
+      flex: 1;
+      min-width: 150px;
+      transition: background var(--transition), color var(--transition);
+      font-family: var(--font);
+    }
+
+    .proyecto-header .titulo-input:focus {
+      background: var(--gray-light);
+      outline: none;
+      box-shadow: 0 0 0 2px var(--primary);
+    }
+
+    body.dark-mode .proyecto-header .titulo-input:focus {
+      background: var(--input-bg);
+    }
+
+    .proyecto-header .titulo-input::placeholder {
+      color: var(--gray);
+      font-weight: 400;
+      font-size: 15px;
     }
 
     .proyecto-header .acciones {
       display: flex;
-      gap: 8px;
+      gap: 6px;
       flex-wrap: wrap;
+      align-items: center;
     }
 
-    .btn-eliminar-proyecto {
-      background: #c62828;
-      color: #fff;
+    .btn-icon {
+      background: transparent;
       border: none;
-      padding: 4px 12px;
-      border-radius: 4px;
+      font-size: 18px;
+      padding: 6px 10px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
-      transition: background 0.2s;
-    }
-    .btn-eliminar-proyecto:hover {
-      background: #b71c1c;
+      transition: background var(--transition), transform 0.15s;
+      color: var(--gray);
+      display: flex;
+      align-items: center;
+      justify-content: center;
     }
 
-    .btn-duplicar-proyecto {
-      background: #2e7d32;
-      color: #fff;
-      border: none;
-      padding: 4px 12px;
-      border-radius: 4px;
-      cursor: pointer;
-      font-weight: 600;
-      font-size: 13px;
-      transition: background 0.2s;
-    }
-    .btn-duplicar-proyecto:hover {
-      background: #1b5e20;
+    .btn-icon:hover {
+      background: var(--gray-light);
+      transform: scale(1.05);
     }
 
-    .proyecto-subtotal {
-      text-align: right;
-      font-weight: 700;
-      font-size: 16px;
-      margin-top: 10px;
-      padding-top: 10px;
-      border-top: 2px solid var(--primary);
-      color: var(--primary);
-      transition: border-color var(--transition), color var(--transition);
+    .btn-icon.duplicar:hover {
+      color: #2e7d32;
+      background: rgba(46, 125, 50, 0.1);
+    }
+
+    .btn-icon.eliminar:hover {
+      color: #c62828;
+      background: rgba(198, 40, 40, 0.1);
+    }
+
+    body.dark-mode .btn-icon:hover {
+      background: var(--input-bg);
+    }
+
+    .btn-icon .tooltip {
+      display: none;
     }
 
     /* ============================================================
@@ -187,12 +358,14 @@
     .btn {
       padding: 8px 18px;
       border: none;
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       font-weight: 600;
       font-size: 13px;
       cursor: pointer;
       transition: background var(--transition), transform 0.15s;
+      font-family: var(--font);
     }
+
     .btn:hover {
       transform: translateY(-1px);
     }
@@ -230,31 +403,8 @@
     }
 
     .btn-small {
-      padding: 4px 10px;
+      padding: 4px 12px;
       font-size: 12px;
-    }
-
-    .btn-accion {
-      background: transparent;
-      border: none;
-      font-size: 18px;
-      padding: 4px 6px;
-      border-radius: 4px;
-      cursor: pointer;
-      transition: background 0.2s;
-    }
-    .btn-accion:hover {
-      background: rgba(0, 0, 0, 0.08);
-    }
-    .btn-accion.duplicar {
-      color: #2e7d32;
-    }
-    .btn-accion.eliminar {
-      color: #c62828;
-    }
-    .btn-accion.arrastrar {
-      color: var(--gray);
-      cursor: grab;
     }
 
     .btn-group {
@@ -271,14 +421,16 @@
       width: 100%;
       padding: 14px 20px;
       font-size: 18px;
-      font-weight: 700;
+      font-weight: 600;
       border: none;
       border-radius: var(--radius);
       cursor: pointer;
       transition: background var(--transition), transform 0.15s, box-shadow var(--transition);
       margin: 10px 0;
       color: #fff;
+      font-family: var(--font);
     }
+
     .btn-generate {
       background: var(--primary);
     }
@@ -287,6 +439,7 @@
       transform: scale(1.01);
       box-shadow: 0 4px 20px rgba(139, 0, 0, 0.3);
     }
+
     .btn-contrato {
       background: #1a237e;
     }
@@ -295,6 +448,7 @@
       transform: scale(1.01);
       box-shadow: 0 4px 20px rgba(26, 35, 126, 0.3);
     }
+
     .btn-certificado {
       background: #00695c;
     }
@@ -324,20 +478,29 @@
     }
 
     .btn-agregar-proyecto {
-      background: var(--primary);
-      color: #fff;
-      padding: 12px 30px;
+      display: block;
+      width: 100%;
+      padding: 16px;
       font-size: 16px;
-      font-weight: 700;
-      border: none;
+      font-weight: 600;
+      border: 2px dashed var(--border-color);
       border-radius: var(--radius);
+      background: transparent;
+      color: var(--gray);
       cursor: pointer;
-      transition: background var(--transition), transform 0.15s;
+      transition: border-color var(--transition), color var(--transition), background var(--transition);
+      font-family: var(--font);
       margin: 10px 0;
     }
+
     .btn-agregar-proyecto:hover {
-      background: var(--primary-dark);
-      transform: scale(1.01);
+      border-color: var(--primary);
+      color: var(--primary);
+      background: var(--gray-light);
+    }
+
+    body.dark-mode .btn-agregar-proyecto:hover {
+      background: var(--input-bg);
     }
 
     /* ============================================================
@@ -357,40 +520,54 @@
     table th {
       background: var(--primary);
       color: #fff;
-      padding: 8px 10px;
+      padding: 8px 12px;
       text-align: left;
+      font-weight: 600;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
       transition: background var(--transition);
     }
 
     table td {
-      padding: 6px 10px;
-      border-bottom: 1px solid #e0e0e0;
+      padding: 8px 12px;
+      border-bottom: 1px solid var(--border-color);
       vertical-align: middle;
+      transition: border-color var(--transition);
     }
 
-    table tr:hover {
-      background: rgba(0, 0, 0, 0.03);
+    table tbody tr:nth-child(even) {
+      background: var(--gray-light);
     }
-    body.dark-mode table tr:hover {
-      background: rgba(255, 255, 255, 0.04);
+
+    table tbody tr:hover {
+      background: rgba(139, 0, 0, 0.04);
+    }
+
+    body.dark-mode table tbody tr:nth-child(even) {
+      background: var(--input-bg);
+    }
+
+    body.dark-mode table tbody tr:hover {
+      background: rgba(204, 51, 51, 0.06);
     }
 
     table input,
     table select {
       width: 100%;
       padding: 5px 8px;
-      border: 1px solid #ccc;
-      border-radius: 4px;
+      border: 1px solid var(--border-color);
+      border-radius: var(--radius-sm);
       font-size: 13px;
       background: var(--input-bg);
       color: var(--text-color);
+      font-family: var(--font);
       transition: background var(--transition), color var(--transition), border-color var(--transition);
     }
 
     body.dark-mode table input,
     body.dark-mode table select {
       background: var(--input-bg);
-      color: #fff;
       border-color: var(--input-border);
     }
 
@@ -404,6 +581,36 @@
       transition: border-color var(--transition);
     }
 
+    .btn-accion {
+      background: transparent;
+      border: none;
+      font-size: 16px;
+      padding: 4px 6px;
+      border-radius: var(--radius-sm);
+      cursor: pointer;
+      transition: background 0.2s;
+      color: var(--gray);
+    }
+
+    .btn-accion:hover {
+      background: var(--gray-light);
+    }
+
+    .btn-accion.duplicar:hover {
+      color: #2e7d32;
+    }
+    .btn-accion.eliminar:hover {
+      color: #c62828;
+    }
+    .btn-accion.arrastrar {
+      cursor: grab;
+      color: var(--gray);
+    }
+
+    body.dark-mode .btn-accion:hover {
+      background: var(--input-bg);
+    }
+
     /* ============================================================
        RESUMEN GENERAL
        ============================================================ */
@@ -411,7 +618,7 @@
       background: var(--primary);
       color: #fff;
       padding: 20px;
-      border-radius: var(--radius);
+      border-radius: var(--radius-sm);
       margin: 20px 0;
       display: grid;
       grid-template-columns: 1fr 1fr 1fr;
@@ -423,8 +630,10 @@
       text-align: center;
     }
     .summary-box .item .label {
-      font-size: 13px;
-      opacity: 0.85;
+      font-size: 12px;
+      text-transform: uppercase;
+      letter-spacing: 0.3px;
+      opacity: 0.8;
     }
     .summary-box .item .value {
       font-size: 24px;
@@ -435,11 +644,12 @@
       border: 1px solid rgba(255, 255, 255, 0.3);
       color: #fff;
       padding: 6px 10px;
-      border-radius: 4px;
+      border-radius: var(--radius-sm);
       width: 100%;
       text-align: center;
       font-size: 18px;
       font-weight: 700;
+      font-family: var(--font);
     }
     .summary-box .item input:focus {
       border-color: #fff;
@@ -447,12 +657,12 @@
     }
 
     .total-letras {
-      background: var(--light-gray);
+      background: var(--gray-light);
       padding: 15px;
-      border-radius: var(--radius);
+      border-radius: var(--radius-sm);
       text-align: center;
       font-size: 16px;
-      border: 1px solid #ddd;
+      border: 1px solid var(--border-color);
       margin: 10px 0;
       transition: background var(--transition), color var(--transition), border-color var(--transition);
     }
@@ -484,18 +694,14 @@
     }
     .firma-box .leyenda {
       font-size: 12px;
-      color: #555;
+      color: var(--gray);
       font-style: italic;
       margin-top: 5px;
     }
     .firma-box .nombre {
-      font-weight: 700;
+      font-weight: 600;
       font-size: 14px;
       margin-top: 5px;
-    }
-
-    body.dark-mode .firma-box .leyenda {
-      color: #bbb;
     }
 
     /* ============================================================
@@ -601,18 +807,20 @@
       display: flex;
     }
     .modal-content {
-      background: #fff;
+      background: var(--bg-container);
       padding: 20px;
-      border-radius: 12px;
+      border-radius: var(--radius);
       max-width: 95%;
       max-height: 95%;
       overflow: auto;
       box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+      transition: background var(--transition);
     }
     .modal-content iframe {
       width: 820px;
       height: 620px;
       border: none;
+      background: #fff;
     }
     .modal-close {
       display: block;
@@ -621,24 +829,39 @@
       background: var(--primary);
       color: #fff;
       border: none;
-      border-radius: 6px;
+      border-radius: var(--radius-sm);
       cursor: pointer;
-      font-weight: 700;
+      font-weight: 600;
+      font-family: var(--font);
       transition: background var(--transition);
     }
     .modal-close:hover {
       background: var(--primary-dark);
     }
 
-    body.dark-mode .modal-content {
-      background: #3a3a3a;
-      color: #f0f0f0;
+    /* ============================================================
+       PROYECTO SUBTOTAL
+       ============================================================ */
+    .proyecto-subtotal {
+      text-align: right;
+      font-weight: 700;
+      font-size: 16px;
+      margin-top: 12px;
+      padding-top: 12px;
+      border-top: 2px solid var(--primary);
+      color: var(--primary);
+      transition: border-color var(--transition), color var(--transition);
     }
-    body.dark-mode .modal-close {
-      background: #cc3333;
-    }
-    body.dark-mode .modal-close:hover {
-      background: #aa2222;
+
+    .proyecto-subtotal input {
+      border: none;
+      background: transparent;
+      font-weight: 700;
+      font-size: 18px;
+      width: 180px;
+      text-align: right;
+      color: var(--primary);
+      font-family: var(--font);
     }
 
     /* ============================================================
@@ -646,8 +869,7 @@
        ============================================================ */
     @media (max-width: 768px) {
       .row,
-      .row-3,
-      .row-4 {
+      .row-3 {
         grid-template-columns: 1fr;
       }
       .summary-box {
@@ -666,6 +888,12 @@
       .proyecto-header {
         flex-direction: column;
         align-items: stretch;
+      }
+      .proyecto-header .titulo-wrapper {
+        flex-wrap: wrap;
+      }
+      .proyecto-header .acciones {
+        justify-content: flex-start;
       }
     }
 
@@ -699,8 +927,7 @@
       .toggle-dark,
       .modal-overlay,
       .btn-agregar-proyecto,
-      .btn-eliminar-proyecto,
-      .btn-duplicar-proyecto {
+      .btn-icon {
         display: none !important;
       }
       .proyecto-container {
@@ -710,6 +937,7 @@
         break-inside: avoid;
         padding: 15px !important;
         margin-bottom: 15px !important;
+        box-shadow: none !important;
       }
       .section {
         background: #fff !important;
@@ -796,6 +1024,16 @@
         border-top-color: #8B0000 !important;
         color: #000 !important;
       }
+      .proyecto-header .badge-tipo {
+        background: #8B0000 !important;
+        color: #fff !important;
+      }
+      .proyecto-header .titulo-input {
+        border: none !important;
+        background: transparent !important;
+        color: #000 !important;
+        font-weight: 700 !important;
+      }
       @page {
         margin: 1cm;
         @bottom-center {
@@ -859,7 +1097,7 @@
     <!-- ====== TÍTULO Y VERSIÓN ====== -->
     <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px;">
       <h1>COTIZADOR · MS SOLUTIONS</h1>
-      <span class="version-badge" id="versionBadge">v2.0</span>
+      <span class="version-badge" id="versionBadge">v3.0</span>
     </div>
     <div class="subtitulo">Soluciones en Seguridad Electrónica y Tecnología</div>
 
@@ -876,7 +1114,7 @@
     </div>
 
     <!-- ============================================================
-    DATOS GENERALES (cliente y empresa)
+    DATOS GENERALES
     ============================================================ -->
     <div class="section">
       <div class="section-title"><span>1</span> DATOS GENERALES</div>
@@ -931,10 +1169,10 @@
     </div>
 
     <!-- ============================================================
-    PROYECTOS (contenedor dinámico)
+    PROYECTOS
     ============================================================ -->
     <div id="proyectosContainer">
-      <!-- Los proyectos se renderizan aquí con JavaScript -->
+      <!-- Renderizado con JavaScript -->
     </div>
 
     <!-- ====== BOTÓN AGREGAR PROYECTO ====== -->
@@ -991,7 +1229,7 @@
       <div class="row">
         <div class="field">
           <label>VERSIÓN DE COTIZACIÓN</label>
-          <input type="text" id="versionCotizacion" value="2.0" placeholder="Ej. 2.0" />
+          <input type="text" id="versionCotizacion" value="3.0" placeholder="Ej. 3.0" />
         </div>
         <div class="field">
           <label>PLAZO DE ENTREGA (texto)</label>
@@ -1054,8 +1292,8 @@
     <button class="btn-contrato" id="contratoBtn">📜 GENERAR CONTRATO</button>
     <button class="btn-certificado" id="certificadoBtn">📜 CERTIFICADO DE INSTALACIÓN</button>
 
-    <div style="text-align:center; color:#999; font-size:12px; margin-top:20px;">
-      COTIZADOR · MS SOLUTIONS v2.0
+    <div style="text-align:center; color:var(--gray); font-size:12px; margin-top:20px;">
+      COTIZADOR · MS SOLUTIONS v3.0
     </div>
   </div>
 
@@ -1070,7 +1308,7 @@
 
   <script>
     // ================================================================
-    // 1. CONSTANTES Y UTILIDADES
+    // UTILIDADES
     // ================================================================
 
     const getEmoji = (cat) => ({
@@ -1146,7 +1384,14 @@
     };
 
     // ================================================================
-    // 2. FUNCIONES DE NEGOCIO
+    // ESTADO GLOBAL
+    // ================================================================
+
+    let proyectos = [];
+    let nextProyectoId = 1;
+
+    // ================================================================
+    // CÁLCULOS
     // ================================================================
 
     const calcularSubtotalProyecto = (proyectoId) => {
@@ -1209,7 +1454,7 @@
     };
 
     // ================================================================
-    // 3. FUNCIONES DE UI (crear filas, etc.)
+    // FUNCIONES DE UI
     // ================================================================
 
     const crearFilaEquipo = (tipo = 'cctv', desc = '', cat = '', uni = 'Pieza', cant = 1, punit = 0) => {
@@ -1295,11 +1540,8 @@
     };
 
     // ================================================================
-    // 4. RENDERIZADO DE PROYECTOS
+    // RENDERIZADO DE PROYECTOS
     // ================================================================
-
-    let proyectos = [];
-    let nextProyectoId = 1;
 
     const renderProyecto = (proyecto) => {
       const container = document.createElement('div');
@@ -1309,6 +1551,9 @@
 
       const tipo = proyecto.tipo || 'cctv';
       const tipoLabel = tipo === 'cctv' ? 'CCTV' : 'Reparación de PC';
+      const badgeClass = tipo === 'cctv' ? 'cctv' : 'pc';
+      const badgeIcon = tipo === 'cctv' ? '📹' : '💻';
+      const titulo = proyecto.titulo || '';
 
       let configHTML = '';
       if (tipo === 'cctv') {
@@ -1568,22 +1813,21 @@
 
       container.innerHTML = `
             <div class="proyecto-header">
-              <span class="titulo">📌 PROYECTO #${proyecto.id}</span>
+              <div class="titulo-wrapper">
+                <span class="badge-tipo ${badgeClass}">${badgeIcon} ${tipoLabel}</span>
+                <input type="text" class="titulo-input" value="${titulo}" placeholder="${tipo === 'cctv' ? 'Ej. Instalación de 4 cámaras CCTV' : 'Ej. Cambio de disco SSD y RAM'}" />
+              </div>
               <div class="acciones">
-                <select class="tipo-proyecto-select">
-                  <option value="cctv" ${tipo==='cctv'?'selected':''}>📹 CCTV</option>
-                  <option value="pc" ${tipo==='pc'?'selected':''}>💻 Reparación de PC</option>
-                </select>
-                <button class="btn-duplicar-proyecto" data-accion="duplicar-proyecto">📋 Duplicar</button>
-                <button class="btn-eliminar-proyecto" data-accion="eliminar-proyecto">✕ Eliminar</button>
+                <button class="btn-icon duplicar" data-accion="duplicar-proyecto" title="Duplicar proyecto">📋</button>
+                <button class="btn-icon eliminar" data-accion="eliminar-proyecto" title="Eliminar proyecto">🗑️</button>
               </div>
             </div>
-            <div class="section" style="border-left-color:var(--primary); background:var(--light-gray);">
-              <div class="section-title" style="font-size:16px;">⚙️ CONFIGURACIÓN</div>
+            <div class="section" style="border-left-color:var(--primary); background:var(--gray-light);">
+              <div class="section-title" style="font-size:15px;">⚙️ CONFIGURACIÓN</div>
               ${configHTML}
             </div>
-            <div class="section" style="border-left-color:var(--primary); background:var(--light-gray);">
-              <div class="section-title" style="font-size:16px;">📦 EQUIPOS / HARDWARE</div>
+            <div class="section" style="border-left-color:var(--primary); background:var(--gray-light);">
+              <div class="section-title" style="font-size:15px;">📦 EQUIPOS / HARDWARE</div>
               <div class="table-wrap">
                 <table class="tabla-equipos">
                   <thead>
@@ -1609,8 +1853,8 @@
               </div>
               <button class="btn btn-success btn-agregar-equipo" data-proyecto-id="${proyecto.id}">+ AGREGAR EQUIPO</button>
             </div>
-            <div class="section" style="border-left-color:var(--primary); background:var(--light-gray);">
-              <div class="section-title" style="font-size:16px;">🛠️ MANO DE OBRA Y SERVICIOS</div>
+            <div class="section" style="border-left-color:var(--primary); background:var(--gray-light);">
+              <div class="section-title" style="font-size:15px;">🛠️ MANO DE OBRA Y SERVICIOS</div>
               <div class="table-wrap">
                 <table class="tabla-servicios">
                   <thead>
@@ -1634,8 +1878,8 @@
               </div>
               <button class="btn btn-success btn-agregar-servicio" data-proyecto-id="${proyecto.id}">+ AGREGAR SERVICIO</button>
             </div>
-            <div class="section" style="border-left-color:var(--primary); background:var(--light-gray);">
-              <div class="section-title" style="font-size:16px;">💰 GASTOS EXTRA (este proyecto)</div>
+            <div class="section" style="border-left-color:var(--primary); background:var(--gray-light);">
+              <div class="section-title" style="font-size:15px;">💰 GASTOS EXTRA (este proyecto)</div>
               <div class="row row-3">
                 <div class="field">
                   <label>VIÁTICOS / TRANSPORTE ($)</label>
@@ -1652,7 +1896,7 @@
               </div>
             </div>
             <div class="proyecto-subtotal">
-              SUBTOTAL PROYECTO: <input type="text" class="subtotal-proyecto-input" value="$0.00" readonly style="border:none;background:transparent;font-weight:700;font-size:18px;width:150px;text-align:right;color:var(--primary);" />
+              SUBTOTAL PROYECTO: <input type="text" class="subtotal-proyecto-input" value="$0.00" readonly style="border:none;background:transparent;font-weight:700;font-size:18px;width:180px;text-align:right;color:var(--primary);" />
             </div>
           `;
 
@@ -1685,7 +1929,9 @@
         tbodyServicios.appendChild(crearFilaServicio('Limpieza interna de componentes', 1, 250));
       }
 
-      // Event listeners dentro del proyecto
+      // --- Event listeners ---
+
+      // Cambio de tipo de proyecto
       container.querySelector('.tipo-proyecto-select').addEventListener('change', function(e) {
         const nuevoTipo = this.value;
         const proyectoId = parseInt(container.dataset.proyectoId);
@@ -1701,6 +1947,17 @@
         }
       });
 
+      // Título editable
+      container.querySelector('.titulo-input').addEventListener('input', function() {
+        const proyectoId = parseInt(container.dataset.proyectoId);
+        const proyecto = proyectos.find(p => p.id === proyectoId);
+        if (proyecto) {
+          proyecto.titulo = this.value;
+          guardarDatos();
+        }
+      });
+
+      // Agregar equipo
       container.querySelector('.btn-agregar-equipo').addEventListener('click', function() {
         const tipo = container.querySelector('.tipo-proyecto-select').value;
         const tbody = container.querySelector('.tabla-equipos tbody');
@@ -1710,6 +1967,7 @@
         actualizarNumerosFilas(container);
       });
 
+      // Agregar servicio
       container.querySelector('.btn-agregar-servicio').addEventListener('click', function() {
         const tbody = container.querySelector('.tabla-servicios tbody');
         tbody.appendChild(crearFilaServicio());
@@ -1718,6 +1976,7 @@
         actualizarNumerosFilas(container);
       });
 
+      // Inputs que afectan cálculos
       container.querySelectorAll('input, select').forEach(el => {
         el.addEventListener('input', function() {
           recalcularTodo();
@@ -1729,6 +1988,7 @@
         });
       });
 
+      // Botones de acción en tablas (duplicar/eliminar)
       container.addEventListener('click', function(e) {
         const btn = e.target.closest('.btn-accion');
         if (!btn) return;
@@ -1759,7 +2019,8 @@
         }
       });
 
-      container.querySelector('.btn-eliminar-proyecto').addEventListener('click', function() {
+      // Eliminar proyecto
+      container.querySelector('.btn-icon.eliminar').addEventListener('click', function() {
         const id = parseInt(container.dataset.proyectoId);
         if (proyectos.length <= 1) {
           alert('Debe quedar al menos un proyecto.');
@@ -1773,7 +2034,8 @@
         }
       });
 
-      container.querySelector('.btn-duplicar-proyecto').addEventListener('click', function() {
+      // Duplicar proyecto
+      container.querySelector('.btn-icon.duplicar').addEventListener('click', function() {
         const id = parseInt(container.dataset.proyectoId);
         const original = proyectos.find(p => p.id === id);
         if (!original) return;
@@ -1793,11 +2055,11 @@
     };
 
     // ================================================================
-    // 5. MANEJO DE PROYECTOS (agregar, eliminar, duplicar)
+    // MANEJO DE PROYECTOS
     // ================================================================
 
     const agregarProyecto = (tipo = 'cctv') => {
-      const proyecto = { id: nextProyectoId++, tipo: tipo };
+      const proyecto = { id: nextProyectoId++, tipo: tipo, titulo: '' };
       proyectos.push(proyecto);
       const container = document.getElementById('proyectosContainer');
       const nuevoContainer = renderProyecto(proyecto);
@@ -1808,7 +2070,7 @@
     };
 
     // ================================================================
-    // 6. PERSISTENCIA (LocalStorage)
+    // PERSISTENCIA (LocalStorage)
     // ================================================================
 
     const guardarDatos = () => {
@@ -1818,6 +2080,7 @@
         const data = {
           id: p.id,
           tipo: container.querySelector('.tipo-proyecto-select').value,
+          titulo: container.querySelector('.titulo-input').value || '',
           equipos: [],
           servicios: []
         };
@@ -1878,7 +2141,7 @@
         container.innerHTML = '';
         proyectos = [];
         data.proyectos.forEach(p => {
-          const proyecto = { id: p.id, tipo: p.tipo };
+          const proyecto = { id: p.id, tipo: p.tipo, titulo: p.titulo || '' };
           proyectos.push(proyecto);
           const nuevoContainer = renderProyecto(proyecto);
           container.appendChild(nuevoContainer);
@@ -1905,7 +2168,7 @@
     };
 
     // ================================================================
-    // 7. SORTABLE (arrastrar filas)
+    // SORTABLE
     // ================================================================
 
     const initSortable = () => {
@@ -1934,7 +2197,7 @@
     };
 
     // ================================================================
-    // 8. GENERACIÓN DE PDF, CONTRATO Y CERTIFICADO
+    // GENERACIÓN DE PDF, CONTRATO Y CERTIFICADO
     // ================================================================
 
     const generarPDFContent = () => {
@@ -1968,6 +2231,7 @@
         const tipo = container.querySelector('.tipo-proyecto-select').value;
         const tipoLabel = tipo === 'cctv' ? 'CCTV' : 'Reparación de PC';
         const subtotal = container.querySelector('.subtotal-proyecto-input').value;
+        const titulo = container.querySelector('.titulo-input').value || `Proyecto #${id}`;
 
         let configText = '';
         if (tipo === 'cctv') {
@@ -2029,7 +2293,7 @@
 
         proyectosHTML += `
               <div style="border:1px solid #8B0000; padding:12px; margin-bottom:15px; border-radius:4px; page-break-inside:avoid; break-inside:avoid;">
-                <h3 style="color:#8B0000; margin:0 0 8px 0;">📌 PROYECTO #${id} - ${tipoLabel}</h3>
+                <h3 style="color:#8B0000; margin:0 0 8px 0;">📌 ${titulo} (${tipoLabel})</h3>
                 <div style="font-size:10pt; background:#f5f5f5; padding:6px; border-left:3px solid #8B0000; margin-bottom:8px;">
                   ${configText}
                 </div>
@@ -2212,7 +2476,7 @@
     };
 
     // ================================================================
-    // 9. FUNCIONES DE DOCUMENTOS (PDF, CONTRATO, CERTIFICADO)
+    // FUNCIONES DE DOCUMENTOS
     // ================================================================
 
     let pdfContentCache = '';
@@ -2467,7 +2731,7 @@
     };
 
     // ================================================================
-    // 10. INICIALIZACIÓN Y EVENTOS
+    // INICIALIZACIÓN Y EVENTOS
     // ================================================================
 
     const generarFolio = () => {
