@@ -2556,11 +2556,12 @@
     }
 
     // Croquis (se mantiene la funcionalidad, pero se puede usar en el PDF)
+
 document.getElementById('croquisUpload').addEventListener('change', function(e) {
-      const reader = new FileReader();
-      reader.onload = function(ev) {
+    const reader = new FileReader();
+    reader.onload = function(event) {
         const img = document.createElement('img');
-        img.src = ev.target.result;
+        img.src = event.target.result;
         img.style.maxHeight = '150px';
         img.style.maxWidth = '100%';
         img.style.border = '1px solid #ccc';
@@ -2568,10 +2569,10 @@ document.getElementById('croquisUpload').addEventListener('change', function(e) 
         const preview = document.getElementById('croquisPreview');
         preview.innerHTML = '';
         preview.appendChild(img);
-        localStorage.setItem('croquisData', ev.target.result);
-      };
-      reader.readAsDataURL(e.target.files[0]);
-    });
+        localStorage.setItem('croquisData', event.target.result);
+    };
+    reader.readAsDataURL(e.target.files[0]);
+});
 
     const croquisGuardado = localStorage.getItem('croquisData');
     if (croquisGuardado) {
