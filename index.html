@@ -8,7 +8,7 @@
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
-    /* ====== CSS ====== */
+    /* ====== CSS (sin cambios, igual que antes) ====== */
     :root {
       --bg-body: #f4f6f9;
       --bg-container: #ffffff;
@@ -702,7 +702,7 @@
   </div>
   <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px;">
     <h1>COTIZADOR · MS SOLUTIONS</h1>
-    <span class="version-badge" id="versionBadge">v5.0</span>
+    <span class="version-badge" id="versionBadge">v6.0</span>
   </div>
   <div class="subtitulo">Soluciones en Seguridad Electrónica y Tecnología</div>
   <div class="row">
@@ -752,7 +752,7 @@
       <div class="field"><label>MÉTODO DE PAGO</label><select id="metodoPagoGlobal"><option value="Efectivo">Efectivo</option><option value="Transferencia" selected>Transferencia</option><option value="Tarjeta">Tarjeta</option><option value="Otro">Otro</option></select></div>
     </div>
     <div class="row">
-      <div class="field"><label>VERSIÓN DE COTIZACIÓN</label><input type="text" id="versionCotizacion" value="5.0" placeholder="Ej. 5.0" /></div>
+      <div class="field"><label>VERSIÓN DE COTIZACIÓN</label><input type="text" id="versionCotizacion" value="6.0" placeholder="Ej. 6.0" /></div>
       <div class="field"><label>PLAZO DE ENTREGA (texto)</label><input type="text" id="plazoEntregaTexto" value="5 días hábiles" placeholder="Ej. 5 días hábiles" /></div>
     </div>
   </div>
@@ -800,7 +800,7 @@
   <button class="btn-certificado" id="certificadoBtn">📜 CERTIFICADO DE INSTALACIÓN</button>
 
   <div style="text-align:center; color:var(--gray); font-size:12px; margin-top:20px;">
-    COTIZADOR · MS SOLUTIONS v5.0
+    COTIZADOR · MS SOLUTIONS v6.0
   </div>
 </div>
 
@@ -1244,7 +1244,7 @@
     }
 
     // ============================================================
-    // ASIGNACIÓN DE EVENTOS
+    // ASIGNACIÓN DE EVENTOS (CORREGIDO)
     // ============================================================
 
     // Cambio de tipo de proyecto
@@ -1279,16 +1279,28 @@
       });
     }
 
-    // AGREGAR EQUIPO
+    // AGREGAR EQUIPO (con verificación)
     const btnAgregarEquipo = container.querySelector('.btn-agregar-equipo');
     if (btnAgregarEquipo) {
       btnAgregarEquipo.addEventListener('click', function() {
         const tipo = container.querySelector('.tipo-proyecto-select').value;
         const tbody = container.querySelector('.tabla-equipos tbody');
+        if (!tbody) return;
         tbody.appendChild(crearFilaEquipo(tipo));
         recalcularTodo();
         guardarDatos();
         actualizarNumerosFilas(container);
+        // Asignar eventos a los nuevos campos
+        tbody.querySelectorAll('input, select').forEach(el => {
+          el.addEventListener('input', function() {
+            recalcularTodo();
+            guardarDatos();
+          });
+          el.addEventListener('change', function() {
+            recalcularTodo();
+            guardarDatos();
+          });
+        });
       });
     }
 
@@ -1336,11 +1348,22 @@
         guardarDatos();
         actualizarNumerosFilas(container);
         select.value = '';
+        // Asignar eventos a los nuevos campos
+        tbody.querySelectorAll('input, select').forEach(el => {
+          el.addEventListener('input', function() {
+            recalcularTodo();
+            guardarDatos();
+          });
+          el.addEventListener('change', function() {
+            recalcularTodo();
+            guardarDatos();
+          });
+        });
       });
     }
 
-    // Inputs que afectan cálculos
-    container.querySelectorAll('input, select').forEach(el => {
+    // Eventos para campos de cantidad y precio (asegurar que recalcule)
+    container.querySelectorAll('.cant-equipo, .punit-equipo, .cant-servicio, .punit-servicio').forEach(el => {
       el.addEventListener('input', function() {
         recalcularTodo();
         guardarDatos();
@@ -1366,6 +1389,17 @@
         recalcularTodo();
         guardarDatos();
         actualizarNumerosFilas(container);
+        // Asignar eventos a los nuevos campos
+        tbody.querySelectorAll('input, select').forEach(el => {
+          el.addEventListener('input', function() {
+            recalcularTodo();
+            guardarDatos();
+          });
+          el.addEventListener('change', function() {
+            recalcularTodo();
+            guardarDatos();
+          });
+        });
       }
 
       if (btn.dataset.accion === 'eliminar') {
@@ -1553,6 +1587,17 @@
           p.servicios.forEach(s => {
             tbodyServicios.appendChild(crearFilaServicio(s.desc, s.cant, s.punit));
           });
+          // Forzar eventos en los inputs cargados
+          containerEl.querySelectorAll('.cant-equipo, .punit-equipo, .cant-servicio, .punit-servicio').forEach(el => {
+            el.addEventListener('input', function() {
+              recalcularTodo();
+              guardarDatos();
+            });
+            el.addEventListener('change', function() {
+              recalcularTodo();
+              guardarDatos();
+            });
+          });
           actualizarNumerosFilas(containerEl);
         }
       });
@@ -1593,10 +1638,9 @@
   };
 
   // ================================================================
-  // 9. GENERACIÓN DE PDF, CONTRATO Y CERTIFICADO
+  // 9. GENERACIÓN DE PDF (CORREGIDO: toma el tipo de proyecto)
   // ================================================================
 
-  // PDF
   const generarPDFContent = () => {
     const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
     const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
@@ -1798,7 +1842,7 @@
     iframe.contentWindow.print();
   };
 
-  // CONTRATO
+  // CONTRATO (similar, con tipo de proyecto)
   const generarContrato = () => {
     const cliente = document.getElementById('cliente_nombre').value || '_________________________';
     const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
@@ -1813,6 +1857,15 @@
     const metodoPago = document.getElementById('metodoPagoGlobal').value || 'Transferencia';
     const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
     const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
+
+    // Obtener lista de proyectos para el contrato
+    let proyectosTexto = '';
+    document.querySelectorAll('.proyecto-container').forEach(container => {
+      const tipo = container.querySelector('.tipo-proyecto-select')?.value || 'cctv';
+      const tipoLabel = tipo === 'cctv' ? 'CCTV' : 'Reparación de PC';
+      const titulo = container.querySelector('.titulo-input')?.value || `Proyecto`;
+      proyectosTexto += `<li>${titulo} (${tipoLabel})</li>`;
+    });
 
     const ahora = new Date();
     const dia = ahora.getDate();
@@ -1848,7 +1901,8 @@
             <p>Por medio del presente contrato, <strong>${empresa}</strong> (en adelante "EL PRESTADOR"), representado por <strong>${tecnico}</strong>, y el cliente <strong>${cliente}</strong> (en adelante "EL CLIENTE"), acuerdan los siguientes términos y condiciones para la prestación de los servicios descritos en la cotización con folio <strong>${folio}</strong>.</p>
             <div class="clausula">
               <strong>1. OBJETO DEL CONTRATO</strong>
-              <p>EL PRESTADOR se compromete a realizar los servicios detallados en la cotización, los cuales incluyen los proyectos y trabajos especificados en el anexo A.</p>
+              <p>EL PRESTADOR se compromete a realizar los siguientes servicios:</p>
+              <ul>${proyectosTexto}</ul>
             </div>
             <div class="clausula">
               <strong>2. MONTO Y FORMA DE PAGO</strong>
@@ -1900,7 +1954,7 @@
     ventana.print();
   };
 
-  // CERTIFICADO
+  // CERTIFICADO (similar, con tipo de proyecto)
   const generarCertificado = () => {
     const cliente = document.getElementById('cliente_nombre').value || '_________________________';
     const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
@@ -1928,6 +1982,15 @@
     if (logoData) {
       logoHTML = `<img src="${logoData}" style="max-height:60px; max-width:150px; display:block; margin:0 auto 10px auto;">`;
     }
+
+    // Obtener lista de proyectos
+    let proyectosTexto = '';
+    document.querySelectorAll('.proyecto-container').forEach(container => {
+      const tipo = container.querySelector('.tipo-proyecto-select')?.value || 'cctv';
+      const tipoLabel = tipo === 'cctv' ? 'CCTV' : 'Reparación de PC';
+      const titulo = container.querySelector('.titulo-input')?.value || `Proyecto`;
+      proyectosTexto += `<li>${titulo} (${tipoLabel})</li>`;
+    });
 
     const certificadoHTML = `
           <!DOCTYPE html>
@@ -1975,7 +2038,8 @@
               </div>
               <div class="seccion">
                 <div class="seccion-titulo">DESCRIPCIÓN DEL SERVICIO</div>
-                <p>Se ha realizado la instalación y/o mantenimiento de los equipos y sistemas descritos en la cotización con folio <strong>${folio}</strong>.</p>
+                <p>Se ha realizado la instalación y/o mantenimiento de los siguientes proyectos:</p>
+                <ul>${proyectosTexto}</ul>
               </div>
               <div class="seccion">
                 <div class="seccion-titulo">GARANTÍA</div>
