@@ -2558,6 +2558,9 @@
     // Croquis (se mantiene la funcionalidad, pero se puede usar en el PDF)
 
 document.getElementById('croquisUpload').addEventListener('change', function(e) {
+    const file = e.target.files[0];
+    if (!file) return;
+    
     const reader = new FileReader();
     reader.onload = function(event) {
         const img = document.createElement('img');
@@ -2571,7 +2574,7 @@ document.getElementById('croquisUpload').addEventListener('change', function(e) 
         preview.appendChild(img);
         localStorage.setItem('croquisData', event.target.result);
     };
-    reader.readAsDataURL(e.target.files[0]);
+    reader.readAsDataURL(file);
 });
 
     const croquisGuardado = localStorage.getItem('croquisData');
