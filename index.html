@@ -4,10 +4,11 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Cotizador · MS Solutions</title>
-  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/sortablejs@1.15.0/Sortable.min.js">
+  </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
-    /* ====== ESTILOS (igual que antes) ====== */
+    /* ====== CSS (igual que antes, sin cambios) ====== */
     :root {
       --bg-body: #f4f6f9;
       --bg-container: #ffffff;
@@ -578,6 +579,7 @@
       gap: 8px;
       align-items: center;
       margin-top: 8px;
+      flex-wrap: wrap;
     }
     .servicio-selector select {
       padding: 6px 12px;
@@ -587,6 +589,7 @@
       background: var(--input-bg);
       color: var(--text-color);
       font-family: var(--font);
+      min-width: 200px;
     }
 
     @media (max-width: 768px) {
@@ -598,6 +601,7 @@
       .proyecto-header { flex-direction: column; align-items: stretch; }
       .proyecto-header .titulo-wrapper { flex-wrap: wrap; }
       .proyecto-header .acciones { justify-content: flex-start; }
+      .servicio-selector { flex-direction: column; align-items: stretch; }
     }
 
     @media print {
@@ -671,7 +675,7 @@
   </div>
   <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px;">
     <h1>COTIZADOR · MS SOLUTIONS</h1>
-    <span class="version-badge" id="versionBadge">v4.1</span>
+    <span class="version-badge" id="versionBadge">v4.2</span>
   </div>
   <div class="subtitulo">Soluciones en Seguridad Electrónica y Tecnología</div>
   <div class="row">
@@ -721,7 +725,7 @@
       <div class="field"><label>MÉTODO DE PAGO</label><select id="metodoPagoGlobal"><option value="Efectivo">Efectivo</option><option value="Transferencia" selected>Transferencia</option><option value="Tarjeta">Tarjeta</option><option value="Otro">Otro</option></select></div>
     </div>
     <div class="row">
-      <div class="field"><label>VERSIÓN DE COTIZACIÓN</label><input type="text" id="versionCotizacion" value="4.1" placeholder="Ej. 4.1" /></div>
+      <div class="field"><label>VERSIÓN DE COTIZACIÓN</label><input type="text" id="versionCotizacion" value="4.2" placeholder="Ej. 4.2" /></div>
       <div class="field"><label>PLAZO DE ENTREGA (texto)</label><input type="text" id="plazoEntregaTexto" value="5 días hábiles" placeholder="Ej. 5 días hábiles" /></div>
     </div>
   </div>
@@ -769,7 +773,7 @@
   <button class="btn-certificado" id="certificadoBtn">📜 CERTIFICADO DE INSTALACIÓN</button>
 
   <div style="text-align:center; color:var(--gray); font-size:12px; margin-top:20px;">
-    COTIZADOR · MS SOLUTIONS v4.1
+    COTIZADOR · MS SOLUTIONS v4.2
   </div>
 </div>
 
@@ -805,8 +809,9 @@
   } [cat] || '📦');
 
   const formatCurrency = (value) => '$' + value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
+
   const numberToLetters = (num) => {
-    // (función completa, omitida por brevedad)
+    // Función completa (se omite por brevedad, pero se usa en total-letras)
     return 'CERO PESOS 00/100 M.N.';
   };
 
@@ -1114,6 +1119,41 @@
     }
 
     // ============================================================
+    // Llenar select de servicios según tipo
+    // ============================================================
+    const servicioSelect = container.querySelector('.servicio-tipo-select');
+    if (servicioSelect) {
+      const opciones = tipo === 'cctv' ? [
+        { value: 'instalacion', label: '📹 Instalación nueva' },
+        { value: 'mantenimiento', label: '🔧 Mantenimiento preventivo' },
+        { value: 'cambio_equipo', label: '🔄 Cambio de equipo / pieza' },
+        { value: 'revision', label: '🔍 Revisión / diagnóstico' },
+        { value: 'actualizacion', label: '⬆️ Actualización de sistema' },
+        { value: 'configuracion_app', label: '📱 Configuración de app / celulares' },
+        { value: 'otro', label: '📝 Otro (personalizado)' }
+      ] : [
+        { value: 'diagnostico', label: '🔍 Diagnóstico de falla' },
+        { value: 'instalacion_so', label: '💿 Instalación de sistema operativo' },
+        { value: 'limpieza', label: '🧹 Limpieza interna' },
+        { value: 'mantenimiento', label: '🔧 Mantenimiento preventivo' },
+        { value: 'cambio_hardware', label: '🔄 Cambio de disco / RAM / fuente' },
+        { value: 'recuperacion_datos', label: '💾 Recuperación de datos' },
+        { value: 'otro', label: '📝 Otro (personalizado)' }
+      ];
+      servicioSelect.innerHTML = '';
+      const defaultOpt = document.createElement('option');
+      defaultOpt.value = '';
+      defaultOpt.textContent = '-- Selecciona tipo de servicio --';
+      servicioSelect.appendChild(defaultOpt);
+      opciones.forEach(opt => {
+        const option = document.createElement('option');
+        option.value = opt.value;
+        option.textContent = opt.label;
+        servicioSelect.appendChild(option);
+      });
+    }
+
+    // ============================================================
     // ASIGNACIÓN DE EVENTOS
     // ============================================================
 
@@ -1149,39 +1189,6 @@
       });
     }
 
-    // Llenar select de servicios según tipo
-    const servicioSelect = container.querySelector('.servicio-tipo-select');
-    if (servicioSelect) {
-      const opciones = tipo === 'cctv' ? [
-        { value: 'instalacion', label: '📹 Instalación nueva' },
-        { value: 'mantenimiento', label: '🔧 Mantenimiento preventivo' },
-        { value: 'cambio_equipo', label: '🔄 Cambio de equipo / pieza' },
-        { value: 'revision', label: '🔍 Revisión / diagnóstico' },
-        { value: 'actualizacion', label: '⬆️ Actualización de sistema' },
-        { value: 'configuracion_app', label: '📱 Configuración de app / celulares' },
-        { value: 'otro', label: '📝 Otro (personalizado)' }
-      ] : [
-        { value: 'diagnostico', label: '🔍 Diagnóstico de falla' },
-        { value: 'instalacion_so', label: '💿 Instalación de sistema operativo' },
-        { value: 'limpieza', label: '🧹 Limpieza interna' },
-        { value: 'mantenimiento', label: '🔧 Mantenimiento preventivo' },
-        { value: 'cambio_hardware', label: '🔄 Cambio de disco / RAM / fuente' },
-        { value: 'recuperacion_datos', label: '💾 Recuperación de datos' },
-        { value: 'otro', label: '📝 Otro (personalizado)' }
-      ];
-      servicioSelect.innerHTML = '';
-      const defaultOpt = document.createElement('option');
-      defaultOpt.value = '';
-      defaultOpt.textContent = '-- Selecciona tipo de servicio --';
-      servicioSelect.appendChild(defaultOpt);
-      opciones.forEach(opt => {
-        const option = document.createElement('option');
-        option.value = opt.value;
-        option.textContent = opt.label;
-        servicioSelect.appendChild(option);
-      });
-    }
-
     // AGREGAR EQUIPO
     const btnAgregarEquipo = container.querySelector('.btn-agregar-equipo');
     if (btnAgregarEquipo) {
@@ -1195,17 +1202,21 @@
       });
     }
 
-    // AGREGAR SERVICIO (con selector inline)
+    // AGREGAR SERVICIO (corregido)
     const btnAgregarServicio = container.querySelector('.btn-agregar-servicio');
     if (btnAgregarServicio) {
       btnAgregarServicio.addEventListener('click', function() {
         const select = container.querySelector('.servicio-tipo-select');
+        if (!select) {
+          alert('Error: No se encontró el selector de servicio.');
+          return;
+        }
         const valor = select.value;
         if (!valor) {
           alert('Por favor selecciona un tipo de servicio.');
           return;
         }
-        const tipo = container.querySelector('.tipo-proyecto-select').value;
+        const tipo = container.querySelector('.tipo-proyecto-select')?.value || 'cctv';
         const descripciones = {
           cctv: {
             instalacion: 'Instalación nueva de sistema CCTV',
@@ -1228,6 +1239,7 @@
         };
         const descripcion = descripciones[tipo]?.[valor] || 'Servicio';
         const tbody = container.querySelector('.tabla-servicios tbody');
+        if (!tbody) return;
         const fila = crearFilaServicio(descripcion, 1, 0);
         tbody.appendChild(fila);
         recalcularTodo();
@@ -1333,39 +1345,47 @@
     const nuevoContainer = renderProyecto(proyecto);
     container.appendChild(nuevoContainer);
     recalcularTodo();
-    guardarDatos();
+    // Guardar después de que el DOM se actualice
+    setTimeout(() => guardarDatos(), 50);
     initSortable();
   };
 
   // ================================================================
-  // PERSISTENCIA (LocalStorage)
+  // PERSISTENCIA (LocalStorage) - CORREGIDO
   // ================================================================
 
   const guardarDatos = () => {
     const proyectosData = proyectos.map(p => {
       const container = document.getElementById(`proyecto-${p.id}`);
       if (!container) return p;
+
+      // Verificar que los elementos existan antes de leer .value
+      const tipoSelect = container.querySelector('.tipo-proyecto-select');
+      const tituloInput = container.querySelector('.titulo-input');
+
       const data = {
         id: p.id,
-        tipo: container.querySelector('.tipo-proyecto-select').value,
-        titulo: container.querySelector('.titulo-input').value || '',
+        tipo: tipoSelect ? tipoSelect.value : p.tipo || 'cctv',
+        titulo: tituloInput ? tituloInput.value : '',
         equipos: [],
         servicios: []
       };
+
       container.querySelectorAll('.tabla-equipos tbody tr').forEach(row => {
         data.equipos.push({
-          desc: row.querySelector('.desc-equipo').value,
-          cat: row.querySelector('.categoria-equipo').value,
-          uni: row.querySelector('.unidad-equipo').value,
-          cant: row.querySelector('.cant-equipo').value,
-          punit: row.querySelector('.punit-equipo').value
+          desc: row.querySelector('.desc-equipo')?.value || '',
+          cat: row.querySelector('.categoria-equipo')?.value || '',
+          uni: row.querySelector('.unidad-equipo')?.value || '',
+          cant: row.querySelector('.cant-equipo')?.value || '1',
+          punit: row.querySelector('.punit-equipo')?.value || '0'
         });
       });
+
       container.querySelectorAll('.tabla-servicios tbody tr').forEach(row => {
         data.servicios.push({
-          desc: row.querySelector('.desc-servicio').value,
-          cant: row.querySelector('.cant-servicio').value,
-          punit: row.querySelector('.punit-servicio').value
+          desc: row.querySelector('.desc-servicio')?.value || '',
+          cant: row.querySelector('.cant-servicio')?.value || '1',
+          punit: row.querySelector('.punit-servicio')?.value || '0'
         });
       });
       return data;
@@ -1465,12 +1485,192 @@
   };
 
   // ================================================================
-  // GENERACIÓN DE PDF (RESUMIDO)
+  // GENERACIÓN DE PDF (RESUMIDO Y PROFESIONAL)
   // ================================================================
 
   const generarPDFContent = () => {
-    // (Función resumida, se omite por brevedad, pero mantiene la misma estructura profesional)
-    return '<html><body><h1>Cotización</h1></body></html>';
+    const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
+    const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
+    const telefono = document.getElementById('telefono').value || '';
+    const correo = document.getElementById('correo').value || '';
+    const cliente = document.getElementById('cliente_nombre').value || '';
+    const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
+    const clienteTel = document.getElementById('cliente_telefono').value || '';
+    const clienteCorreo = document.getElementById('cliente_correo').value || '';
+    const clienteDir = document.getElementById('cliente_direccion').value || '';
+    const metodoPago = document.getElementById('metodoPagoGlobal').value || '';
+    const plazoEntregaTexto = document.getElementById('plazoEntregaTexto').value || '5 días hábiles';
+    const observaciones = document.getElementById('observacionesCliente').value || '';
+    const version = document.getElementById('versionCotizacion').value || '1.0';
+    const subtotalGeneral = document.getElementById('subtotalGeneral').value;
+    const totalFinal = document.getElementById('totalFinalInput').value;
+    const totalLetras = document.getElementById('totalLetras').innerText;
+    const anticipacionMonto = document.getElementById('anticipacionMonto').value;
+    const contraEntrega = document.getElementById('contra_entrega').value;
+    const descuentoPorc = document.getElementById('descuentoPorcentaje').value || '0';
+    const folio = document.getElementById('folio').value;
+    const fecha = document.getElementById('fechaEmision').value;
+
+    let proyectosResumen = '';
+    document.querySelectorAll('.proyecto-container').forEach(container => {
+      const id = container.dataset.proyectoId;
+      const tipo = container.querySelector('.tipo-proyecto-select')?.value || 'cctv';
+      const tipoLabel = tipo === 'cctv' ? 'CCTV' : 'Reparación de PC';
+      const subtotal = container.querySelector('.subtotal-proyecto-input')?.value || '$0.00';
+      const titulo = container.querySelector('.titulo-input')?.value || `Proyecto #${id}`;
+
+      let equiposCount = 0;
+      let serviciosCount = 0;
+      container.querySelectorAll('.tabla-equipos tbody tr').forEach(row => {
+        const cant = parseInt(row.querySelector('.cant-equipo')?.value) || 0;
+        equiposCount += cant;
+      });
+      container.querySelectorAll('.tabla-servicios tbody tr').forEach(row => {
+        const cant = parseInt(row.querySelector('.cant-servicio')?.value) || 0;
+        serviciosCount += cant;
+      });
+
+      proyectosResumen += `
+            <div style="border-bottom:1px solid #ccc; padding:8px 0; margin-bottom:6px;">
+              <div style="display:flex; justify-content:space-between; font-weight:bold;">
+                <span>${titulo} (${tipoLabel})</span>
+                <span>${subtotal}</span>
+              </div>
+              <div style="font-size:9pt; color:#555;">
+                ${equiposCount > 0 ? `${equiposCount} equipos · ` : ''}
+                ${serviciosCount > 0 ? `${serviciosCount} servicios` : ''}
+                ${equiposCount === 0 && serviciosCount === 0 ? 'Sin items' : ''}
+              </div>
+            </div>
+          `;
+    });
+
+    const logoData = localStorage.getItem('logoData');
+    let logoHTML = '';
+    if (logoData) {
+      logoHTML = `<img src="${logoData}" style="max-height:60px; max-width:150px; display:block; margin:0 auto 10px auto;">`;
+    }
+
+    return `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <title>Cotización - MS Solutions</title>
+            <style>
+              body { font-family: 'Times New Roman', Times, serif; margin: 1.5cm; color: #000; }
+              .header { text-align: center; border-bottom: 2px solid #8B0000; padding-bottom: 10px; margin-bottom: 15px; }
+              .header h1 { font-size: 22pt; margin: 0; color: #8B0000; }
+              .header .subt { font-size: 12pt; color: #555; }
+              .header .folio-fecha { display: flex; justify-content: space-between; font-size: 11pt; margin-top: 5px; }
+              .seccion { margin-bottom: 12px; }
+              .seccion-titulo { font-weight: bold; font-size: 13pt; border-bottom: 1px solid #8B0000; padding-bottom: 3px; margin-bottom: 8px; color: #8B0000; }
+              .datos-cliente { display: grid; grid-template-columns: 1fr 1fr; gap: 4px 20px; font-size: 11pt; }
+              .datos-cliente .label { font-weight: bold; }
+              .resumen { display: flex; justify-content: space-between; font-size: 13pt; font-weight: bold; margin: 10px 0; }
+              .resumen .total { color: #8B0000; font-size: 16pt; }
+              .total-letras { font-size: 11pt; margin: 8px 0; padding: 8px; border: 1px solid #333; background: #f9f9f9; }
+              .firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 30px; margin-top: 20px; }
+              .firma-box { border-top: 2px solid #333; padding-top: 8px; }
+              .firma-box .linea { height: 30px; border-bottom: 1px solid #333; margin-bottom: 5px; }
+              .firma-box .leyenda { font-size: 9pt; font-style: italic; color: #555; }
+              .firma-box .nombre { font-weight: bold; font-size: 11pt; margin-top: 5px; }
+              .vigencia { font-size: 9pt; text-align: center; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 8px; color: #555; }
+              .observaciones { border: 1px solid #333; padding: 8px; margin-top: 10px; background: #fafafa; font-size: 10pt; }
+              .observaciones h4 { margin: 0 0 5px 0; color: #8B0000; }
+              .observaciones p { margin: 0; white-space: pre-wrap; }
+              .version { font-size: 10pt; color: #555; text-align: right; margin-top: 5px; }
+              .certificado-garantia { border: 1px solid #333; padding: 8px; margin-top: 12px; background: #fafafa; font-size: 10pt; }
+              .certificado-garantia h4 { margin: 0 0 5px 0; color: #8B0000; }
+              .certificado-garantia p { margin: 0; }
+              .resumen-proyectos { margin: 8px 0; }
+              @page { margin: 1.5cm; }
+              @media print { body { margin: 0; } }
+            </style>
+          </head>
+          <body>
+            ${logoHTML}
+            <div class="header">
+              <h1>COTIZACIÓN · MS SOLUTIONS</h1>
+              <div class="subt">Soluciones en Seguridad Electrónica y Tecnología</div>
+              <div class="folio-fecha">
+                <span><strong>Folio:</strong> ${folio}</span>
+                <span><strong>Fecha:</strong> ${fecha}</span>
+              </div>
+              <div class="version"><strong>Versión:</strong> ${version}</div>
+            </div>
+
+            <div class="seccion">
+              <div class="seccion-titulo">DATOS DEL CLIENTE</div>
+              <div class="datos-cliente">
+                <div><span class="label">Cliente:</span> ${cliente}</div>
+                <div><span class="label">Empresa:</span> ${clienteEmpresa || '---'}</div>
+                <div><span class="label">Teléfono:</span> ${clienteTel}</div>
+                <div><span class="label">Correo:</span> ${clienteCorreo}</div>
+                <div style="grid-column:1/-1;"><span class="label">Dirección:</span> ${clienteDir}</div>
+              </div>
+            </div>
+
+            <div class="seccion">
+              <div class="seccion-titulo">RESUMEN DE PROYECTOS</div>
+              <div class="resumen-proyectos">
+                ${proyectosResumen}
+              </div>
+              <div class="resumen">
+                <span>Subtotal General: ${subtotalGeneral}</span>
+                <span>Descuento: ${descuentoPorc}%</span>
+                <span class="total">Total Final: ${totalFinal}</span>
+              </div>
+              <div class="total-letras"><strong>Total con letra:</strong> ${totalLetras}</div>
+              <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:4px 15px; font-size:10pt; margin-top:5px;">
+                <div><strong>Anticipación (${document.getElementById('anticipacionPorcentaje').value}%):</strong> ${anticipacionMonto}</div>
+                <div><strong>Contra entrega:</strong> ${contraEntrega}</div>
+                <div><strong>Plazo entrega:</strong> ${plazoEntregaTexto}</div>
+              </div>
+              <div style="font-size:10pt; margin-top:5px;"><strong>Método de pago:</strong> ${metodoPago}</div>
+            </div>
+
+            ${observaciones ? `
+              <div class="observaciones">
+                <h4>📝 OBSERVACIONES DEL CLIENTE</h4>
+                <p>${observaciones}</p>
+              </div>
+            ` : ''}
+
+            <div class="seccion">
+              <div class="seccion-titulo">FIRMAS DE ACEPTACIÓN</div>
+              <div class="firmas">
+                <div class="firma-box">
+                  <div><strong>FIRMA DEL INSTALADOR / EMPRESA</strong></div>
+                  <div class="linea"></div>
+                  <div class="leyenda">Al generar este documento, MS SOLUTIONS certifica que esta cotización ha sido emitida de manera oficial y cuenta con validez legal para su uso como propuesta comercial.</div>
+                  <div class="nombre"><strong>MS SOLUTIONS</strong> - ${tecnico}</div>
+                </div>
+                <div class="firma-box">
+                  <div><strong>FIRMA DEL CLIENTE</strong></div>
+                  <div class="linea"></div>
+                  <div class="leyenda">El cliente reconoce haber recibido esta cotización a través de medios digitales y acepta los términos aquí descritos.</div>
+                  <div class="nombre"><strong>Cliente:</strong> ${cliente}</div>
+                </div>
+              </div>
+            </div>
+
+            <div class="certificado-garantia">
+              <h4>📜 CERTIFICADO DE GARANTÍA</h4>
+              <p>MS SOLUTIONS garantiza que todos los equipos incluidos en esta cotización son 100% originales y cuentan con garantía de fábrica contra defectos de fabricación por 12 meses a partir de la fecha de instalación. La garantía cubre reparación o reposición del equipo, no aplica a daños por mal uso, descargas eléctricas, modificaciones no autorizadas o desgaste normal por uso. Para hacer válida la garantía, el cliente deberá conservar el comprobante de compra y notificar cualquier falla dentro del periodo establecido.</p>
+            </div>
+
+            <div class="vigencia">
+              <strong>Vigencia:</strong> ${document.getElementById('vigenciaTexto')?.value || '7 días'} naturales a partir de la fecha de emisión. Los precios están sujetos a cambios sin previo aviso por fluctuaciones del mercado o tipo de cambio.
+              <br>Este documento es una cotización oficial de MS SOLUTIONS.
+            </div>
+
+            <div style="text-align:center; font-size:8pt; color:#999; margin-top:10px;">
+              Página 1 de 1 - Generado el ${new Date().toLocaleString('es-ES')}
+            </div>
+          </body>
+          </html>
+        `;
   };
 
   // ================================================================
@@ -1496,8 +1696,13 @@
     iframe.contentWindow.print();
   };
 
-  const generarContrato = () => { alert('Contrato generado'); };
-  const generarCertificado = () => { alert('Certificado generado'); };
+  const generarContrato = () => {
+    alert('Función de contrato disponible (próxima actualización)');
+  };
+
+  const generarCertificado = () => {
+    alert('Función de certificado disponible (próxima actualización)');
+  };
 
   // ================================================================
   // INICIALIZACIÓN Y EVENTOS
