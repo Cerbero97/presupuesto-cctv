@@ -8,7 +8,7 @@
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
-    /* ====== CSS (sin cambios, igual que antes) ====== */
+    /* ====== CSS (sin cambios) ====== */
     :root {
       --bg-body: #f4f6f9;
       --bg-container: #ffffff;
@@ -702,7 +702,7 @@
   </div>
   <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px;">
     <h1>COTIZADOR · MS SOLUTIONS</h1>
-    <span class="version-badge" id="versionBadge">v6.0</span>
+    <span class="version-badge" id="versionBadge">v7.0</span>
   </div>
   <div class="subtitulo">Soluciones en Seguridad Electrónica y Tecnología</div>
   <div class="row">
@@ -713,23 +713,23 @@
   <div class="section">
     <div class="section-title"><span>1</span> DATOS GENERALES</div>
     <div class="row">
-      <div class="field"><label>EMPRESA</label><input type="text" id="empresa" value="MS SOLUTIONS" placeholder="Nombre de tu empresa" /></div>
-      <div class="field"><label>TÉCNICO RESPONSABLE</label><input type="text" id="tecnico" value="Ing. Alan Marcelo" placeholder="Nombre del técnico" /></div>
+      <div class="field"><label>EMPRESA</label><input type="text" id="empresa" value="" placeholder="Nombre de tu empresa" /></div>
+      <div class="field"><label>TÉCNICO RESPONSABLE</label><input type="text" id="tecnico" value="" placeholder="Nombre del técnico" /></div>
     </div>
     <div class="row">
-      <div class="field"><label>TELÉFONO (WhatsApp)</label><input type="text" id="telefono" value="55 1234 5678" placeholder="Teléfono" /></div>
-      <div class="field"><label>CORREO ELECTRÓNICO</label><input type="email" id="correo" value="contacto@mssolutions.com" placeholder="correo@empresa.com" /></div>
+      <div class="field"><label>TELÉFONO (WhatsApp)</label><input type="text" id="telefono" value="" placeholder="Teléfono" /></div>
+      <div class="field"><label>CORREO ELECTRÓNICO</label><input type="email" id="correo" value="" placeholder="correo@empresa.com" /></div>
     </div>
-    <div class="field full-width"><label>DOMICILIO</label><input type="text" id="domicilio" value="Calle Independencia #45, Col. Centro, CDMX" placeholder="Dirección" /></div>
+    <div class="field full-width"><label>DOMICILIO</label><input type="text" id="domicilio" value="" placeholder="Dirección" /></div>
     <div class="row">
-      <div class="field"><label>NOMBRE DEL CLIENTE</label><input type="text" id="cliente_nombre" value="Bruno Calderón Vega" placeholder="Nombre completo" /></div>
-      <div class="field"><label>EMPRESA (Opcional)</label><input type="text" id="cliente_empresa" value="Oficina Particular" placeholder="Empresa" /></div>
+      <div class="field"><label>NOMBRE DEL CLIENTE</label><input type="text" id="cliente_nombre" value="" placeholder="Nombre completo" /></div>
+      <div class="field"><label>EMPRESA (Opcional)</label><input type="text" id="cliente_empresa" value="" placeholder="Empresa" /></div>
     </div>
     <div class="row">
-      <div class="field"><label>TELÉFONO (WhatsApp)</label><input type="text" id="cliente_telefono" value="6647795280" placeholder="Teléfono" /></div>
-      <div class="field"><label>CORREO ELECTRÓNICO</label><input type="email" id="cliente_correo" value="brunocald123@gmail.com" placeholder="cliente@mail.com" /></div>
+      <div class="field"><label>TELÉFONO (WhatsApp)</label><input type="text" id="cliente_telefono" value="" placeholder="Teléfono" /></div>
+      <div class="field"><label>CORREO ELECTRÓNICO</label><input type="email" id="cliente_correo" value="" placeholder="cliente@mail.com" /></div>
     </div>
-    <div class="field full-width"><label>DIRECCIÓN DEL SITIO</label><input type="text" id="cliente_direccion" value="Av. Américas 1250" placeholder="Ubicación de la instalación" /></div>
+    <div class="field full-width"><label>DIRECCIÓN DEL SITIO</label><input type="text" id="cliente_direccion" value="" placeholder="Ubicación de la instalación" /></div>
   </div>
 
   <div id="proyectosContainer"></div>
@@ -752,7 +752,7 @@
       <div class="field"><label>MÉTODO DE PAGO</label><select id="metodoPagoGlobal"><option value="Efectivo">Efectivo</option><option value="Transferencia" selected>Transferencia</option><option value="Tarjeta">Tarjeta</option><option value="Otro">Otro</option></select></div>
     </div>
     <div class="row">
-      <div class="field"><label>VERSIÓN DE COTIZACIÓN</label><input type="text" id="versionCotizacion" value="6.0" placeholder="Ej. 6.0" /></div>
+      <div class="field"><label>VERSIÓN DE COTIZACIÓN</label><input type="text" id="versionCotizacion" value="7.0" placeholder="Ej. 7.0" /></div>
       <div class="field"><label>PLAZO DE ENTREGA (texto)</label><input type="text" id="plazoEntregaTexto" value="5 días hábiles" placeholder="Ej. 5 días hábiles" /></div>
     </div>
   </div>
@@ -769,13 +769,13 @@
         <label>FIRMA DEL INSTALADOR / EMPRESA</label>
         <div class="firma-linea"></div>
         <div class="leyenda">Al generar este documento, MS SOLUTIONS certifica que esta cotización ha sido emitida de manera oficial y cuenta con validez legal para su uso como propuesta comercial.</div>
-        <div class="nombre"><strong>MS SOLUTIONS</strong> - <span id="tecnicoFirma">Ing. Alan Marcelo</span></div>
+        <div class="nombre"><strong>MS SOLUTIONS</strong> - <span id="tecnicoFirma"></span></div>
       </div>
       <div class="firma-box">
         <label>FIRMA DEL CLIENTE</label>
         <div class="firma-linea"></div>
         <div class="leyenda">El cliente reconoce haber recibido esta cotización a través de medios digitales y acepta los términos aquí descritos.</div>
-        <div class="nombre"><strong>Cliente:</strong> <span id="clienteFirma">Bruno Calderón Vega</span></div>
+        <div class="nombre"><strong>Cliente:</strong> <span id="clienteFirma"></span></div>
       </div>
     </div>
   </div>
@@ -800,7 +800,7 @@
   <button class="btn-certificado" id="certificadoBtn">📜 CERTIFICADO DE INSTALACIÓN</button>
 
   <div style="text-align:center; color:var(--gray); font-size:12px; margin-top:20px;">
-    COTIZADOR · MS SOLUTIONS v6.0
+    COTIZADOR · MS SOLUTIONS v7.0
   </div>
 </div>
 
@@ -1178,35 +1178,12 @@
         `;
 
     // ============================================================
-    // Poblar filas iniciales según tipo
+    // Poblar filas iniciales (vacías)
     // ============================================================
     const tbodyEquipos = container.querySelector('.tabla-equipos tbody');
     const tbodyServicios = container.querySelector('.tabla-servicios tbody');
 
-    if (tipo === 'cctv') {
-      [
-        ['Cámara Bala 4MP IP', 'Cámaras', 'Pieza', 4, 1800],
-        ['Grabador NVR 8 Canales', 'Grabadores', 'Pieza', 1, 4500],
-        ['Disco Duro 2TB', 'Accesorios', 'Pieza', 1, 2200],
-        ['Switch PoE 8 Puertos', 'Accesorios', 'Pieza', 1, 2600],
-        ['Cable UTP Cat5e (por metro)', 'Otros', 'Metro', 30, 8.5]
-      ].forEach(([desc, cat, uni, cant, punit]) => {
-        tbodyEquipos.appendChild(crearFilaEquipo('cctv', desc, cat, uni, cant, punit));
-      });
-      tbodyServicios.appendChild(crearFilaServicio('Instalación de cámaras IP y configuración', 1, 1800));
-      tbodyServicios.appendChild(crearFilaServicio('Configuración de 3 celulares para visualización remota', 1, 600));
-    } else {
-      [
-        ['Disco SSD 512GB SATA III', 'Almacenamiento', 'Pieza', 1, 850],
-        ['Memoria RAM 8GB DDR4 3200MHz', 'Memoria RAM', 'Pieza', 2, 450],
-        ['Fuente de poder 500W 80 Plus', 'Fuente de poder', 'Pieza', 1, 600]
-      ].forEach(([desc, cat, uni, cant, punit]) => {
-        tbodyEquipos.appendChild(crearFilaEquipo('pc', desc, cat, uni, cant, punit));
-      });
-      tbodyServicios.appendChild(crearFilaServicio('Diagnóstico de falla', 1, 350));
-      tbodyServicios.appendChild(crearFilaServicio('Instalación de sistema operativo Windows 11', 1, 450));
-      tbodyServicios.appendChild(crearFilaServicio('Limpieza interna de componentes', 1, 250));
-    }
+    // No agregar ninguna fila por defecto, solo dejar vacío.
 
     // ============================================================
     // Llenar select de servicios según tipo
@@ -1279,14 +1256,20 @@
       });
     }
 
-    // AGREGAR EQUIPO (con verificación)
+    // AGREGAR EQUIPO (con verificación de existencia)
     const btnAgregarEquipo = container.querySelector('.btn-agregar-equipo');
     if (btnAgregarEquipo) {
       btnAgregarEquipo.addEventListener('click', function() {
-        const tipo = container.querySelector('.tipo-proyecto-select').value;
+        const tipoSelect = container.querySelector('.tipo-proyecto-select');
+        if (!tipoSelect) {
+          console.warn('No se encontró .tipo-proyecto-select en el proyecto', container.dataset.proyectoId);
+          return;
+        }
+        const tipo = tipoSelect.value;
         const tbody = container.querySelector('.tabla-equipos tbody');
         if (!tbody) return;
-        tbody.appendChild(crearFilaEquipo(tipo));
+        const fila = crearFilaEquipo(tipo);
+        tbody.appendChild(fila);
         recalcularTodo();
         guardarDatos();
         actualizarNumerosFilas(container);
@@ -1638,9 +1621,10 @@
   };
 
   // ================================================================
-  // 9. GENERACIÓN DE PDF (CORREGIDO: toma el tipo de proyecto)
+  // 9. GENERACIÓN DE PDF, CONTRATO Y CERTIFICADO
   // ================================================================
 
+  // PDF
   const generarPDFContent = () => {
     const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
     const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
@@ -1663,6 +1647,20 @@
     const descuentoPorc = document.getElementById('descuentoPorcentaje').value || '0';
     const folio = document.getElementById('folio').value;
     const fecha = document.getElementById('fechaEmision').value;
+
+    // Si no hay proyectos, mostrar mensaje
+    if (document.querySelectorAll('.proyecto-container').length === 0) {
+      return `
+          <!DOCTYPE html>
+          <html>
+          <head><meta charset="UTF-8"><title>Cotización - MS Solutions</title></head>
+          <body style="font-family: 'Times New Roman', Times, serif; margin: 2cm;">
+            <h1 style="color:#8B0000;">COTIZACIÓN · MS SOLUTIONS</h1>
+            <p style="font-size:14pt;">No hay proyectos agregados. Agrega al menos un proyecto para generar la cotización.</p>
+          </body>
+          </html>
+        `;
+    }
 
     let proyectosResumen = '';
     document.querySelectorAll('.proyecto-container').forEach(container => {
@@ -1842,8 +1840,13 @@
     iframe.contentWindow.print();
   };
 
-  // CONTRATO (similar, con tipo de proyecto)
+  // CONTRATO
   const generarContrato = () => {
+    if (document.querySelectorAll('.proyecto-container').length === 0) {
+      alert('No hay proyectos agregados. Agrega al menos un proyecto para generar el contrato.');
+      return;
+    }
+
     const cliente = document.getElementById('cliente_nombre').value || '_________________________';
     const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
     const clienteDir = document.getElementById('cliente_direccion').value || '_________________________';
@@ -1858,7 +1861,6 @@
     const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
     const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
 
-    // Obtener lista de proyectos para el contrato
     let proyectosTexto = '';
     document.querySelectorAll('.proyecto-container').forEach(container => {
       const tipo = container.querySelector('.tipo-proyecto-select')?.value || 'cctv';
@@ -1954,8 +1956,13 @@
     ventana.print();
   };
 
-  // CERTIFICADO (similar, con tipo de proyecto)
+  // CERTIFICADO
   const generarCertificado = () => {
+    if (document.querySelectorAll('.proyecto-container').length === 0) {
+      alert('No hay proyectos agregados. Agrega al menos un proyecto para generar el certificado.');
+      return;
+    }
+
     const cliente = document.getElementById('cliente_nombre').value || '_________________________';
     const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
     const clienteDir = document.getElementById('cliente_direccion').value || '_________________________';
@@ -1983,7 +1990,6 @@
       logoHTML = `<img src="${logoData}" style="max-height:60px; max-width:150px; display:block; margin:0 auto 10px auto;">`;
     }
 
-    // Obtener lista de proyectos
     let proyectosTexto = '';
     document.querySelectorAll('.proyecto-container').forEach(container => {
       const tipo = container.querySelector('.tipo-proyecto-select')?.value || 'cctv';
@@ -2221,11 +2227,11 @@
   });
 
   document.getElementById('tecnico').addEventListener('input', function() {
-    document.getElementById('tecnicoFirma').textContent = this.value || 'Ing. Alan Marcelo';
+    document.getElementById('tecnicoFirma').textContent = this.value || '';
     guardarDatos();
   });
   document.getElementById('cliente_nombre').addEventListener('input', function() {
-    document.getElementById('clienteFirma').textContent = this.value || 'Bruno Calderón Vega';
+    document.getElementById('clienteFirma').textContent = this.value || '';
     guardarDatos();
   });
 
@@ -2237,10 +2243,10 @@
   window.onload = function() {
     generarFolio();
     generarFechaHora();
+    // No crear proyectos por defecto
+    // Si hay datos guardados, cargarlos; si no, comenzar vacío
     cargarDatos();
-    if (proyectos.length === 0) {
-      agregarProyecto('cctv');
-    }
+    // Si después de cargar no hay proyectos, no hacer nada (queda vacío)
     recalcularTodo();
     initSortable();
   };
