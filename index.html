@@ -2556,7 +2556,7 @@
     }
 
     // Croquis (se mantiene la funcionalidad, pero se puede usar en el PDF)
-    document.getElementById('croquisUpload').addEventListener('change', function(e) {
+document.getElementById('croquisUpload').addEventListener('change', function(e) {
       const reader = new FileReader();
       reader.onload = function(ev) {
         const img = document.createElement('img');
