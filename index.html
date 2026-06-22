@@ -8,7 +8,7 @@
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
-    /* ====== CSS (igual que antes, sin cambios) ====== */
+    /* ====== CSS ====== */
     :root {
       --bg-body: #f4f6f9;
       --bg-container: #ffffff;
@@ -158,6 +158,7 @@
     .field input[readonly] { background: var(--gray-light); cursor: not-allowed; }
     .full-width { grid-column: 1 / -1; }
 
+    /* Proyectos */
     .proyecto-container {
       background: var(--bg-container);
       border: 1px solid var(--proyecto-border);
@@ -242,6 +243,7 @@
     .btn-icon.duplicar:hover { color: #2e7d32; background: rgba(46,125,50,0.1); }
     .btn-icon.eliminar:hover { color: #c62828; background: rgba(198,40,40,0.1); }
 
+    /* Botones */
     .btn {
       padding: 8px 18px;
       border: none;
@@ -306,6 +308,7 @@
       background: var(--gray-light);
     }
 
+    /* Tablas */
     .table-wrap { overflow-x: auto; margin: 10px 0; }
     table { width: 100%; border-collapse: collapse; font-size: 14px; }
     table th {
@@ -360,6 +363,7 @@
     .btn-accion.eliminar:hover { color: #c62828; }
     .btn-accion.arrastrar { cursor: grab; color: var(--gray); }
 
+    /* Resumen */
     .summary-box {
       background: var(--primary);
       color: #fff;
@@ -408,6 +412,7 @@
     }
     .total-letras strong { color: var(--primary); transition: color var(--transition); }
 
+    /* Firmas */
     .firmas-container {
       display: grid;
       grid-template-columns: 1fr 1fr;
@@ -512,7 +517,8 @@
       transform: translateX(18px);
     }
 
-    .modal-overlay {
+    /* Modales */
+    .modal-overlay, .modal-proyecto {
       display: none;
       position: fixed;
       top: 0; left: 0; width: 100%; height: 100%;
@@ -521,17 +527,38 @@
       justify-content: center;
       align-items: center;
     }
-    .modal-overlay.active { display: flex; }
+    .modal-overlay.active, .modal-proyecto.active { display: flex; }
     .modal-content {
       background: var(--bg-container);
-      padding: 20px;
+      padding: 25px;
       border-radius: var(--radius);
-      max-width: 95%;
-      max-height: 95%;
-      overflow: auto;
+      max-width: 500px;
+      width: 90%;
       box-shadow: 0 10px 40px rgba(0,0,0,0.5);
       transition: background var(--transition);
     }
+    .modal-content h3 {
+      margin-bottom: 15px;
+      color: var(--primary);
+      font-weight: 600;
+    }
+    .modal-content select {
+      width: 100%;
+      padding: 10px 12px;
+      border: 1.5px solid var(--border-color);
+      border-radius: var(--radius-sm);
+      font-size: 14px;
+      background: var(--input-bg);
+      color: var(--text-color);
+      font-family: var(--font);
+      margin-bottom: 15px;
+    }
+    .modal-content .btn-group-modal {
+      display: flex;
+      gap: 10px;
+      justify-content: flex-end;
+    }
+
     .modal-content iframe {
       width: 820px;
       height: 620px;
@@ -608,7 +635,7 @@
       body { background: #fff !important; padding: 0 !important; margin: 0 !important; font-family: 'Times New Roman', Times, serif !important; }
       .container { box-shadow: none !important; padding: 20px !important; border-radius: 0 !important; max-width: 100% !important; }
       .btn, .btn-group, .btn-generate, .btn-contrato, .btn-certificado, .btn-success, .btn-warning, .btn-danger, .btn-primary,
-      .logo-area input[type="file"], .btn-accion, .toggle-dark, .modal-overlay, .btn-agregar-proyecto, .btn-icon,
+      .logo-area input[type="file"], .btn-accion, .toggle-dark, .modal-overlay, .modal-proyecto, .btn-agregar-proyecto, .btn-icon,
       .servicio-selector { display: none !important; }
       .proyecto-container {
         border: 1px solid #333 !important;
@@ -675,7 +702,7 @@
   </div>
   <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px;">
     <h1>COTIZADOR · MS SOLUTIONS</h1>
-    <span class="version-badge" id="versionBadge">v4.2</span>
+    <span class="version-badge" id="versionBadge">v5.0</span>
   </div>
   <div class="subtitulo">Soluciones en Seguridad Electrónica y Tecnología</div>
   <div class="row">
@@ -725,7 +752,7 @@
       <div class="field"><label>MÉTODO DE PAGO</label><select id="metodoPagoGlobal"><option value="Efectivo">Efectivo</option><option value="Transferencia" selected>Transferencia</option><option value="Tarjeta">Tarjeta</option><option value="Otro">Otro</option></select></div>
     </div>
     <div class="row">
-      <div class="field"><label>VERSIÓN DE COTIZACIÓN</label><input type="text" id="versionCotizacion" value="4.2" placeholder="Ej. 4.2" /></div>
+      <div class="field"><label>VERSIÓN DE COTIZACIÓN</label><input type="text" id="versionCotizacion" value="5.0" placeholder="Ej. 5.0" /></div>
       <div class="field"><label>PLAZO DE ENTREGA (texto)</label><input type="text" id="plazoEntregaTexto" value="5 días hábiles" placeholder="Ej. 5 días hábiles" /></div>
     </div>
   </div>
@@ -773,10 +800,11 @@
   <button class="btn-certificado" id="certificadoBtn">📜 CERTIFICADO DE INSTALACIÓN</button>
 
   <div style="text-align:center; color:var(--gray); font-size:12px; margin-top:20px;">
-    COTIZADOR · MS SOLUTIONS v4.2
+    COTIZADOR · MS SOLUTIONS v5.0
   </div>
 </div>
 
+<!-- ====== MODAL PREVISUALIZACIÓN ====== -->
 <div class="modal-overlay" id="modalPreview">
   <div class="modal-content">
     <iframe id="pdfPreviewFrame"></iframe>
@@ -785,9 +813,24 @@
   </div>
 </div>
 
+<!-- ====== MODAL PARA AGREGAR PROYECTO ====== -->
+<div class="modal-proyecto" id="modalProyecto">
+  <div class="modal-content">
+    <h3>📌 Selecciona el tipo de proyecto</h3>
+    <select id="selectTipoProyecto">
+      <option value="cctv">📹 CCTV</option>
+      <option value="pc">💻 Reparación de PC</option>
+    </select>
+    <div class="btn-group-modal">
+      <button class="btn btn-danger" id="cancelarProyectoBtn">Cancelar</button>
+      <button class="btn btn-success" id="confirmarProyectoBtn">Agregar</button>
+    </div>
+  </div>
+</div>
+
 <script>
   // ================================================================
-  // UTILIDADES
+  // 1. UTILIDADES
   // ================================================================
 
   const getEmoji = (cat) => ({
@@ -811,19 +854,66 @@
   const formatCurrency = (value) => '$' + value.toFixed(2).replace(/\B(?=(\d{3})+(?!\d))/g, ',');
 
   const numberToLetters = (num) => {
-    // Función completa (se omite por brevedad, pero se usa en total-letras)
-    return 'CERO PESOS 00/100 M.N.';
+    const unidades = ['', 'UN', 'DOS', 'TRES', 'CUATRO', 'CINCO', 'SEIS', 'SIETE', 'OCHO', 'NUEVE'];
+    const decenas = ['', 'DIEZ', 'VEINTE', 'TREINTA', 'CUARENTA', 'CINCUENTA', 'SESENTA', 'SETENTA', 'OCHENTA', 'NOVENTA'];
+    const centenas = ['', 'CIENTO', 'DOSCIENTOS', 'TRESCIENTOS', 'CUATROCIENTOS', 'QUINIENTOS', 'SEISCIENTOS',
+      'SETECIENTOS', 'OCHOCIENTOS', 'NOVECIENTOS'
+    ];
+
+    const convertirGrupo = (n) => {
+      let texto = '';
+      const c = Math.floor(n / 100);
+      const d = Math.floor((n % 100) / 10);
+      const u = n % 10;
+
+      if (c > 0) {
+        if (c === 1 && d === 0 && u === 0) texto += 'CIEN';
+        else texto += centenas[c];
+      }
+      if (d > 0) {
+        if (d === 1 && u > 0) {
+          const especiales = ['', 'ONCE', 'DOCE', 'TRECE', 'CATORCE', 'QUINCE',
+            'DIECISÉIS', 'DIECISIETE', 'DIECIOCHO', 'DIECINUEVE'
+          ];
+          texto += (texto ? ' ' : '') + especiales[u];
+          return texto;
+        } else {
+          texto += (texto ? ' ' : '') + decenas[d];
+        }
+      }
+      if (u > 0 && d !== 1) {
+        if (d > 0) texto += ' Y ';
+        texto += unidades[u];
+      }
+      return texto;
+    };
+
+    const entero = Math.floor(num);
+    const decimal = Math.round((num - entero) * 100);
+    if (entero === 0) return 'CERO PESOS 00/100 M.N.';
+
+    let partes = [];
+    const miles = Math.floor(entero / 1000);
+    const resto = entero % 1000;
+
+    if (miles > 0) {
+      if (miles === 1) partes.push('MIL');
+      else partes.push(convertirGrupo(miles) + ' MIL');
+    }
+    if (resto > 0) partes.push(convertirGrupo(resto));
+
+    return partes.join(' ') + ' PESOS ' + (decimal < 10 ? '0' : '') + decimal + '/100 M.N.';
   };
 
   // ================================================================
-  // ESTADO GLOBAL
+  // 2. ESTADO GLOBAL
   // ================================================================
 
   let proyectos = [];
   let nextProyectoId = 1;
 
   // ================================================================
-  // CÁLCULOS
+  // 3. CÁLCULOS
   // ================================================================
 
   const calcularSubtotalProyecto = (proyectoId) => {
@@ -886,7 +976,7 @@
   };
 
   // ================================================================
-  // FUNCIONES DE UI
+  // 4. FUNCIONES DE UI
   // ================================================================
 
   const crearFilaEquipo = (tipo = 'cctv', desc = '', cat = '', uni = 'Pieza', cant = 1, punit = 0) => {
@@ -972,7 +1062,7 @@
   };
 
   // ================================================================
-  // RENDERIZADO DE PROYECTOS
+  // 5. RENDERIZADO DE PROYECTOS
   // ================================================================
 
   const renderProyecto = (proyecto) => {
@@ -1088,7 +1178,7 @@
         `;
 
     // ============================================================
-    // Poblar filas de equipos y servicios según tipo
+    // Poblar filas iniciales según tipo
     // ============================================================
     const tbodyEquipos = container.querySelector('.tabla-equipos tbody');
     const tbodyServicios = container.querySelector('.tabla-servicios tbody');
@@ -1160,7 +1250,7 @@
     // Cambio de tipo de proyecto
     const tipoSelect = container.querySelector('.tipo-proyecto-select');
     if (tipoSelect) {
-      tipoSelect.addEventListener('change', function(e) {
+      tipoSelect.addEventListener('change', function() {
         const nuevoTipo = this.value;
         const proyectoId = parseInt(container.dataset.proyectoId);
         const proyecto = proyectos.find(p => p.id === proyectoId);
@@ -1202,7 +1292,7 @@
       });
     }
 
-    // AGREGAR SERVICIO (corregido)
+    // AGREGAR SERVICIO
     const btnAgregarServicio = container.querySelector('.btn-agregar-servicio');
     if (btnAgregarServicio) {
       btnAgregarServicio.addEventListener('click', function() {
@@ -1245,7 +1335,6 @@
         recalcularTodo();
         guardarDatos();
         actualizarNumerosFilas(container);
-        // Resetear select
         select.value = '';
       });
     }
@@ -1262,7 +1351,7 @@
       });
     });
 
-    // Botones de acción en tablas (duplicar/eliminar) - DELEGACIÓN
+    // Botones de acción en tablas (duplicar/eliminar)
     container.addEventListener('click', function(e) {
       const btn = e.target.closest('.btn-accion');
       if (!btn) return;
@@ -1335,8 +1424,33 @@
   };
 
   // ================================================================
-  // MANEJO DE PROYECTOS
+  // 6. MANEJO DE PROYECTOS
   // ================================================================
+
+  // Modal para agregar proyecto
+  const modalProyecto = document.getElementById('modalProyecto');
+  const selectTipoProyecto = document.getElementById('selectTipoProyecto');
+  const confirmarProyectoBtn = document.getElementById('confirmarProyectoBtn');
+  const cancelarProyectoBtn = document.getElementById('cancelarProyectoBtn');
+
+  const abrirModalProyecto = () => {
+    modalProyecto.classList.add('active');
+  };
+
+  const cerrarModalProyecto = () => {
+    modalProyecto.classList.remove('active');
+  };
+
+  confirmarProyectoBtn.addEventListener('click', () => {
+    const tipo = selectTipoProyecto.value;
+    agregarProyecto(tipo);
+    cerrarModalProyecto();
+  });
+
+  cancelarProyectoBtn.addEventListener('click', cerrarModalProyecto);
+  modalProyecto.addEventListener('click', function(e) {
+    if (e.target === this) cerrarModalProyecto();
+  });
 
   const agregarProyecto = (tipo = 'cctv') => {
     const proyecto = { id: nextProyectoId++, tipo: tipo, titulo: '' };
@@ -1345,24 +1459,20 @@
     const nuevoContainer = renderProyecto(proyecto);
     container.appendChild(nuevoContainer);
     recalcularTodo();
-    // Guardar después de que el DOM se actualice
     setTimeout(() => guardarDatos(), 50);
     initSortable();
   };
 
   // ================================================================
-  // PERSISTENCIA (LocalStorage) - CORREGIDO
+  // 7. PERSISTENCIA (LocalStorage)
   // ================================================================
 
   const guardarDatos = () => {
     const proyectosData = proyectos.map(p => {
       const container = document.getElementById(`proyecto-${p.id}`);
       if (!container) return p;
-
-      // Verificar que los elementos existan antes de leer .value
       const tipoSelect = container.querySelector('.tipo-proyecto-select');
       const tituloInput = container.querySelector('.titulo-input');
-
       const data = {
         id: p.id,
         tipo: tipoSelect ? tipoSelect.value : p.tipo || 'cctv',
@@ -1370,7 +1480,6 @@
         equipos: [],
         servicios: []
       };
-
       container.querySelectorAll('.tabla-equipos tbody tr').forEach(row => {
         data.equipos.push({
           desc: row.querySelector('.desc-equipo')?.value || '',
@@ -1380,7 +1489,6 @@
           punit: row.querySelector('.punit-equipo')?.value || '0'
         });
       });
-
       container.querySelectorAll('.tabla-servicios tbody tr').forEach(row => {
         data.servicios.push({
           desc: row.querySelector('.desc-servicio')?.value || '',
@@ -1456,7 +1564,7 @@
   };
 
   // ================================================================
-  // SORTABLE
+  // 8. SORTABLE
   // ================================================================
 
   const initSortable = () => {
@@ -1485,9 +1593,10 @@
   };
 
   // ================================================================
-  // GENERACIÓN DE PDF (RESUMIDO Y PROFESIONAL)
+  // 9. GENERACIÓN DE PDF, CONTRATO Y CERTIFICADO
   // ================================================================
 
+  // PDF
   const generarPDFContent = () => {
     const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
     const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
@@ -1673,15 +1782,8 @@
         `;
   };
 
-  // ================================================================
-  // FUNCIONES DE DOCUMENTOS
-  // ================================================================
-
-  let pdfContentCache = '';
-
   const previsualizarPDF = () => {
     const content = generarPDFContent();
-    pdfContentCache = content;
     const iframe = document.getElementById('pdfPreviewFrame');
     iframe.srcdoc = content;
     document.getElementById('modalPreview').classList.add('active');
@@ -1696,16 +1798,242 @@
     iframe.contentWindow.print();
   };
 
+  // CONTRATO
   const generarContrato = () => {
-    alert('Función de contrato disponible (próxima actualización)');
+    const cliente = document.getElementById('cliente_nombre').value || '_________________________';
+    const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
+    const clienteDir = document.getElementById('cliente_direccion').value || '_________________________';
+    const folio = document.getElementById('folio').value || '__________';
+    const fecha = document.getElementById('fechaEmision').value || '__________';
+    const total = document.getElementById('totalFinalInput').value || '$0.00';
+    const totalLetras = document.getElementById('totalLetras').innerText || 'CERO PESOS 00/100 M.N.';
+    const anticipacion = document.getElementById('anticipacionMonto').value || '$0.00';
+    const contraEntrega = document.getElementById('contra_entrega').value || '$0.00';
+    const plazoEntregaTexto = document.getElementById('plazoEntregaTexto').value || '5 días hábiles';
+    const metodoPago = document.getElementById('metodoPagoGlobal').value || 'Transferencia';
+    const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
+    const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
+
+    const ahora = new Date();
+    const dia = ahora.getDate();
+    const mes = ahora.toLocaleString('es-ES', { month: 'long' });
+    const año = ahora.getFullYear();
+
+    const contratoHTML = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <title>Contrato de Servicios - MS Solutions</title>
+            <style>
+              body { font-family: 'Times New Roman', Times, serif; margin: 2cm; color: #000; line-height: 1.6; }
+              h1 { text-align: center; font-size: 18pt; color: #8B0000; border-bottom: 2px solid #8B0000; padding-bottom: 10px; }
+              .info { display: flex; justify-content: space-between; font-size: 11pt; margin-bottom: 20px; }
+              .clausula { margin-bottom: 15px; }
+              .clausula strong { display: block; font-size: 12pt; }
+              .firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 30px; }
+              .firma-box { border-top: 2px solid #333; padding-top: 10px; text-align: center; }
+              .firma-box .linea { height: 30px; border-bottom: 1px solid #333; margin-bottom: 5px; }
+              .firma-box .nombre { font-weight: bold; }
+              .footer { text-align: center; font-size: 9pt; color: #555; margin-top: 30px; border-top: 1px solid #ccc; padding-top: 10px; }
+              @page { margin: 2cm; }
+            </style>
+          </head>
+          <body>
+            <h1>CONTRATO DE PRESTACIÓN DE SERVICIOS</h1>
+            <div class="info">
+              <span><strong>Folio:</strong> ${folio}</span>
+              <span><strong>Fecha:</strong> ${fecha}</span>
+            </div>
+            <p>Por medio del presente contrato, <strong>${empresa}</strong> (en adelante "EL PRESTADOR"), representado por <strong>${tecnico}</strong>, y el cliente <strong>${cliente}</strong> (en adelante "EL CLIENTE"), acuerdan los siguientes términos y condiciones para la prestación de los servicios descritos en la cotización con folio <strong>${folio}</strong>.</p>
+            <div class="clausula">
+              <strong>1. OBJETO DEL CONTRATO</strong>
+              <p>EL PRESTADOR se compromete a realizar los servicios detallados en la cotización, los cuales incluyen los proyectos y trabajos especificados en el anexo A.</p>
+            </div>
+            <div class="clausula">
+              <strong>2. MONTO Y FORMA DE PAGO</strong>
+              <p>El costo total del proyecto asciende a la cantidad de <strong>${total}</strong> (${totalLetras}), mismo que se pagará de la siguiente manera:</p>
+              <ul>
+                <li><strong>Anticipo:</strong> ${anticipacion}</li>
+                <li><strong>Saldo contra entrega:</strong> ${contraEntrega}</li>
+              </ul>
+              <p><strong>Método de pago:</strong> ${metodoPago}</p>
+            </div>
+            <div class="clausula">
+              <strong>3. PLAZO DE EJECUCIÓN</strong>
+              <p>EL PRESTADOR se compromete a realizar los servicios en un plazo de <strong>${plazoEntregaTexto}</strong> a partir de la fecha de aceptación del presente contrato.</p>
+            </div>
+            <div class="clausula">
+              <strong>4. GARANTÍA</strong>
+              <p>Los equipos y servicios cuentan con garantía según lo estipulado en la cotización.</p>
+            </div>
+            <div class="clausula">
+              <strong>5. ACEPTACIÓN</strong>
+              <p>Las partes firman el presente contrato en la ciudad de <strong>Ciudad de México</strong>, a los <strong>${dia}</strong> días del mes de <strong>${mes}</strong> de <strong>${año}</strong>.</p>
+            </div>
+            <div class="firmas">
+              <div class="firma-box">
+                <div><strong>EL PRESTADOR</strong></div>
+                <div class="linea"></div>
+                <div class="nombre">${empresa}</div>
+                <div>${tecnico}</div>
+              </div>
+              <div class="firma-box">
+                <div><strong>EL CLIENTE</strong></div>
+                <div class="linea"></div>
+                <div class="nombre">${cliente}</div>
+                ${clienteEmpresa ? `<div>${clienteEmpresa}</div>` : ''}
+              </div>
+            </div>
+            <div class="footer">
+              MS SOLUTIONS - Soluciones en Seguridad y Tecnología<br>
+              Este contrato es un documento legal que respalda los servicios contratados.
+            </div>
+          </body>
+          </html>
+        `;
+
+    const ventana = window.open('', '_blank', 'width=800,height=600');
+    ventana.document.write(contratoHTML);
+    ventana.document.close();
+    ventana.focus();
+    ventana.print();
   };
 
+  // CERTIFICADO
   const generarCertificado = () => {
-    alert('Función de certificado disponible (próxima actualización)');
+    const cliente = document.getElementById('cliente_nombre').value || '_________________________';
+    const clienteEmpresa = document.getElementById('cliente_empresa').value || '';
+    const clienteDir = document.getElementById('cliente_direccion').value || '_________________________';
+    const folio = document.getElementById('folio').value || '__________';
+    const tecnico = document.getElementById('tecnico').value || 'Ing. Alan Marcelo';
+    const empresa = document.getElementById('empresa').value || 'MS SOLUTIONS';
+    const telefono = document.getElementById('telefono').value || '55 1234 5678';
+    const correo = document.getElementById('correo').value || 'contacto@mssolutions.com';
+
+    const hoy = new Date();
+    const dia = hoy.getDate();
+    const mes = hoy.toLocaleString('es-ES', { month: 'long' });
+    const año = hoy.getFullYear();
+    const fechaInstalacion = dia + ' de ' + mes + ' de ' + año;
+    const finGarantia = new Date(hoy);
+    finGarantia.setFullYear(finGarantia.getFullYear() + 1);
+    const diaG = finGarantia.getDate();
+    const mesG = finGarantia.toLocaleString('es-ES', { month: 'long' });
+    const añoG = finGarantia.getFullYear();
+    const fechaFinGarantia = diaG + ' de ' + mesG + ' de ' + añoG;
+
+    const logoData = localStorage.getItem('logoData');
+    let logoHTML = '';
+    if (logoData) {
+      logoHTML = `<img src="${logoData}" style="max-height:60px; max-width:150px; display:block; margin:0 auto 10px auto;">`;
+    }
+
+    const certificadoHTML = `
+          <!DOCTYPE html>
+          <html>
+          <head>
+            <meta charset="UTF-8">
+            <title>Certificado de Instalación - MS Solutions</title>
+            <style>
+              body { font-family: 'Times New Roman', Times, serif; margin: 1.5cm; color: #000; }
+              .certificado { border: 3px double #8B0000; padding: 30px; }
+              .header { text-align: center; border-bottom: 2px solid #8B0000; padding-bottom: 10px; margin-bottom: 20px; }
+              .header h1 { font-size: 24pt; margin: 0; color: #8B0000; letter-spacing: 2px; }
+              .header .subt { font-size: 12pt; color: #555; }
+              .header .folio-fecha { display: flex; justify-content: space-between; font-size: 11pt; margin-top: 5px; }
+              .seccion { margin-bottom: 15px; }
+              .seccion-titulo { font-weight: bold; font-size: 13pt; border-bottom: 1px solid #8B0000; padding-bottom: 3px; margin-bottom: 8px; color: #8B0000; }
+              .firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 40px; margin-top: 25px; }
+              .firma-box { border-top: 2px solid #333; padding-top: 10px; text-align: center; }
+              .firma-box .linea { height: 30px; border-bottom: 1px solid #333; margin-bottom: 5px; }
+              .firma-box .nombre { font-weight: bold; }
+              .certificado-calidad { border: 2px solid #8B0000; padding: 15px; margin-top: 20px; text-align: center; background: #fafafa; }
+              .certificado-calidad h3 { color: #8B0000; margin: 0 0 5px 0; }
+              .certificado-calidad p { margin: 0; font-size: 11pt; }
+              .sello { font-family: 'Courier New', monospace; font-size: 14pt; color: #8B0000; border: 2px solid #8B0000; padding: 5px 15px; display: inline-block; margin-top: 10px; letter-spacing: 2px; }
+              .vigencia { font-size: 10pt; text-align: center; margin-top: 15px; border-top: 1px solid #ccc; padding-top: 10px; color: #555; }
+              @page { margin: 1.5cm; }
+              @media print { body { margin: 0; } }
+            </style>
+          </head>
+          <body>
+            <div class="certificado">
+              ${logoHTML}
+              <div class="header">
+                <h1>CERTIFICADO DE INSTALACIÓN</h1>
+                <div class="subt">Soluciones en Seguridad Electrónica y Tecnología</div>
+                <div class="folio-fecha">
+                  <span><strong>Folio:</strong> CERT-${folio}</span>
+                  <span><strong>Fecha de instalación:</strong> ${fechaInstalacion}</span>
+                </div>
+              </div>
+              <div class="seccion">
+                <div class="seccion-titulo">DATOS DEL CLIENTE</div>
+                <p><strong>Cliente:</strong> ${cliente} ${clienteEmpresa ? '('+clienteEmpresa+')' : ''}</p>
+                <p><strong>Dirección:</strong> ${clienteDir}</p>
+              </div>
+              <div class="seccion">
+                <div class="seccion-titulo">DESCRIPCIÓN DEL SERVICIO</div>
+                <p>Se ha realizado la instalación y/o mantenimiento de los equipos y sistemas descritos en la cotización con folio <strong>${folio}</strong>.</p>
+              </div>
+              <div class="seccion">
+                <div class="seccion-titulo">GARANTÍA</div>
+                <p><strong>Fecha de instalación:</strong> ${fechaInstalacion}</p>
+                <p><strong>Fin de garantía:</strong> ${fechaFinGarantia}</p>
+                <p style="margin-top:5px;">Los equipos instalados cuentan con garantía de fábrica contra defectos de fabricación por 12 meses a partir de la fecha de instalación. La garantía no cubre daños por mal uso, descargas eléctricas o modificaciones no autorizadas.</p>
+              </div>
+              <div class="seccion">
+                <div class="seccion-titulo">FIRMAS DE ACEPTACIÓN</div>
+                <div class="firmas">
+                  <div class="firma-box">
+                    <div><strong>EL INSTALADOR</strong></div>
+                    <div class="linea"></div>
+                    <div class="nombre">${empresa}</div>
+                    <div>${tecnico}</div>
+                  </div>
+                  <div class="firma-box">
+                    <div><strong>EL CLIENTE</strong></div>
+                    <div class="linea"></div>
+                    <div class="nombre">${cliente}</div>
+                    ${clienteEmpresa ? `<div>${clienteEmpresa}</div>` : ''}
+                  </div>
+                </div>
+              </div>
+              <div class="certificado-calidad">
+                <h3>🏆 GARANTÍA DE CALIDAD</h3>
+                <p>MS SOLUTIONS certifica que los servicios prestados cumplen con los más altos estándares de calidad.</p>
+                <div class="sello">MS SOLUTIONS</div>
+                <p style="font-size:10pt; margin-top:5px;">Fecha: ${fechaInstalacion}</p>
+              </div>
+              <div class="seccion">
+                <div class="seccion-titulo">📞 DATOS DE CONTACTO PARA SOPORTE</div>
+                <p><strong>WhatsApp:</strong> ${telefono}</p>
+                <p><strong>Correo electrónico:</strong> ${correo}</p>
+                <p><strong>Horario de atención:</strong> Lunes a Viernes de 9:00 a 18:00 hrs</p>
+                <p><strong>Tiempo de respuesta:</strong> Máximo 24 horas hábiles</p>
+              </div>
+              <div class="vigencia">
+                <strong>Vigencia:</strong> Este certificado es válido para fines de garantía y registro de activos.
+                <br>MS SOLUTIONS - Soluciones en Seguridad y Tecnología
+              </div>
+              <div style="text-align:center; font-size:8pt; color:#999; margin-top:10px;">
+                Página 1 de 1 - Generado el ${new Date().toLocaleString('es-ES')}
+              </div>
+            </div>
+          </body>
+          </html>
+        `;
+
+    const ventana = window.open('', '_blank', 'width=800,height=600');
+    ventana.document.write(certificadoHTML);
+    ventana.document.close();
+    ventana.focus();
+    ventana.print();
   };
 
   // ================================================================
-  // INICIALIZACIÓN Y EVENTOS
+  // 10. INICIALIZACIÓN Y EVENTOS
   // ================================================================
 
   const generarFolio = () => {
@@ -1791,9 +2119,7 @@
   }
 
   // Botones
-  document.getElementById('agregarProyectoBtn').addEventListener('click', () => {
-    agregarProyecto('cctv');
-  });
+  document.getElementById('agregarProyectoBtn').addEventListener('click', abrirModalProyecto);
 
   document.getElementById('nuevaCotizacionBtn').addEventListener('click', () => {
     if (confirm('¿Reiniciar todo? Se perderán los datos actuales.')) {
