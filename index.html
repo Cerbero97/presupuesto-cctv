@@ -8,7 +8,7 @@
   </script>
   <link href="https://fonts.googleapis.com/css2?family=Inter:opsz,wght@14..32,400;14..32,500;14..32,600;14..32,700&display=swap" rel="stylesheet">
   <style>
-    /* ====== CSS COMPLETO (mismo que la versión anterior, con estilos para campos "Otro" y cargador) ====== */
+    /* ====== CSS COMPLETO (mismo que la versión anterior) ====== */
     :root {
       --bg-body: #f4f6f9;
       --bg-container: #ffffff;
@@ -829,7 +829,7 @@
   </div>
   <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px;">
     <h1>COTIZADOR · MS SOLUTIONS</h1>
-    <span class="version-badge" id="versionBadge">v10.0</span>
+    <span class="version-badge" id="versionBadge">v11.0</span>
   </div>
   <div class="subtitulo">Soluciones en Seguridad Electrónica y Tecnología</div>
   <div class="row">
@@ -890,7 +890,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="field"><label>VERSIÓN DE COTIZACIÓN</label><input type="text" id="versionCotizacion" value="10.0" placeholder="Ej. 10.0" /></div>
+      <div class="field"><label>VERSIÓN DE COTIZACIÓN</label><input type="text" id="versionCotizacion" value="11.0" placeholder="Ej. 11.0" /></div>
       <div class="field"><label>PLAZO DE ENTREGA (texto)</label><input type="text" id="plazoEntregaTexto" value="5 días hábiles" placeholder="Ej. 5 días hábiles" /></div>
     </div>
   </div>
@@ -944,7 +944,7 @@
   <button class="btn-certificado" id="certificadoBtn">📜 CERTIFICADO DE INSTALACIÓN</button>
 
   <div style="text-align:center; color:var(--gray); font-size:12px; margin-top:20px;">
-    COTIZADOR · MS SOLUTIONS v10.0
+    COTIZADOR · MS SOLUTIONS v11.0
   </div>
 </div>
 
@@ -1206,7 +1206,7 @@
   };
 
   // ================================================================
-  // 5. RENDERIZADO DE PROYECTOS (con nuevos campos)
+  // 5. RENDERIZADO DE PROYECTOS (con todos los campos)
   // ================================================================
 
   const renderProyecto = (proyecto) => {
@@ -1357,7 +1357,6 @@
           `;
     }
 
-    // HTML del proyecto
     container.innerHTML = `
           <div class="proyecto-header">
             <div class="titulo-wrapper">
@@ -1756,7 +1755,6 @@
         container.appendChild(nuevoContainer);
         const containerEl = document.getElementById(`proyecto-${p.id}`);
         if (containerEl) {
-          // Restaurar equipos y servicios
           const tbodyEquipos = containerEl.querySelector('.tabla-equipos tbody');
           tbodyEquipos.innerHTML = '';
           p.equipos.forEach(e => {
@@ -1767,7 +1765,6 @@
           p.servicios.forEach(s => {
             tbodyServicios.appendChild(crearFilaServicio(s.desc, s.cant, s.punit));
           });
-          // Forzar eventos en los inputs cargados
           containerEl.querySelectorAll('.cant-equipo, .punit-equipo, .cant-servicio, .punit-servicio, .viaticos-proyecto, .renta-proyecto, .insumos-proyecto').forEach(el => {
             el.addEventListener('input', function() {
               recalcularTodo();
@@ -1810,7 +1807,7 @@
   };
 
   // ================================================================
-  // 9. GENERACIÓN DE PDF (UNA SOLA HOJA, CON TODOS LOS CAMPOS Y SIN IVA)
+  // 9. GENERACIÓN DE PDF (CON LAS 4 LEYENDAS Y SIN IVA)
   // ================================================================
 
   const generarPDFContent = () => {
@@ -1848,7 +1845,6 @@
       const titulo = container.querySelector('.titulo-input')?.value || `Proyecto #${id}`;
       const subtotal = container.querySelector('.subtotal-proyecto-input')?.value || '$0.00';
 
-      // Recolectar configuración
       let configText = '';
       if (tipo === 'cctv') {
         const sistema = container.querySelector('.tipo_sistema')?.value || '';
@@ -1892,7 +1888,6 @@
         configText = `Marca:${marcaFinal} | Modelo:${modelo} | Tipo:${tipoEquipo} | Proc:${procFinal} | RAM:${ram} | Almac:${almacenamiento} | SO:${soFinal} | Falla:${falla} | Serie:${numSerie} | Gar:${garantia} | Urg:${urgencia} | Cargador:${cargador}`;
       }
 
-      // Tabla de equipos
       let equiposRows = '';
       container.querySelectorAll('.tabla-equipos tbody tr').forEach((row, i) => {
         const desc = row.querySelector('.desc-equipo')?.value || '';
@@ -1904,7 +1899,6 @@
         equiposRows += `<tr><td>${i+1}</td><td>${desc}</td><td>${cat}</td><td>${uni}</td><td>${cant}</td><td>${punit}</td><td>${total}</td></tr>`;
       });
 
-      // Tabla de servicios
       let serviciosRows = '';
       container.querySelectorAll('.tabla-servicios tbody tr').forEach((row, i) => {
         const desc = row.querySelector('.desc-servicio')?.value || '';
@@ -1959,18 +1953,30 @@
         .firma-box .linea { height: 15px; border-bottom: 1px solid #333; margin-bottom: 2px; }
         .firma-box .leyenda { font-size: 6pt; color: #555; }
         .vigencia { font-size: 7pt; text-align: center; margin-top: 6px; border-top: 1px solid #ccc; padding-top: 4px; color: #555; }
-        .condiciones { font-size: 7pt; margin-top: 4px; border-top: 1px solid #333; padding-top: 4px; }
+        .condiciones {
+          font-size: 7pt;
+          margin-top: 4px;
+          border-top: 1px solid #333;
+          padding-top: 4px;
+        }
         .condiciones p { margin: 1px 0; }
         table { width: 100%; border-collapse: collapse; font-size: 7pt; }
         table th { background: #8B0000; color: #fff; padding: 2px 4px; text-align: left; }
         table td { padding: 2px 4px; border-bottom: 1px solid #ccc; }
         .total-row td { border-top: 2px solid #8B0000; font-weight: bold; }
         .proyecto-container-print { border: 1px solid #8B0000; padding: 6px; margin-bottom: 6px; page-break-inside: avoid; }
-        .badge-print { background: #8B0000; color: #fff; padding: 1px 6px; border-radius: 4px; font-size: 7pt; }
         .summary-box-print { background: #8B0000; color: #fff; padding: 4px; display: flex; justify-content: space-around; margin: 4px 0; }
         .summary-box-print .item { text-align: center; }
         .summary-box-print .item .label { font-size: 7pt; }
         .summary-box-print .item .value { font-size: 10pt; font-weight: 700; }
+        .leyendas {
+          font-size: 7pt;
+          margin-top: 4px;
+          padding-top: 4px;
+          border-top: 1px solid #8B0000;
+          color: #333;
+        }
+        .leyendas p { margin: 1px 0; }
         @page { margin: 0.8cm; }
       </style>
       </head>
@@ -2029,13 +2035,12 @@
           </div>
         </div>
 
-        <div class="condiciones">
-          <p><strong>Condiciones generales:</strong></p>
-          <p>• Esta cotización tiene una vigencia de 7 días naturales.</p>
-          <p>• Los precios no incluyen IVA ni gastos de envío (si aplican).</p>
-          <p>• Los equipos son originales y cuentan con garantía de fábrica.</p>
-          <p>• La instalación se realizará en horario laboral (L-V, 9:00-18:00).</p>
-          <p>• Cualquier cambio en el alcance o en los equipos debe ser notificado por escrito.</p>
+        <!-- ====== LEYENDAS (4) ====== -->
+        <div class="leyendas">
+          <p><strong>Vigencia:</strong> 7 días naturales</p>
+          <p><strong>Precios sujetos a cambios sin previo aviso</strong></p>
+          <p><strong>Los equipos y servicios están sujetos a disponibilidad</strong></p>
+          <p><strong>Este documento es una cotización, no una factura. No tiene validez como comprobante fiscal.</strong></p>
         </div>
 
         <div class="vigencia">
@@ -2068,7 +2073,6 @@
     iframe.contentWindow.print();
   };
 
-  // Contrato y certificado (simples, funcionales)
   const generarContrato = () => {
     alert('Contrato generado (versión mejorada).');
   };
