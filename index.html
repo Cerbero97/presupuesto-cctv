@@ -661,14 +661,14 @@
       .servicio-selector { flex-direction: column; align-items: stretch; }
     }
 
-    /* ====== ESTILOS PARA IMPRESIÓN (PDF DE UNA SOLA HOJA) ====== */
+    /* ====== ESTILOS PARA IMPRESIÓN (PDF DE UNA SOLA HOJA - FUENTE MÁS GRANDE) ====== */
     @media print {
       body {
         background: #fff !important;
         padding: 0 !important;
         margin: 0 !important;
         font-family: 'Times New Roman', Times, serif !important;
-        font-size: 9pt !important;
+        font-size: 10pt !important;
       }
       .container {
         box-shadow: none !important;
@@ -699,30 +699,30 @@
         margin-bottom: 4px !important;
       }
       .section-title {
-        font-size: 10pt !important;
+        font-size: 11pt !important;
         color: #000 !important;
         margin-bottom: 4px !important;
       }
       .section-title span { display: none; }
-      h1 { font-size: 16pt !important; color: #000 !important; }
+      h1 { font-size: 18pt !important; color: #000 !important; }
       .subtitulo { font-size: 9pt !important; border-bottom-color: #8B0000 !important; color: #333 !important; padding-bottom: 4px !important; margin-bottom: 8px !important; }
       .version-badge { display: none; }
       .row, .row-3 { display: flex; flex-wrap: wrap; gap: 4px 8px; margin-bottom: 2px; }
       .field { flex: 1 0 45%; margin-bottom: 2px; }
-      .field label { font-size: 7pt !important; text-transform: none; letter-spacing: 0; color: #333; }
+      .field label { font-size: 8pt !important; text-transform: none; letter-spacing: 0; color: #333; }
       .field input, .field select, .field textarea {
         border: 1px solid #aaa !important;
         background: transparent !important;
         color: #000 !important;
         font-family: 'Times New Roman', Times, serif !important;
-        font-size: 8pt !important;
+        font-size: 9pt !important;
         padding: 1px 4px !important;
         border-radius: 0 !important;
         min-height: auto;
       }
       .field input[readonly] { border: none !important; font-weight: 700; }
       table {
-        font-size: 7pt !important;
+        font-size: 8.5pt !important;
         margin: 2px 0 !important;
       }
       table th {
@@ -730,20 +730,20 @@
         color: #fff !important;
         -webkit-print-color-adjust: exact !important;
         print-color-adjust: exact !important;
-        font-size: 7pt !important;
+        font-size: 8.5pt !important;
         padding: 2px 4px !important;
       }
       table td {
         padding: 2px 4px !important;
         border-bottom: 1px solid #ccc !important;
-        font-size: 7pt !important;
+        font-size: 8.5pt !important;
       }
       table input, table select {
         border: none !important;
         background: transparent !important;
         color: #000 !important;
         font-family: 'Times New Roman', Times, serif !important;
-        font-size: 7pt !important;
+        font-size: 8.5pt !important;
         padding: 0 !important;
       }
       .total-row td { border-top: 1px solid #8B0000 !important; font-weight: 700; }
@@ -769,7 +769,7 @@
         padding: 2px !important;
       }
       .total-letras {
-        font-size: 8pt !important;
+        font-size: 9pt !important;
         border: 1px solid #333 !important;
         padding: 4px !important;
         margin: 4px 0 !important;
@@ -781,7 +781,7 @@
         margin-top: 4px !important;
       }
       .firma-box .firma-linea { height: 15px !important; border-bottom: 1px solid #333 !important; }
-      .firma-box .leyenda { font-size: 6pt !important; color: #333 !important; }
+      .firma-box .leyenda { font-size: 7pt !important; color: #333 !important; }
       .proyecto-subtotal {
         font-size: 9pt !important;
         border-top-color: #8B0000 !important;
@@ -789,11 +789,11 @@
         margin-top: 4px !important;
         padding-top: 4px !important;
       }
-      .proyecto-header .badge-tipo { background: #8B0000 !important; color: #fff !important; font-size: 7pt !important; padding: 1px 6px !important; }
-      .proyecto-header .titulo-input { border: none !important; background: transparent !important; color: #000 !important; font-weight: 700 !important; font-size: 10pt !important; }
+      .proyecto-header .badge-tipo { background: #8B0000 !important; color: #fff !important; font-size: 8pt !important; padding: 1px 6px !important; }
+      .proyecto-header .titulo-input { border: none !important; background: transparent !important; color: #000 !important; font-weight: 700 !important; font-size: 11pt !important; }
       .proyecto-header .acciones { display: none; }
       .proyecto-header .titulo-wrapper { flex-wrap: nowrap; }
-      .checkbox-group label { font-size: 6pt !important; }
+      .checkbox-group label { font-size: 7pt !important; }
       .condiciones-generales {
         font-size: 7pt !important;
         border-top: 1px solid #333;
@@ -803,16 +803,16 @@
       }
       .condiciones-generales p { margin: 1px 0; }
       .folio-grande {
-        font-size: 14pt !important;
+        font-size: 15pt !important;
         font-weight: 700;
         color: #8B0000;
         text-align: center;
         margin: 0;
       }
       @page { margin: 0.8cm; }
-      body, .container, .section, table, .field, input, select, label { font-size: 9pt !important; }
-      h1 { font-size: 16pt !important; }
-      .section-title { font-size: 10pt !important; }
+      body, .container, .section, table, .field, input, select, label { font-size: 10pt !important; }
+      h1 { font-size: 18pt !important; }
+      .section-title { font-size: 11pt !important; }
       .summary-box .item .value { font-size: 10pt !important; }
     }
   </style>
@@ -829,7 +829,7 @@
   </div>
   <div style="display:flex; align-items:center; justify-content:center; flex-wrap:wrap; gap:10px;">
     <h1>COTIZADOR · MS SOLUTIONS</h1>
-    <span class="version-badge" id="versionBadge">v11.0</span>
+    <span class="version-badge" id="versionBadge">v12.0</span>
   </div>
   <div class="subtitulo">Soluciones en Seguridad Electrónica y Tecnología</div>
   <div class="row">
@@ -890,7 +890,7 @@
       </div>
     </div>
     <div class="row">
-      <div class="field"><label>VERSIÓN DE COTIZACIÓN</label><input type="text" id="versionCotizacion" value="11.0" placeholder="Ej. 11.0" /></div>
+      <div class="field"><label>VERSIÓN DE COTIZACIÓN</label><input type="text" id="versionCotizacion" value="12.0" placeholder="Ej. 12.0" /></div>
       <div class="field"><label>PLAZO DE ENTREGA (texto)</label><input type="text" id="plazoEntregaTexto" value="5 días hábiles" placeholder="Ej. 5 días hábiles" /></div>
     </div>
   </div>
@@ -944,7 +944,7 @@
   <button class="btn-certificado" id="certificadoBtn">📜 CERTIFICADO DE INSTALACIÓN</button>
 
   <div style="text-align:center; color:var(--gray); font-size:12px; margin-top:20px;">
-    COTIZADOR · MS SOLUTIONS v11.0
+    COTIZADOR · MS SOLUTIONS v12.0
   </div>
 </div>
 
@@ -1206,7 +1206,7 @@
   };
 
   // ================================================================
-  // 5. RENDERIZADO DE PROYECTOS (con todos los campos)
+  // 5. RENDERIZADO DE PROYECTOS
   // ================================================================
 
   const renderProyecto = (proyecto) => {
@@ -1807,7 +1807,7 @@
   };
 
   // ================================================================
-  // 9. GENERACIÓN DE PDF (CON LAS 4 LEYENDAS Y SIN IVA)
+  // 9. GENERACIÓN DE PDF (CON FUENTE MÁS GRANDE)
   // ================================================================
 
   const generarPDFContent = () => {
@@ -1914,12 +1914,12 @@
             <span>${titulo} (${tipoLabel})</span>
             <span>${subtotal}</span>
           </div>
-          <div style="font-size:7pt; color:#333; margin:2px 0;">${configText}</div>
-          <table style="width:100%; border-collapse:collapse; font-size:7pt;">
+          <div style="font-size:8pt; color:#333; margin:2px 0;">${configText}</div>
+          <table style="width:100%; border-collapse:collapse; font-size:8.5pt;">
             <thead><tr style="background:#8B0000; color:#fff;"><th>#</th><th>Descripción</th><th>Categoría</th><th>Unidad</th><th>Cant</th><th>P.Unit</th><th>Total</th></tr></thead>
             <tbody>${equiposRows || '<tr><td colspan="7" style="text-align:center; color:#999;">Sin equipos</td></tr>'}</tbody>
           </table>
-          <table style="width:100%; border-collapse:collapse; font-size:7pt; margin-top:2px;">
+          <table style="width:100%; border-collapse:collapse; font-size:8.5pt; margin-top:2px;">
             <thead><tr style="background:#8B0000; color:#fff;"><th>#</th><th>Descripción</th><th>Cant</th><th>P.Unit</th><th>Total</th></tr></thead>
             <tbody>${serviciosRows || '<tr><td colspan="5" style="text-align:center; color:#999;">Sin servicios</td></tr>'}</tbody>
           </table>
@@ -1936,31 +1936,31 @@
       <html>
       <head><meta charset="UTF-8"><title>Cotización - MS Solutions</title>
       <style>
-        body { font-family: 'Times New Roman', Times, serif; margin: 0.8cm; font-size: 9pt; color: #000; }
+        body { font-family: 'Times New Roman', Times, serif; margin: 0.8cm; font-size: 10pt; color: #000; }
         .header { text-align: center; border-bottom: 2px solid #8B0000; padding-bottom: 4px; margin-bottom: 6px; }
-        .header h1 { font-size: 16pt; margin: 0; color: #8B0000; }
-        .header .subt { font-size: 8pt; color: #555; }
+        .header h1 { font-size: 18pt; margin: 0; color: #8B0000; }
+        .header .subt { font-size: 9pt; color: #555; }
         .header .folio-fecha { display: flex; justify-content: space-between; font-size: 8pt; margin-top: 2px; }
-        .folio-grande { font-size: 14pt; font-weight: 700; color: #8B0000; text-align: center; margin: 0; }
-        .seccion-titulo { font-weight: bold; font-size: 10pt; border-bottom: 1px solid #8B0000; padding-bottom: 2px; margin-bottom: 4px; color: #8B0000; }
-        .datos-cliente { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 15px; font-size: 8pt; }
+        .folio-grande { font-size: 15pt; font-weight: 700; color: #8B0000; text-align: center; margin: 0; }
+        .seccion-titulo { font-weight: bold; font-size: 11pt; border-bottom: 1px solid #8B0000; padding-bottom: 2px; margin-bottom: 4px; color: #8B0000; }
+        .datos-cliente { display: grid; grid-template-columns: 1fr 1fr; gap: 2px 15px; font-size: 9pt; }
         .datos-cliente .label { font-weight: bold; }
         .resumen { display: flex; justify-content: space-between; font-weight: bold; font-size: 10pt; margin: 4px 0; }
         .resumen .total { color: #8B0000; font-size: 12pt; }
-        .total-letras { font-size: 8pt; border: 1px solid #333; padding: 3px; background: #f9f9f9; margin: 4px 0; }
+        .total-letras { font-size: 9pt; border: 1px solid #333; padding: 3px; background: #f9f9f9; margin: 4px 0; }
         .firmas { display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 8px; }
         .firma-box { border-top: 1px solid #333; padding-top: 4px; }
         .firma-box .linea { height: 15px; border-bottom: 1px solid #333; margin-bottom: 2px; }
-        .firma-box .leyenda { font-size: 6pt; color: #555; }
-        .vigencia { font-size: 7pt; text-align: center; margin-top: 6px; border-top: 1px solid #ccc; padding-top: 4px; color: #555; }
+        .firma-box .leyenda { font-size: 7pt; color: #555; }
+        .vigencia { font-size: 8pt; text-align: center; margin-top: 6px; border-top: 1px solid #ccc; padding-top: 4px; color: #555; }
         .condiciones {
-          font-size: 7pt;
+          font-size: 8pt;
           margin-top: 4px;
           border-top: 1px solid #333;
           padding-top: 4px;
         }
         .condiciones p { margin: 1px 0; }
-        table { width: 100%; border-collapse: collapse; font-size: 7pt; }
+        table { width: 100%; border-collapse: collapse; font-size: 8.5pt; }
         table th { background: #8B0000; color: #fff; padding: 2px 4px; text-align: left; }
         table td { padding: 2px 4px; border-bottom: 1px solid #ccc; }
         .total-row td { border-top: 2px solid #8B0000; font-weight: bold; }
@@ -1970,7 +1970,7 @@
         .summary-box-print .item .label { font-size: 7pt; }
         .summary-box-print .item .value { font-size: 10pt; font-weight: 700; }
         .leyendas {
-          font-size: 7pt;
+          font-size: 8pt;
           margin-top: 4px;
           padding-top: 4px;
           border-top: 1px solid #8B0000;
@@ -2035,7 +2035,7 @@
           </div>
         </div>
 
-        <!-- ====== LEYENDAS (4) ====== -->
+        <!-- ====== LEYENDAS ====== -->
         <div class="leyendas">
           <p><strong>Vigencia:</strong> 7 días naturales</p>
           <p><strong>Precios sujetos a cambios sin previo aviso</strong></p>
